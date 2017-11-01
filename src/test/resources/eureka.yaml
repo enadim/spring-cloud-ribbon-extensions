@@ -1,0 +1,38 @@
+server:
+  port: 8000
+  ssl:
+    enabled: false
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+
+spring:
+  application:
+    name: eureka
+    default-domain: eureka
+  cloud:
+    config:
+      enabled: false
+  jmx:
+    enabled: false
+
+endpoints:
+  jmx:
+    enabled: false
+    domain: eureka
+  env:
+    enabled: false
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka
+  instance:
+    metadataMap:
+      instanceId: eureka
+      zone: default
+
+
