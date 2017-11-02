@@ -1,12 +1,12 @@
-/**
- * Copyright (c) 2015 the original author or authors
- * <p>
+/*
+ * Copyright (c) 2017 the original author or authors
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,15 @@
  */
 package com.github.enadim.spring.cloud.ribbon.api;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Ribbon discovery filter context, stores the attributes based on which the server matching will be performed.
  *
- * @author Jakub Narloch
  * @author Nadim Benabdenbi
  */
-public interface RibbonRuleContext {
+public interface RibbonRuleContext extends Serializable {
 
     /**
      * put the context attribute.
@@ -44,15 +44,15 @@ public interface RibbonRuleContext {
     RibbonRuleContext putIfAbsent(String key, String value);
 
     /**
-     * Retrieves the context attribute.
+     * Check if an attribute key is present.
      *
      * @param key the attribute key
-     * @return the attribute value
+     * @return true when the attribute key is present otherwise false.
      */
     boolean containsKey(String key);
 
     /**
-     * Retrieves the context attribute.
+     * Retrieves the context attribute value.
      *
      * @param key the attribute key
      * @return the attribute value
@@ -78,7 +78,16 @@ public interface RibbonRuleContext {
     /**
      * Retrieves the attributes.
      *
-     * @return the attributes as an unmodifiable {@link Map}
+     * @return the stored attributes as an unmodifiable {@link Map}
      */
     Map<String, String> getAttributes();
+
+    /**
+     * Copies the current instances.
+     *
+     * @return a context copy
+     */
+    DefaultRibbonRuleContext copy();
+
+
 }

@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,9 +29,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class StaticMatcherTest {
-    private String attributeName = "name";
+    private String attributeKey = "name";
     private String expectedValue = "value";
-    private StaticMatcher predicate = new StaticMatcher(attributeName, expectedValue);
+    private StaticMatcher predicate = new StaticMatcher(attributeKey, expectedValue);
     private InstanceInfo instanceInfo = mock(InstanceInfo.class);
     private Map<String, String> metada = new HashMap<>();
     private DiscoveryEnabledServer server = new DiscoveryEnabledServer(instanceInfo, true);
@@ -43,7 +43,7 @@ public class StaticMatcherTest {
 
     @Test
     public void should_not_filter_server_with_expected_attribute_value() throws Exception {
-        metada.put(attributeName, expectedValue);
+        metada.put(attributeKey, expectedValue);
         assertThat(predicate.doApply(server), is(true));
     }
 
@@ -54,7 +54,7 @@ public class StaticMatcherTest {
 
     @Test
     public void should_filter_server_with_different_attribute_value() throws Exception {
-        metada.put(attributeName, attributeName);
+        metada.put(attributeKey, attributeKey);
         assertThat(predicate.doApply(server), is(false));
     }
 }

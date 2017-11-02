@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.propagator;
 
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotNull;
@@ -28,41 +29,66 @@ import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.
 
 /**
  * {@link RibbonRuleContext} Feign Propagator.
- * <p>Copies current {@link RibbonRuleContext} attributes in {@link #attributesToPropagate} using the {@link #propagationFunction}.
+ * <p>Copies current {@link RibbonRuleContext} attributes that matches {@link #keysToPropagate} using the {@link #propagationFunction} to the HttpHeaders.
  *
+ * @param <T> the type of the propagation function parameter.
  * @author Nadim Benabdenbi
  */
 @Slf4j
+@Getter
 public class AbstractAttributesPropagator<T> {
-    private final Set<String> attributesToPropagate;
+    private final Set<String> keysToPropagate;
     private final PropagationFunction<T> propagationFunction;
 
-    public AbstractAttributesPropagator(@NotNull Set<String> attributesToPropagate, @NotNull PropagationFunction<T> propagationFunction) {
-        this.attributesToPropagate = attributesToPropagate;
+    /**
+     * Sole Constructor to be invoked by sub classes.
+     *
+     * @param keysToPropagate     the keys to propagate
+     * @param propagationFunction the propagation function
+     */
+    public AbstractAttributesPropagator(@NotNull Set<String> keysToPropagate, @NotNull PropagationFunction<T> propagationFunction) {
+        this.keysToPropagate = keysToPropagate;
         this.propagationFunction = propagationFunction;
     }
 
-    public List<Map.Entry<String, String>> propagate(T t) {
-        List<Map.Entry<String, String>> result = new ArrayList<>(attributesToPropagate.size());
+    /**
+     * Propagation feature.
+     *
+     * @param t the propagation function parameter.
+     * @return the propagated attributes
+     */
+    protected List<Map.Entry<String, String>> propagate(T t) {
+        List<Map.Entry<String, String>> result = new ArrayList<>(keysToPropagate.size());
         current().getAttributes()
                 .entrySet()
                 .stream()
-                .filter(x -> attributesToPropagate.contains(x.getKey()))
+                .filter(x -> keysToPropagate.contains(x.getKey()))
                 .forEach(x -> {
                     try {
                         propagationFunction.propagate(t, x.getKey(), x.getValue());
                         result.add(x);
                     } catch (Exception e) {
-                        log.warn("Failed to propagate {}.", x, e);
+                        log.debug("Failed to propagate {}.", x, e);
                     }
                 });
         return result;
     }
 
     /**
-     * Propagation Function
+     * Propagation Function.
+     *
+     * @param <T> the type of the propagation function parameter.
      */
     public interface PropagationFunction<T> {
+
+        /**
+         * Propagation function.
+         *
+         * @param t     the propagation function parameter.
+         * @param key   the attribute key to propagate.
+         * @param value the attribute value to propagate.
+         * @throws Exception the checked sub class exception
+         */
         void propagate(T t, String key, String value) throws Exception;
     }
 }

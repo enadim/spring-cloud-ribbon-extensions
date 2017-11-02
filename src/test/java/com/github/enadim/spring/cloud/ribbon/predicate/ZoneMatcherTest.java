@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,9 +24,9 @@ import static org.hamcrest.Matchers.is;
 
 public class ZoneMatcherTest {
 
-    String       expectedZone = "zone1";
-    ZoneMatcher  predicate    = new ZoneMatcher(expectedZone);
-    Server       server       = new Server("id");
+    String expectedZone = "zone1";
+    ZoneMatcher predicate = new ZoneMatcher(expectedZone);
+    Server server = new Server("id");
     PredicateKey predicateKey = new PredicateKey(server);
 
     @Test

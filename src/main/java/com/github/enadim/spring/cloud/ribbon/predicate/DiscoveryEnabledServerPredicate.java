@@ -1,12 +1,12 @@
-/**
- * Copyright (c) 2015 the original author or authors
- * <p>
+/*
+ * Copyright (c) 2017 the original author or authors
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Convenient class for predicates that are based on {@link DiscoveryEnabledServer} created by the ribbon load balancer
@@ -32,9 +33,10 @@ public abstract class DiscoveryEnabledServerPredicate extends NullSafeServerPred
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings("BC_UNCONFIRMED_CAST_OF_RETURN_VALUE")
     protected boolean doApply(PredicateKey input) {
         return input.getServer() instanceof DiscoveryEnabledServer
-               && doApply((DiscoveryEnabledServer) input.getServer());
+                && doApply((DiscoveryEnabledServer) input.getServer());
     }
 
     /**

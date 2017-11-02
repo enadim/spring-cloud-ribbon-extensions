@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,22 +15,23 @@
  */
 package com.github.enadim.spring.cloud.ribbon.rule;
 
-import com.netflix.client.IClientConfigAware;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateBasedRule;
 
-import javax.annotation.PostConstruct;
-
-import static org.springframework.util.Assert.notNull;
+import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
 /**
  * Convenient support of {@link PredicateBasedRule}.
  * <p>Defines a non final property predicate to satisfy the circular dependency between {@link PredicateBasedRule} {@link AbstractServerPredicate} that may requires back this rule reference.
- * <p>The {@link PostConstruct} is implemented to verify that the predicate has been set.
  *
  * @author Nadim Benabdenbi
  */
-public class PredicateBasedRuleSupport extends PredicateBasedRule implements IClientConfigAware {
+public class PredicateBasedRuleSupport extends PredicateBasedRule {
+    /**
+     * the delegate predicate.
+     */
+    @Inject
     private AbstractServerPredicate predicate;
 
     /**
@@ -50,8 +51,12 @@ public class PredicateBasedRuleSupport extends PredicateBasedRule implements ICl
         setPredicate(predicate);
     }
 
-    public void setPredicate(AbstractServerPredicate predicate) {
-        notNull(predicate, "Parameter 'predicate' can't be null");
+    /**
+     * Convenient delegate predicate setter.
+     *
+     * @param predicate the rule predicate.
+     */
+    public void setPredicate(@NotNull AbstractServerPredicate predicate) {
         this.predicate = predicate;
     }
 

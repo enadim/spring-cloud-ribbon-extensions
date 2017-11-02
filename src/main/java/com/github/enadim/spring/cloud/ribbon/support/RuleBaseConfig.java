@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,18 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
+import com.github.enadim.spring.cloud.ribbon.rule.PredicateBasedRuleSupport;
 import com.netflix.client.config.IClientConfig;
-import com.netflix.loadbalancer.*;
+import com.netflix.loadbalancer.DynamicServerListLoadBalancer;
+import com.netflix.loadbalancer.ILoadBalancer;
+import com.netflix.loadbalancer.IPing;
+import com.netflix.loadbalancer.IRule;
+import com.netflix.loadbalancer.Server;
+import com.netflix.loadbalancer.ServerList;
+import com.netflix.loadbalancer.ServerListFilter;
+import com.netflix.loadbalancer.ServerListUpdater;
+import com.netflix.loadbalancer.ZoneAvoidancePredicate;
+import com.netflix.loadbalancer.ZoneAwareLoadBalancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -28,22 +38,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Convenient configuration initializing the ribbon client config, that is required to defining rules.
- * <p>Disables server list filter: ({@link ZonePreferenceServerListFilter}).
- * <p>Enables {@link DynamicServerListLoadBalancer}
+ * Convenient configuration initializing the ribbon client config that is required for defining custom rules.
+ * <p>Disables server list filter: ({@link ZonePreferenceServerListFilter})
+ * otherwise we may experience some weird error {@link NullPointerException} logging.
+ * <p>Replaces the default {@link ZoneAwareLoadBalancer} with its super class {@link DynamicServerListLoadBalancer}
+ * because of the strong dependency with the {@link ZoneAvoidancePredicate} that leads to worst performance.
  *
  * @author Nadim Benabdenbi
  * @see RibbonClientConfiguration
  */
 @Configuration
 @AutoConfigureBefore(RibbonClientConfiguration.class)
-@EnableConfigurationProperties({EurekaInstanceProperties.class, RibbonClientProperties.class})
+@EnableConfigurationProperties(EurekaInstanceProperties.class)
 @Slf4j
 public class RuleBaseConfig {
     @Autowired
     protected EurekaInstanceProperties eurekaInstanceProperties;
-    @Autowired
-    protected RibbonClientProperties ribbonClientProperties;
+
+    @Bean
+    public PredicateBasedRuleSupport rule() {
+        return new PredicateBasedRuleSupport();
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -52,18 +67,15 @@ public class RuleBaseConfig {
                                       ServerListFilter<Server> serverListFilter,
                                       IRule rule, IPing ping,
                                       ServerListUpdater serverListUpdater) {
-        log.info("dynamic server list load balancer enabled.");
+        log.debug("dynamic server list load balancer enabled.");
         return new DynamicServerListLoadBalancer<>(config, rule, ping, serverList,
                 serverListFilter, serverListUpdater);
     }
 
-    /**
-     * @return a pass through filter
-     */
     @Bean
     @ConditionalOnMissingBean
     public ServerListFilter<Server> serverListFilter() {
-        log.info("ribbon discovery server list filter disabled.");
+        log.debug("ribbon discovery server list filter disabled.");
         return x -> x;
     }
 }

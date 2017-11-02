@@ -1,12 +1,12 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
- * <p>
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,27 +17,30 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder;
-import com.github.enadim.spring.cloud.ribbon.support.FavoriteZoneConfig;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
- * Filters Servers against a specific {@link #attributeName} defined in {@link RibbonRuleContext}.
- * <p>The filter is applied against the server attribute when the {@link RibbonRuleContext}[{@link #attributeName}] is not null or when the {@link #defaultValue} is not null
+ * Filters Servers metadata attribute against a specific {@link #attributeKey} defined in {@link RibbonRuleContext}.
  *
  * @author Nadim Benabdenbi
- * @see FavoriteZoneConfig for a concrete usage
  */
 @Slf4j
 public class AttributeMatcher extends DiscoveryEnabledServerPredicate {
-    private final String attributeName;
-    private final String defaultValue;
+    /**
+     * the attribute key to test against
+     */
+    private final String attributeKey;
 
-    public AttributeMatcher(final String attributeName, final String defaultValue) {
-        this.attributeName = attributeName;
-        this.defaultValue = defaultValue;
+    /**
+     * Sole Constructor.
+     *
+     * @param attributeKey the attribute key.
+     */
+    public AttributeMatcher(String attributeKey) {
+        this.attributeKey = attributeKey;
     }
 
     /**
@@ -45,19 +48,16 @@ public class AttributeMatcher extends DiscoveryEnabledServerPredicate {
      */
     @Override
     protected boolean doApply(DiscoveryEnabledServer server) {
-        String expected = RibbonRuleContextHolder.current().get(attributeName);
-        if (expected == null) {
-            expected = defaultValue;
-        }
-        String  actual = server.getInstanceInfo().getMetadata().get(attributeName);
-        boolean accept = expected == null || expected.equals(actual);
-        log.trace("expected [{}={}] to {}[{}={}] => {}",
-                  attributeName,
-                  expected,
-                  server.getHostPort(),
-                  attributeName,
-                  actual,
-                  accept);
+        String expected = RibbonRuleContextHolder.current().get(attributeKey);
+        Map<String, String> metadata = server.getInstanceInfo().getMetadata();
+        String actual = metadata.get(attributeKey);
+        boolean accept = (expected == null && actual == null) || (expected != null && expected.equals(actual));
+        log.trace("Expected [{}] vs {}{} => {}",
+                attributeKey,
+                expected,
+                server.getHostPort(),
+                metadata,
+                accept);
         return accept;
     }
 }

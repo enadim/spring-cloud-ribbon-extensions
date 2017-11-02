@@ -1,6 +1,6 @@
 plugins {
     id "com.github.hierynomus.license" version "0.14.0"
-    id 'net.researchgate.release' version '2.4.0'
+    id 'net.researchgate.release' version '2.6.0'
     id "org.sonarqube" version "2.5"
     id 'org.unbroken-dome.test-sets' version '1.4.2'
     id 'com.github.psxpaul.execfork' version '0.1.5'
@@ -12,6 +12,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'checkstyle'
 apply plugin: "jacoco"
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
@@ -28,9 +29,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    jcenterUrl = !'$customJcenterUrl' ? '$customJcenterUrl' : 'https://jcenter.bintray.com/'
-    mavenUrl = !'$customMavenUrl' ? '$customMavenUrl' : 'https://repo.maven.apache.org/maven2/'
-    mavenPluginsUrl = !'$customMavenPluginsUrl' ? '$customMavenPluginsUrl' : 'https://plugins.gradle.org/m2/'
+    jcenterUrl = project.hasProperty('customJcenterUrl') ? project.customJcenterUrl : 'https://jcenter.bintray.com/'
+    mavenUrl = project.hasProperty('customMavenUrl') ? project.customMavenUrl : 'https://repo.maven.apache.org/maven2/'
+    mavenPluginsUrl = project.hasProperty('customMavenPluginsUrl') ? project.customMavenPluginsUrl : 'https://plugins.gradle.org/m2/'
 
     jvm = org.gradle.internal.jvm.Jvm.current()
     javaDescription = '' + jvm
@@ -58,11 +59,11 @@ task wrapper(type: Wrapper) {
 
 repositories {
     jcenter {
-        url "$jcenterUrl"
+        url jcenterUrl
     }
     mavenLocal()
     maven {
-        url "$mavenUrl"
+        url mavenUrl
     }
 }
 
@@ -75,6 +76,7 @@ dependencyManagement {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.16.16'
+    compileOnly 'com.google.code.findbugs:annotations:3.0.1'
 
     compile("org.springframework.boot:spring-boot-starter-activemq") { ext.optional = true }
     compile("org.apache.activemq:activemq-broker")                   { ext.optional = true }
@@ -88,6 +90,7 @@ dependencies {
         ext.optional = true
     }
 
+    testCompileOnly 'org.projectlombok:lombok:1.16.16'
     testCompile 'org.springframework.cloud:spring-cloud-starter-zuul'
     testCompile 'org.springframework.boot:spring-boot-starter-web'
     testCompile 'org.springframework.boot:spring-boot-test'
@@ -95,6 +98,19 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.11.0'
     testCompile 'net.bytebuddy:byte-buddy:1.7.4'
     testCompile 'io.rest-assured:rest-assured:3.0.3'
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+eclipse {
+    classpath {
+        downloadSources=true
+    }
 }
 
 task sourcesJar(type: Jar) {
@@ -122,6 +138,18 @@ jar {
                 'Module-Commit': gitCommitId)
     }
 }
+
+checkstyle {
+    sourceSets = [project.sourceSets.main]
+    toolVersion "8.4"
+}
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+check.dependsOn checkstyleMain
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -153,9 +181,11 @@ signing {
 
 
 license {
+    mapping {
+        java = 'SLASHSTAR_STYLE'
+    }
     header rootProject.file('HEADER')
     strictCheck true
-    skipExistingHeaders true
     include '**/*.java'
     ext.year = Calendar.getInstance().get(Calendar.YEAR)
 }
@@ -166,14 +196,20 @@ compileJava {
 
 findbugs {
     sourceSets = [sourceSets.main]
-    ignoreFailures = false
+    ignoreFailures = project.hasProperty('ignoreFailures')
+    reportLevel = 'low'
 }
 
 tasks.withType(FindBugs) {
     reports {
-        xml.enabled = true
-        html.enabled = false
+        xml.enabled = false
+        html.enabled = true
     }
+}
+
+pmd {
+    sourceSets = [sourceSets.main]
+    ignoreFailures = project.hasProperty('ignoreFailures')
 }
 
 jacocoTestReport {
@@ -188,7 +224,6 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             element = 'CLASS'
-            //excludes = ['*Config', '*Properties', '*BeanPostProcessor', '*Test']
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
@@ -200,6 +235,16 @@ jacocoTestCoverageVerification {
                 minimum = 1.0
             }
             limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+            limit {
+                counter = 'COMPLEXITY'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+            limit {
                 counter = 'CLASS'
                 value = 'MISSEDCOUNT'
                 maximum = 0
@@ -207,7 +252,9 @@ jacocoTestCoverageVerification {
         }
     }
 }
-check.dependsOn jacocoTestCoverageVerification
+if (!project.hasProperty('ignoreFailures')){
+    check.dependsOn jacocoTestCoverageVerification
+}
 
 testSets {
     integrationTest {
@@ -353,4 +400,78 @@ def deployer = uploadArchives.repositories.mavenDeployer
         return dep?.hasProperty('optional') && dep.optional
     }*.optional = true
 }
+
+release{
+    git {
+        requireBranch = ''
+    }
+    //pushChanges = false
+}
+class ReplaceVersionInFile extends DefaultTask {
+    @Input
+    String fileName
+    @TaskAction
+    def build() {
+        def newVersion = ''
+        new File('gradle.properties').eachLine { line ->
+            if( newVersion.isEmpty() && line.startsWith('version=')){
+                newVersion = line.substring('version='.length())
+            }
+        }
+        println 'Setting new version ' + newVersion + ' on file ' + fileName
+        def file = new File(fileName)
+        def newContent = file.text.replaceAll('[0-9]+\\.[0-9]+\\.[0-9]+(-SNAPSHOT)?', newVersion)
+        file.text = newContent
+    }
+}
+class ReadMeBranch extends DefaultTask {
+    @Input
+    String targetBranch
+    @TaskAction
+    def build() {
+        println 'README.md: switching branch to ' + targetBranch
+        def content = ''
+        def readmeBranch = ''
+        def readme = new File('README.md')
+        readme.eachLine { line ->
+            if( readmeBranch.isEmpty() && line.contains('branch=')){
+                readmeBranch = line.substring(line.indexOf('branch=')+'branch='.length())
+                readmeBranch = readmeBranch.substring(0,readmeBranch.indexOf(')'))
+             }
+        }
+        readme = new File('README.md')
+        readme.eachLine { line ->
+            if(line.startsWith('[![')){
+                content += line.replaceAll(readmeBranch,targetBranch) + '\n'
+            }else{
+                content += line + '\n'
+            }
+        }
+        readme.text = content
+    }
+}
+task updateReadMeProjectReleaseVersion(type: ReplaceVersionInFile){
+    fileName = 'README.md'
+}
+task updateSonarProjectReleaseVersion(type: ReplaceVersionInFile){
+    fileName = 'sonar-project.properties'
+}
+task updateReadMeProjectVersion(type: ReplaceVersionInFile){
+    fileName = 'README.md'
+}
+task updateSonarProjectVersion(type: ReplaceVersionInFile){
+    fileName = 'sonar-project.properties'
+}
+task ReadMeForMaster(type:ReadMeBranch){
+    targetBranch =  'master'
+}
+task ReadMeForCurrent(type:ReadMeBranch){
+    targetBranch = gitBranchName
+}
+commitNewVersion.dependsOn ReadMeForCurrent
+commitNewVersion.dependsOn updateSonarProjectVersion
+commitNewVersion.dependsOn updateReadMeProjectVersion
+runBuildTasks.dependsOn ReadMeForMaster
+runBuildTasks.dependsOn updateReadMeProjectReleaseVersion
+runBuildTasks.dependsOn updateSonarProjectReleaseVersion
 afterReleaseBuild.dependsOn uploadArchives

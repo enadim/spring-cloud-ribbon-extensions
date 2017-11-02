@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,21 @@ import static org.mockito.Mockito.withSettings;
 public class AbstractAttributesPropagatorTest {
     private Set<String> attributes = new HashSet<>(asList("1", "2"));
     private Map<String, String> collector = new HashMap<>();
+
+    @Test
+    public void test_getters() {
+        PropagationFunction<Map<String, String>> function = Map::put;
+        @SuppressWarnings("unchecked")
+        AbstractAttributesPropagator<Map<String, String>>
+                propagator
+                = (AbstractAttributesPropagator<Map<String, String>>)
+                mock(AbstractAttributesPropagator.class, withSettings()
+                        .defaultAnswer(CALLS_REAL_METHODS)
+                        .useConstructor(attributes, function));
+        assertThat(propagator.getKeysToPropagate(), is(attributes));
+        assertThat(propagator.getPropagationFunction(), is(function));
+
+    }
 
     @Test
     public void test_propagate() {

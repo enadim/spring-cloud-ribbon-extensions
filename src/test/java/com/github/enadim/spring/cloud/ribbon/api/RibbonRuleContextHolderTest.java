@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,6 @@ package com.github.enadim.spring.cloud.ribbon.api;
 import org.junit.After;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -30,6 +28,7 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.mock;
 
 public class RibbonRuleContextHolderTest {
 
@@ -50,24 +49,24 @@ public class RibbonRuleContextHolderTest {
 
     @Test
     public void inheritance_works_when_creating_child_threads() throws Exception {
-        final String key   = "key";
-        final String value = "value";
+        String key = "key";
+        String value = "value";
         current().put(key, value);
-        final ExecutorService executorService = newFixedThreadPool(1);
-        final Future<String>  future          = executorService.submit(() -> current().get(key));
+        ExecutorService executorService = newFixedThreadPool(1);
+        Future<String> future = executorService.submit(() -> current().get(key));
         assertThat(future.get(), is(value));
     }
 
     @Test
     public void inheritance_do_not_work_when_executor_created_elsewhere() throws Exception {
         //init executor : what will happen with a spring context creating its own executors
-        final ExecutorService executorService = newFixedThreadPool(1);
+        ExecutorService executorService = newFixedThreadPool(1);
         executorService.submit(() -> null).get();
         //test inheritance failure
-        final String key   = "key";
-        final String value = "value";
+        String key = "key";
+        String value = "value";
         current().put(key, value);
-        final Future<String> future = executorService.submit(() -> current().get(key));
+        Future<String> future = executorService.submit(() -> current().get(key));
         assertThat(future.get(), is(nullValue()));
     }
 

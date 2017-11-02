@@ -1,12 +1,12 @@
-/**
- * Copyright (c) 2015 the original author or authors
- * <p>
+/*
+ * Copyright (c) 2017 the original author or authors
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ public interface RibbonRuleContextHolder {
     /**
      * Stores the {@link RibbonRuleContext} for current thread.
      */
-    ThreadLocal<RibbonRuleContext> contextHolder = new InheritableThreadLocal<RibbonRuleContext>() {
+    ThreadLocal<RibbonRuleContext> CONTEXT = new InheritableThreadLocal<RibbonRuleContext>() {
         @Override
         protected RibbonRuleContext initialValue() {
             return new DefaultRibbonRuleContext();
@@ -38,7 +38,7 @@ public interface RibbonRuleContextHolder {
      * @return the current context
      */
     static RibbonRuleContext current() {
-        return contextHolder.get();
+        return CONTEXT.get();
     }
 
     /**
@@ -48,7 +48,7 @@ public interface RibbonRuleContextHolder {
      * @return the current context
      */
     static RibbonRuleContext switchTo(RibbonRuleContext context) {
-        contextHolder.set(context);
+        CONTEXT.set(context);
         return context;
     }
 
@@ -58,8 +58,8 @@ public interface RibbonRuleContextHolder {
      * @return the context before removal
      */
     static RibbonRuleContext remove() {
-        final RibbonRuleContext current = contextHolder.get();
-        contextHolder.remove();
+        RibbonRuleContext current = CONTEXT.get();
+        CONTEXT.remove();
         return current;
     }
 }

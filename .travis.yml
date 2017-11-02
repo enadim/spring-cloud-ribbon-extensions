@@ -25,11 +25,22 @@ branches:
 #We need it because otherwise Travis CI injects an awkward './gradlew assemble' step into the CI workflow
 #We want to control and decide what Gradle tasks are executed
 install:
-  - true
+  - [ ! -z "$gpgSecretKeys" ] && then echo $gpgSecretKeys | base64 --decode | gpg --import || echo "Failed to import gpg secret keys!"
+  - [ ! -z "$gpgOwnerTrust" ] && then echo $gpgOwnerTrust | base64 --decode | gpg --import-ownertrust || echo "Failed to import gpg owner trust!"
+
+addons:
+  sonarcloud:
+    organization: enadim-github
+    token:
+      secure: tx2to7YWlVAB+C36j6YcoF8d+WCvn30lWo0w9INR2q3NfOI1jmwGcPcoOhj5tqH0qC5+GcXa4UXizTfvijgnwPEWzMV22W4vqdCqg6awmZEhYQDh3E+Y1wX54mANOlBDCZNHI3HBjOHIrXniqY5U6IXCAxQ8ytfE/zWAymVw8ktZJW5J5WPJ75hS0QitDCAgSdrOhNnC12KB44Fi/oqr1YNzrNzg6lxD17xGjKTudn5WFZmwZHkwUyQxM3EBn3doR6EryeF2oG9gmTguLPKc5qZUTbQw6+spGg7uVF+8tpp9ki/I3uIrSKfQJ2agbbqGILPTzJI6WXr0QLwU+uUdEEOrub+am1s2711i0OdwJ2ehRwYCQu/p/syBYFFo8BCL9R9ofROS3Vy1GGL+vp0pKGPBScoCDkeEPTEERsuf4+7QdmjAJEhEjgdfui7nYWfuBBJIpmLh8d0eZ1qdJtlQhUEFNpsE7x98w8sEBTYJnoVkEuli4huwGGCfyHYBnEqrQ0nMvjywy0GQ8ClheZgqaTcqvFRrM5VHGA3LeGyJPORjYAwImAOjjCuhv1GP6+/7WdqwLAQP0AnwVFUBWO/2wCxbxX/Ewo5kwJx90fplnJmi7YG+sp4ZoH17UZLFgYBC7u6fSCiiT61rb22E5c/yY5wyWe/LCBQkOsa1U0lNpoo=
+    branches:
+      - master
+      - develop
 
 script:
   - ./gradlew clean build -PossrhUsername="${ossrhUsername}" -PossrhPassword="${ossrhPassword}"
+  - sonar-scanner || echo "Failed to scan on sonarcloud"
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
-  - ./gradlew uploadArchives
+  - bash <(curl -s https://codecov.io/bash) || echo "Failed to upload coverage reports to Codecov!"
+  - ./gradlew uploadArchives -PossrhUsername=$ossrhUsername -PossrhPassword=$ossrhPassword || echo "Failed to upload archives!"

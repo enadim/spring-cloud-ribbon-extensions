@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +21,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,12 +29,14 @@ import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class StrictMetadataMatcherTest {
-    StrictMetadataMatcher  predicate    = new StrictMetadataMatcher();
-    InstanceInfo           instanceInfo = mock(InstanceInfo.class);
-    Map<String, String>    metada       = new HashMap<>();
-    DiscoveryEnabledServer server       = new DiscoveryEnabledServer(instanceInfo, true);
+    StrictMetadataMatcher predicate = new StrictMetadataMatcher();
+    InstanceInfo instanceInfo = mock(InstanceInfo.class);
+    Map<String, String> metada = new HashMap<>();
+    DiscoveryEnabledServer server = new DiscoveryEnabledServer(instanceInfo, true);
 
     @Before
     public void before() {

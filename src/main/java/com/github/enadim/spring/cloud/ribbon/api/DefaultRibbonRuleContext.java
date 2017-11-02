@@ -1,12 +1,12 @@
-/**
- * Copyright (c) 2015 the original author or authors
- * <p>
+/*
+ * Copyright (c) 2017 the original author or authors
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,24 +15,46 @@
  */
 package com.github.enadim.spring.cloud.ribbon.api;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static java.util.Collections.unmodifiableMap;
 
 /**
  * The default ribbon rule context.
- * <p>Designed to store attributes that will be used by the ribbon rule predicate.
+ * <p>Designed to store attributes that will be used by the ribbon rule predicates.
  *
  * @author Nadim Benabdenbi
  */
-class DefaultRibbonRuleContext implements RibbonRuleContext {
+public class DefaultRibbonRuleContext implements RibbonRuleContext {
+    /**
+     * The serial version UID
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * The context attributes.
      */
-    private Map<String, String> attributes = new HashMap<>();
+    private Map<String, String> attributes;
+
+    /**
+     * Constructs a new context with an empty attributes.
+     */
+    public DefaultRibbonRuleContext() {
+        attributes = new HashMap<>();
+    }
+
+    /**
+     * Constructs a new context with the given attributes.
+     *
+     * @param attributes the attributes to starts with.
+     */
+    public DefaultRibbonRuleContext(@NotNull Map<String, String> attributes) {
+        this.attributes = new HashMap<>(attributes);
+    }
 
     /**
      * {@inheritDoc}
@@ -47,7 +69,7 @@ class DefaultRibbonRuleContext implements RibbonRuleContext {
      * {@inheritDoc}
      */
     @Override
-    public RibbonRuleContext putIfAbsent(final String key, final String value) {
+    public RibbonRuleContext putIfAbsent(String key, String value) {
         attributes.putIfAbsent(key, value);
         return this;
     }
@@ -81,7 +103,9 @@ class DefaultRibbonRuleContext implements RibbonRuleContext {
      */
     @Override
     public RibbonRuleContext enableConcurrency() {
-        attributes = new ConcurrentHashMap<>(attributes);
+        if (!(attributes instanceof ConcurrentMap)) {
+            attributes = new ConcurrentHashMap<>(attributes);
+        }
         return this;
     }
 
@@ -91,5 +115,13 @@ class DefaultRibbonRuleContext implements RibbonRuleContext {
     @Override
     public Map<String, String> getAttributes() {
         return unmodifiableMap(attributes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DefaultRibbonRuleContext copy() {
+        return new DefaultRibbonRuleContext(attributes);
     }
 }

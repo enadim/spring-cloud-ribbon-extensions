@@ -43,18 +43,22 @@ eureka:
     lease-expiration-duration-in-seconds: 3
 
 ribbon:
-  rule:
+  eager-load:
+    enabled: true
+    clients:
+      - application1
+      - application2
+  extensions:
     propagation:
-      attributes:
+      keys:
         - version
         - zone
-    strict:
-      matcher:
+    rule:
+      strict-matcher:
         enabled: false
-    favorite:
-      zone:
+      favorite-zone:
         enabled: true
-        name: zone
+        key: zone
 
 zuul:
   ignoredServices: '*'

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2017 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,20 +19,19 @@ import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.loadbalancer.Server;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-
 public class NullSafeServerPredicateTest {
 
     NullSafeServerPredicate predicate = mock(NullSafeServerPredicate.class,
-                                             withSettings().defaultAnswer(CALLS_REAL_METHODS));
-    Server                  server    = mock(Server.class);
+            withSettings().defaultAnswer(CALLS_REAL_METHODS));
+    Server server = mock(Server.class);
 
     @Test
     public void should_filter_when_null_input() throws Exception {
