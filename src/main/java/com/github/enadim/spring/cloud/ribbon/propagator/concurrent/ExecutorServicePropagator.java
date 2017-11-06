@@ -30,17 +30,18 @@ import java.util.concurrent.TimeoutException;
 import static com.github.enadim.spring.cloud.ribbon.propagator.concurrent.PropagationCallable.wrap;
 
 /**
- * {@link RibbonRuleContext} Propagator over a delegated executor.
+ * {@link RibbonRuleContext} Propagator over a delegated {@link ExecutorService}.
  * <p>Copies current {@link RibbonRuleContext} to executor tasks.
  *
  * @author Nadim Benabdenbi
  */
-public class ExecutorServicePropagator implements ExecutorService {
+public class ExecutorServicePropagator extends ExecutorPropagator implements ExecutorService {
 
     /**
      * the delegate executor service
      */
     private final ExecutorService delegate;
+
 
     /**
      * Sole Constructor
@@ -48,6 +49,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * @param delegate the delegate executor service
      */
     public ExecutorServicePropagator(@NotNull ExecutorService delegate) {
+        super(delegate);
         this.delegate = delegate;
     }
 
@@ -55,7 +57,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public void shutdown() {
+    public final void shutdown() {
         delegate.shutdown();
     }
 
@@ -63,7 +65,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public List<Runnable> shutdownNow() {
+    public final List<Runnable> shutdownNow() {
         return delegate.shutdownNow();
     }
 
@@ -71,7 +73,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public boolean isShutdown() {
+    public final boolean isShutdown() {
         return delegate.isShutdown();
     }
 
@@ -79,7 +81,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public boolean isTerminated() {
+    public final boolean isTerminated() {
         return delegate.isTerminated();
     }
 
@@ -87,7 +89,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+    public final boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
         return delegate.awaitTermination(timeout, unit);
     }
 
@@ -95,7 +97,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public <T> Future<T> submit(Callable<T> task) {
+    public final <T> Future<T> submit(Callable<T> task) {
         return delegate.submit(wrap(task));
     }
 
@@ -103,7 +105,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public <T> Future<T> submit(Runnable task, T result) {
+    public final <T> Future<T> submit(Runnable task, T result) {
         return delegate.submit(PropagationRunnable.wrap(task), result);
     }
 
@@ -111,7 +113,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public Future<?> submit(Runnable task) {
+    public final Future<?> submit(Runnable task) {
         return delegate.submit(PropagationRunnable.wrap(task));
     }
 
@@ -119,7 +121,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
+    public final <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
         return delegate.invokeAll(wrap(tasks));
     }
 
@@ -127,8 +129,8 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
-                                         long timeout, TimeUnit unit) throws InterruptedException {
+    public final <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
+                                               long timeout, TimeUnit unit) throws InterruptedException {
         return delegate.invokeAll(wrap(tasks), timeout, unit);
     }
 
@@ -136,7 +138,7 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws
+    public final <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws
             InterruptedException,
             ExecutionException {
         return delegate.invokeAny(wrap(tasks));
@@ -146,17 +148,9 @@ public class ExecutorServicePropagator implements ExecutorService {
      * {@inheritDoc}
      */
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks,
-                           long timeout,
-                           TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public final <T> T invokeAny(Collection<? extends Callable<T>> tasks,
+                                 long timeout,
+                                 TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return delegate.invokeAny(wrap(tasks), timeout, unit);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void execute(Runnable command) {
-        delegate.execute(PropagationRunnable.wrap(command));
     }
 }

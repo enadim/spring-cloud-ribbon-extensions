@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  *  ...
  * }
  * &#064;Configuration
- * &#064;EnableDynamicMatcher
+ * &#064;EnableRibbonDynamicMatcher
  * public class RibbonClientsConfig {
  * }
  * </pre></blockquote>
@@ -47,5 +47,5 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Import(DynamicAttributeMatcherConfig.class)
-public @interface EnableDynamicMatcher {
+public @interface EnableRibbonDynamicMatcher {
 }

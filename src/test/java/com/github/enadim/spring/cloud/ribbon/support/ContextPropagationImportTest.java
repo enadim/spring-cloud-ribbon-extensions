@@ -25,9 +25,11 @@ import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.Zu
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,17 +49,10 @@ public class ContextPropagationImportTest {
         when(metadata.getAnnotationAttributes(EnableRibbonContextPropagation.class.getName(), true)).thenReturn(null);
         assertThat(imports.selectImports(metadata).length, is(0));
 
-        when(metadata.getAnnotationAttributes(EnableRibbonContextPropagation.class.getName(), true)).thenReturn(attributes);
         assertThat(imports.selectImports(metadata).length, is(0));
 
-        attributes.put("http", true);
-        attributes.put("feign", true);
-        attributes.put("executor", true);
-        attributes.put("zuul", true);
-        attributes.put("hystrix", true);
-        attributes.put("jms", true);
-        attributes.put("stomp", true);
-        assertThat(Arrays.asList(imports.selectImports(metadata)), Matchers.containsInAnyOrder(
+        List<String> actual = Arrays.asList(imports.selectImports(new SimpleMetadataReaderFactory().getMetadataReader(Annotated.class.getName()).getAnnotationMetadata()));
+        assertThat(actual, Matchers.containsInAnyOrder(
                 WebApplicationPropagationConfig.class.getName(),
                 FeignPropagationConfig.class.getName(),
                 ExecutorServicePostProcessor.class.getName(),
@@ -66,6 +61,10 @@ public class ContextPropagationImportTest {
                 ConnectionFactoryPostProcessor.class.getName(),
                 StompPropagationPostProcessor.class.getName()
         ));
+    }
+
+    @EnableRibbonContextPropagation
+    static class Annotated {
     }
 
 }

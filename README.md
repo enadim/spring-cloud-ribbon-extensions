@@ -9,6 +9,7 @@ Integration tests for stomp & jms are not yet done.
 [![codecov](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions/branch/develop/graph/badge.svg)](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bf7e3455f2894da19b1e250173c9ace1)](https://www.codacy.com/app/enadim/spring-cloud-ribbon-extensions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=enadim/spring-cloud-ribbon-extensions&amp;utm_campaign=Badge_Grade)
 
+![CoL](https://tokei.rs/b1/github/enadim/spring-cloud-ribbon-extensions)
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=reliability_rating)
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=security_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=security_rating)
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=sqale_rating)

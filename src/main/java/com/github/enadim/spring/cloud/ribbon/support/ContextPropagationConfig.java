@@ -16,7 +16,12 @@
 package com.github.enadim.spring.cloud.ribbon.support;
 
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.AsyncListenableTaskExecutorPropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.AsyncTaskExecutorPropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutorPropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutorServicePropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ScheduledExecutorServicePropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.SchedulingTaskExecutorPropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.feign.FeignHttpHeadersPropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.hystrix.HystrixPropagationStrategy;
 import com.github.enadim.spring.cloud.ribbon.propagator.jms.ConnectionFactoryPropagator;
@@ -45,7 +50,10 @@ import org.springframework.cloud.netflix.hystrix.security.HystrixSecurityAutoCon
 import org.springframework.cloud.netflix.zuul.web.ZuulHandlerMapping;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncListenableTaskExecutor;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -56,7 +64,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Enables {@link RibbonRuleContext} propagation.
@@ -195,9 +205,26 @@ public class ContextPropagationConfig {
          */
         @Override
         public Object postProcessAfterInitialization(Object bean, String beanName) {
-            if (bean instanceof ExecutorService && !(bean instanceof ExecutorServicePropagator)) {
-                log.debug("Propagation enabled for executor[{}].", bean);
-                return new ExecutorServicePropagator((ExecutorService) bean);
+            if (bean instanceof Executor && !(bean instanceof ExecutorPropagator)) {
+                if (bean instanceof ScheduledExecutorService) {
+                    log.debug("Propagation enabled for scheduled executor service [{}].", bean);
+                    return new ScheduledExecutorServicePropagator((ScheduledExecutorService) bean);
+                } else if (bean instanceof SchedulingTaskExecutor) {
+                    log.debug("Propagation enabled for scheduling task executor service [{}].", bean);
+                    return new SchedulingTaskExecutorPropagator((SchedulingTaskExecutor) bean);
+                } else if (bean instanceof AsyncListenableTaskExecutor) {
+                    log.debug("Propagation enabled for async listenable task executor [{}].", bean);
+                    return new AsyncListenableTaskExecutorPropagator((AsyncListenableTaskExecutor) bean);
+                } else if (bean instanceof AsyncTaskExecutor) {
+                    log.debug("Propagation enabled for async task executor [{}].", bean);
+                    return new AsyncTaskExecutorPropagator((AsyncTaskExecutor) bean);
+                } else if (bean instanceof ExecutorService) {
+                    log.debug("Propagation enabled for executor service [{}].", bean);
+                    return new ExecutorServicePropagator((ExecutorService) bean);
+                } else {
+                    log.debug("Propagation enabled for executor [{}].", bean);
+                    return new ExecutorPropagator((Executor) bean);
+                }
             } else {
                 return bean;
             }

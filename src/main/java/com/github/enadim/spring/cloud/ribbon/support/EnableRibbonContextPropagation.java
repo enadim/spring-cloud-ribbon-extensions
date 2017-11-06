@@ -18,7 +18,14 @@ package com.github.enadim.spring.cloud.ribbon.support;
 
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ConnectionFactoryPostProcessor;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ExecutorServicePostProcessor;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.FeignPropagationConfig;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.HystrixRibbonContextPropagationConfig;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.PropagationProperties;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.StompPropagationPostProcessor;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.WebApplicationPropagationConfig;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ZuulHandlerBeanPostProcessor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 
@@ -66,11 +73,21 @@ public @interface EnableRibbonContextPropagation {
     boolean http() default true;
 
     /**
+     * @return the inbound http request propagation configuration. default is {@link WebApplicationPropagationConfig}
+     */
+    Class<?> httpConfiguration() default WebApplicationPropagationConfig.class;
+
+    /**
      * default value is true.
      *
      * @return true when outbound feign request should copies the context attribute to the request headers otherwise false.
      */
     boolean feign() default true;
+
+    /**
+     * @return the outbound feign request propagation configuration. default is {@link FeignPropagationConfig}
+     */
+    Class<?> feignConfiguration() default FeignPropagationConfig.class;
 
     /**
      * default value is true.
@@ -80,6 +97,11 @@ public @interface EnableRibbonContextPropagation {
     boolean executor() default true;
 
     /**
+     * @return the executors propagation configuration. default is {@link ExecutorServicePostProcessor}
+     */
+    Class<?> executorConfiguration() default ExecutorServicePostProcessor.class;
+
+    /**
      * default value is true.
      *
      * @return true when zuul should propagate the http request headers otherwise false.
@@ -87,9 +109,19 @@ public @interface EnableRibbonContextPropagation {
     boolean zuul() default true;
 
     /**
+     * @return the zuul propagation configuration. default is {@link ZuulHandlerBeanPostProcessor}
+     */
+    Class<?> zuulConfiguration() default ZuulHandlerBeanPostProcessor.class;
+
+    /**
      * @return true when hystrix should propagate the context to any async task otherwise false.
      */
     boolean hystrix() default true;
+
+    /**
+     * @return the hystrix propagation configuration. default is {@link HystrixRibbonContextPropagationConfig}
+     */
+    Class<?> hystrixConfiguration() default HystrixRibbonContextPropagationConfig.class;
 
     /**
      * default value is true.
@@ -99,9 +131,19 @@ public @interface EnableRibbonContextPropagation {
     boolean jms() default true;
 
     /**
+     * @return the jms propagation configuration. default is {@link ConnectionFactoryPostProcessor}
+     */
+    Class<?> jmsConfiguration() default ConnectionFactoryPostProcessor.class;
+
+    /**
      * default value is true.
      *
      * @return true when stomp headers and the context attributes should be in sync (inbound &amp; outbound) otherwise false.
      */
     boolean stomp() default true;
+
+    /**
+     * @return the stomp propagation configuration. default is {@link StompPropagationPostProcessor}
+     */
+    Class<?> stompConfiguration() default StompPropagationPostProcessor.class;
 }

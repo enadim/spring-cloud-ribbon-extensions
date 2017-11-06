@@ -25,8 +25,7 @@ branches:
 #We need it because otherwise Travis CI injects an awkward './gradlew assemble' step into the CI workflow
 #We want to control and decide what Gradle tasks are executed
 install:
-  - [ ! -z "$gpgSecretKeys" ] && then echo $gpgSecretKeys | base64 --decode | gpg --import || echo "Failed to import gpg secret keys!"
-  - [ ! -z "$gpgOwnerTrust" ] && then echo $gpgOwnerTrust | base64 --decode | gpg --import-ownertrust || echo "Failed to import gpg owner trust!"
+  - true
 
 addons:
   sonarcloud:

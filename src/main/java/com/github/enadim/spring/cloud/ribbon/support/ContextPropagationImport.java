@@ -38,28 +38,28 @@ public class ContextPropagationImport implements ImportSelector {
         Map<String, Object> attributes = metadata.getAnnotationAttributes(EnableRibbonContextPropagation.class.getName(), true);
         if (attributes != null) {
             if ((boolean) attributes.getOrDefault("http", false)) {
-                imports.add(ContextPropagationConfig.WebApplicationPropagationConfig.class.getName());
+                imports.add((String) attributes.get("httpConfiguration"));
             }
             if ((boolean) attributes.getOrDefault("feign", false)) {
-                imports.add(ContextPropagationConfig.FeignPropagationConfig.class.getName());
+                imports.add((String) attributes.get("feignConfiguration"));
             }
             if ((boolean) attributes.getOrDefault("executor", false)) {
-                imports.add(ContextPropagationConfig.ExecutorServicePostProcessor.class.getName());
+                imports.add((String) attributes.get("executorConfiguration"));
                 log.info("Propagation enabled for executors.");
             }
             if ((boolean) attributes.getOrDefault("zuul", false)) {
-                imports.add(ContextPropagationConfig.ZuulHandlerBeanPostProcessor.class.getName());
+                imports.add((String) attributes.get("zuulConfiguration"));
                 log.info("Propagation enabled for zuul.");
             }
             if ((boolean) attributes.getOrDefault("hystrix", false)) {
-                imports.add(ContextPropagationConfig.HystrixRibbonContextPropagationConfig.class.getName());
+                imports.add((String) attributes.get("hystrixConfiguration"));
             }
             if ((boolean) attributes.getOrDefault("jms", false)) {
-                imports.add(ContextPropagationConfig.ConnectionFactoryPostProcessor.class.getName());
+                imports.add((String) attributes.get("jmsConfiguration"));
                 log.info("Propagation enabled for jms.");
             }
             if ((boolean) attributes.getOrDefault("stomp", false)) {
-                imports.add(ContextPropagationConfig.StompPropagationPostProcessor.class.getName());
+                imports.add((String) attributes.get("stompConfiguration"));
                 log.info("Propagation enabled for stomp.");
             }
         }

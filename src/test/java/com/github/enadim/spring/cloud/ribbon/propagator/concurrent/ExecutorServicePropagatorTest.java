@@ -15,17 +15,12 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
-import org.junit.After;
 import org.junit.Test;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.current;
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.remove;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.hamcrest.Matchers.is;
@@ -33,20 +28,11 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ExecutorServicePropagatorTest {
+public class ExecutorServicePropagatorTest extends AbstractExecutorPropagatorTest {
     private final ExecutorService delegate = mock(ExecutorService.class);
     private final ExecutorServicePropagator mocked = new ExecutorServicePropagator(delegate);
     private final ExecutorServicePropagator propagator = new ExecutorServicePropagator(newSingleThreadExecutor());
-    private final String key = "key";
-    private final String value = "value";
-    private final AtomicBoolean holder = new AtomicBoolean();
-    private final Callable<String> callable = () -> current().get(key);
-    private final Runnable runnable = () -> holder.set(current().containsKey(key));
 
-    @After
-    public void after() {
-        remove();
-    }
 
     @Test
     public void testShutdown() throws Exception {
@@ -104,7 +90,7 @@ public class ExecutorServicePropagatorTest {
         current().put(key, value);
         assertThat(propagator.invokeAll(asList(callable, callable))
                 .stream()
-                .map(ExecutorServicePropagatorTest::uncheck)
+                .map(AbstractExecutorPropagatorTest::uncheck)
                 .reduce((x, y) -> x + y)
                 .get(), is(value + value));
     }
@@ -114,7 +100,7 @@ public class ExecutorServicePropagatorTest {
         current().put(key, value);
         assertThat(propagator.invokeAll(asList(callable, callable), 10, TimeUnit.SECONDS)
                 .stream()
-                .map(ExecutorServicePropagatorTest::uncheck)
+                .map(AbstractExecutorPropagatorTest::uncheck)
                 .reduce((x, y) -> x + y)
                 .get(), is(value + value));
     }
@@ -130,23 +116,4 @@ public class ExecutorServicePropagatorTest {
         current().put(key, value);
         assertThat(propagator.invokeAny(asList(callable, callable), 10, TimeUnit.SECONDS), is(value));
     }
-
-    @Test
-    public void testExecute() throws Exception {
-        current().put(key, value);
-        propagator.execute(runnable);
-        Thread.sleep(1000);
-        assertThat(holder.get(), is(true));
-    }
-
-
-    private static <T> T uncheck(Future<T> future) {
-        try {
-            return future.get();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
 }
