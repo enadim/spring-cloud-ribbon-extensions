@@ -15,7 +15,7 @@ Integration tests for stomp & jms are not yet done.
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:master&metric=coverage)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Amaster&metric=Coverage)
 [![Quality Gate](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:master&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Amaster&metric=Duplications)
 
-[![Maven Central](https://img.shields.io/maven-central/v/enadim/spring-cloud-ribbon-extensions.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.enadim%7Cspring-cloud-ribbon-extensions%7C1.1.0-SNAPSHOT%7C)
+[![Maven Central](https://img.shields.io/maven-central/v/enadim/spring-cloud-ribbon-extensions.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.enadim%7Cspring-cloud-ribbon-extensions%7C1.1.0%7C)
 [![Javadocs](http://www.javadoc.io/badge/com.github.enadim/spring-cloud-ribbon-extensions.svg)](http://www.javadoc.io/doc/com.github.enadim/spring-cloud-ribbon-extensions)
 
 [![GitHub license](https://img.shields.io/github/license/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/master/LICENSE)
@@ -72,14 +72,14 @@ maven
 <dependency>
   <groupId>com.github.enadim</groupId>
   <artifactId>spring-cloud-ribbon-extensions</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
 gradle
 ```gradle
 dependencies {
-    compile 'com.github.enadim:spring-cloud-ribbon-extensions:1.0.0'
+    compile 'com.github.enadim:spring-cloud-ribbon-extensions:1.1.0'
 }
 ```
 
