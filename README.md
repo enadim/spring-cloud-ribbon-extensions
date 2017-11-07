@@ -7,21 +7,21 @@ Do not use in production unless excessive testing or simple direct usage without
 
 Integration tests for stomp & jms are not yet done.
 
-[![Build Status](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions.svg?branch=master)](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions)
-[![Codecov Coverage](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions/branch/master/graph/badge.svg)](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions)
+[![Build Status](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions.svg?branch=develop)](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions)
+[![Codecov Coverage](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions/branch/develop/graph/badge.svg)](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions)
 [![Codacy](https://api.codacy.com/project/badge/Grade/bf7e3455f2894da19b1e250173c9ace1)](https://www.codacy.com/app/enadim/spring-cloud-ribbon-extensions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=enadim/spring-cloud-ribbon-extensions&amp;utm_campaign=Badge_Grade)
 
 ![CoL](https://tokei.rs/b1/github/enadim/spring-cloud-ribbon-extensions)
-[![SonarCloud Reliability](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:master&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Amaster&metric=reliability_rating)
-[![SonarCloud Security](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:master&metric=security_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Amaster&metric=security_rating)
-[![SonarCloud Squale](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:master&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Amaster&metric=sqale_rating)
-[![SonarCloud Coverage](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:master&metric=coverage)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Amaster&metric=Coverage)
-[![SonarCloud Duplication](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:master&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Amaster&metric=Duplications)
+[![SonarCloud Reliability](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=reliability_rating)
+[![SonarCloud Security](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=security_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=security_rating)
+[![SonarCloud Squale](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=sqale_rating)
+[![SonarCloud Coverage](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=coverage)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=Coverage)
+[![SonarCloud Duplication](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=Duplications)
 
-[![Maven Central](https://img.shields.io/maven-central/v/enadim/spring-cloud-ribbon-extensions.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.enadim%7Cspring-cloud-ribbon-extensions%7C1.2.1%7C)
+[![Maven Central](https://img.shields.io/maven-central/v/enadim/spring-cloud-ribbon-extensions.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.enadim%7Cspring-cloud-ribbon-extensions%7C1.2.2-SNAPSHOT%7C)
 [![Javadocs](http://www.javadoc.io/badge/com.github.enadim/spring-cloud-ribbon-extensions.svg)](http://www.javadoc.io/doc/com.github.enadim/spring-cloud-ribbon-extensions)
 
-[![GitHub license](https://img.shields.io/github/license/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/develop/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/issues)
 [![GitHub network/members](https://img.shields.io/github/forks/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/network/members)
 
@@ -75,14 +75,14 @@ maven
 <dependency>
   <groupId>com.github.enadim</groupId>
   <artifactId>spring-cloud-ribbon-extensions</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2-SNAPSHOT</version>
 </dependency>
 ```
 
 gradle
 ```gradle
 dependencies {
-    compile 'com.github.enadim:spring-cloud-ribbon-extensions:1.2.1'
+    compile 'com.github.enadim:spring-cloud-ribbon-extensions:1.2.2-SNAPSHOT'
 }
 ```
 
