@@ -22,6 +22,9 @@ import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutorPropa
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutorServicePropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ScheduledExecutorServicePropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.SchedulingTaskExecutorPropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.TaskSchedulerPropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ThreadPoolTaskExecutorPropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ThreadPoolTaskSchedulerPropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.feign.FeignHttpHeadersPropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.hystrix.HystrixPropagationStrategy;
 import com.github.enadim.spring.cloud.ribbon.propagator.jms.ConnectionFactoryPropagator;
@@ -54,6 +57,7 @@ import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.scheduling.SchedulingTaskExecutor;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -199,35 +203,46 @@ public class ContextPropagationConfig {
     @Configuration
     @ConditionalOnProperty(value = "ribbon.extensions.propagation.executor.enabled", matchIfMissing = true)
     @ConditionalOnExpression(value = "${ribbon.extensions.propagation.enabled:true}")
-    public static class ExecutorServicePostProcessor extends InstantiationAwareBeanPostProcessorAdapter {
+    public static class ExecutorPostProcessor extends InstantiationAwareBeanPostProcessorAdapter {
         /**
          * {@inheritDoc}
          */
         @Override
         public Object postProcessAfterInitialization(Object bean, String beanName) {
-            if (bean instanceof Executor && !(bean instanceof ExecutorPropagator)) {
-                if (bean instanceof ScheduledExecutorService) {
-                    log.debug("Propagation enabled for scheduled executor service [{}].", bean);
-                    return new ScheduledExecutorServicePropagator((ScheduledExecutorService) bean);
+            if (bean instanceof Executor || bean instanceof TaskScheduler) {
+                // spring
+                if (bean instanceof AsyncListenableTaskExecutor && bean instanceof SchedulingTaskExecutor && bean instanceof TaskScheduler) {
+                    log.debug("Propagation enabled for ~ThreadPoolTaskScheduler [{}]:[{}].", beanName, bean.getClass().getName());
+                    return new ThreadPoolTaskSchedulerPropagator((AsyncListenableTaskExecutor) bean, (SchedulingTaskExecutor) bean, (TaskScheduler) bean);
+                } else if (bean instanceof AsyncListenableTaskExecutor && bean instanceof SchedulingTaskExecutor) {
+                    log.debug("Propagation enabled for ~ThreadPoolTaskExecutor [{}]:[{}].", beanName, bean.getClass().getName());
+                    return new ThreadPoolTaskExecutorPropagator((AsyncListenableTaskExecutor) bean, (SchedulingTaskExecutor) bean);
+                } else if (bean instanceof TaskScheduler) {
+                    log.debug("Propagation enabled for TaskScheduler [{}]:[{}].", beanName, bean.getClass().getName());
+                    return new TaskSchedulerPropagator((TaskScheduler) bean);
                 } else if (bean instanceof SchedulingTaskExecutor) {
-                    log.debug("Propagation enabled for scheduling task executor service [{}].", bean);
+                    log.debug("Propagation enabled for SchedulingTaskExecutor [{}]:[{}].", beanName, bean.getClass().getName());
                     return new SchedulingTaskExecutorPropagator((SchedulingTaskExecutor) bean);
                 } else if (bean instanceof AsyncListenableTaskExecutor) {
-                    log.debug("Propagation enabled for async listenable task executor [{}].", bean);
+                    log.debug("Propagation enabled for AsyncListenableTaskExecutor [{}]:[{}].", beanName, bean.getClass().getName());
                     return new AsyncListenableTaskExecutorPropagator((AsyncListenableTaskExecutor) bean);
                 } else if (bean instanceof AsyncTaskExecutor) {
-                    log.debug("Propagation enabled for async task executor [{}].", bean);
+                    log.debug("Propagation enabled for AsyncTaskExecutor [{}]:[{}].", beanName, bean.getClass().getName());
                     return new AsyncTaskExecutorPropagator((AsyncTaskExecutor) bean);
+                }
+                // java
+                else if (bean instanceof ScheduledExecutorService) {
+                    log.debug("Propagation enabled for ScheduledExecutorService [{}]:[{}].", beanName, bean.getClass().getName());
+                    return new ScheduledExecutorServicePropagator((ScheduledExecutorService) bean);
                 } else if (bean instanceof ExecutorService) {
-                    log.debug("Propagation enabled for executor service [{}].", bean);
+                    log.debug("Propagation enabled for ExecutorService [{}]:[{}].", beanName, bean.getClass().getName());
                     return new ExecutorServicePropagator((ExecutorService) bean);
                 } else {
-                    log.debug("Propagation enabled for executor [{}].", bean);
+                    log.debug("Propagation enabled for Executor [{}]:[{}].", bean, bean.getClass().getName());
                     return new ExecutorPropagator((Executor) bean);
                 }
-            } else {
-                return bean;
             }
+            return bean;
         }
     }
 

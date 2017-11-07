@@ -19,7 +19,7 @@ package com.github.enadim.spring.cloud.ribbon.support;
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
 import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ConnectionFactoryPostProcessor;
-import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ExecutorServicePostProcessor;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ExecutorPostProcessor;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.FeignPropagationConfig;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.HystrixRibbonContextPropagationConfig;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.PropagationProperties;
@@ -97,9 +97,9 @@ public @interface EnableRibbonContextPropagation {
     boolean executor() default true;
 
     /**
-     * @return the executors propagation configuration. default is {@link ExecutorServicePostProcessor}
+     * @return the executors propagation configuration. default is {@link ExecutorPostProcessor}
      */
-    Class<?> executorConfiguration() default ExecutorServicePostProcessor.class;
+    Class<?> executorConfiguration() default ExecutorPostProcessor.class;
 
     /**
      * default value is true.

@@ -16,7 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.support;
 
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ConnectionFactoryPostProcessor;
-import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ExecutorServicePostProcessor;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ExecutorPostProcessor;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.FeignPropagationConfig;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.HystrixRibbonContextPropagationConfig;
 import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.StompPropagationPostProcessor;
@@ -55,7 +55,7 @@ public class ContextPropagationImportTest {
         assertThat(actual, Matchers.containsInAnyOrder(
                 WebApplicationPropagationConfig.class.getName(),
                 FeignPropagationConfig.class.getName(),
-                ExecutorServicePostProcessor.class.getName(),
+                ExecutorPostProcessor.class.getName(),
                 ZuulHandlerBeanPostProcessor.class.getName(),
                 HystrixRibbonContextPropagationConfig.class.getName(),
                 ConnectionFactoryPostProcessor.class.getName(),

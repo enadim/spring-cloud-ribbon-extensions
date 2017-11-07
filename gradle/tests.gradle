@@ -1,0 +1,17 @@
+test {
+    ignoreFailures = project.hasProperty('ignoreFailures')
+}
+
+testSets {
+    integrationTest {
+        dirName = 'it'
+        createArtifact = true
+    }
+}
+
+integrationTest {
+    ignoreFailures = project.hasProperty('ignoreFailures')
+    doFirst {
+         sleep(2 * 1000)
+    }
+}

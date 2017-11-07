@@ -1,0 +1,48 @@
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+jar {
+    manifest {
+        attributes (
+                'Implementation-Title': archivesBaseName,
+                'Implementation-Version': version,
+                'Bundle-Name': archivesBaseName,
+                'Bundle-Version': version,
+                'Bundle-Description': projectDescription,
+                'Created-By': javaDescription,
+                'License': licenseName,
+                'Build-Jdk': javaVersion,
+                'Build-Date': new Date().format('yyyy-MM-dd HH:mm:ss.SSS', TimeZone.getTimeZone('UTC')),
+                'Gradle-Version': gradle.gradleVersion,
+                'Module-Url': projectUrl,
+                'Module-Owner': authorName,
+                'Module-Owner-Email': authorEmail,
+                'Module-Branch': gitBranchName,
+                'Module-Commit': gitCommitId)
+    }
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task testSourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'testSources'
+    from sourceSets.test.allSource
+}
+
+task testJar(type: Jar, dependsOn: testClasses) {
+    classifier = 'tests'
+    from sourceSets.test.output
+}
+
+assemble.dependsOn projectReport
+assemble.dependsOn testJar
+assemble.dependsOn testSourcesJar
+
+artifacts {
+    archives javadocJar, sourcesJar, testSourcesJar, testJar
+}

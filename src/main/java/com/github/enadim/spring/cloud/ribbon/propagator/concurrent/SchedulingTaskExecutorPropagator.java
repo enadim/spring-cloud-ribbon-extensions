@@ -15,10 +15,17 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
+import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * {@link RibbonRuleContext} Propagator over a delegated {@link SchedulingTaskExecutor}.
+ * <p>Copies current {@link RibbonRuleContext} to executor tasks.
+ *
+ * @author Nadim Benabdenbi
+ */
 public class SchedulingTaskExecutorPropagator extends AsyncTaskExecutorPropagator implements SchedulingTaskExecutor {
     /**
      * the delegate executor service

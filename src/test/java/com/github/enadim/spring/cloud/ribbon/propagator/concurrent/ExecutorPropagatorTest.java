@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 public class ExecutorPropagatorTest extends AbstractExecutorPropagatorTest {
 
-    private final ExecutorServicePropagator propagator = new ExecutorServicePropagator(newSingleThreadExecutor());
+    private final ExecutorPropagator propagator = new ExecutorPropagator(newSingleThreadExecutor());
     protected final String key = "key";
     protected final String value = "value";
     protected final AtomicBoolean holder = new AtomicBoolean();

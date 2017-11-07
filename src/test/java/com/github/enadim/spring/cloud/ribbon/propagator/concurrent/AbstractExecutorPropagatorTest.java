@@ -16,23 +16,26 @@
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
 import org.junit.After;
+import org.springframework.scheduling.Trigger;
 
+import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.current;
 import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.remove;
-import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static org.mockito.Mockito.mock;
 
 public class AbstractExecutorPropagatorTest {
-
-    private final ExecutorServicePropagator propagator = new ExecutorServicePropagator(newSingleThreadExecutor());
     protected final String key = "key";
     protected final String value = "value";
     protected final AtomicBoolean holder = new AtomicBoolean();
     protected final Runnable runnable = () -> holder.set(current().containsKey(key));
     protected final Callable<String> callable = () -> current().get(key);
+    protected final long period = 1;
+    protected final Date date = new Date();
+    protected final Trigger trigger = mock(Trigger.class);
 
     @After
     public void after() {

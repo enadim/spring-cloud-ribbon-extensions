@@ -1,0 +1,33 @@
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+
+findbugs {
+    sourceSets = [sourceSets.main]
+    ignoreFailures = project.hasProperty('ignoreFailures')
+    reportLevel = 'low'
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = true
+        html.enabled = false
+    }
+}
+
+pmd {
+    sourceSets = [sourceSets.main]
+    ignoreFailures = project.hasProperty('ignoreFailures')
+}
+
+checkstyle {
+    sourceSets = [project.sourceSets.main]
+    toolVersion "8.4"
+}
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+check.dependsOn checkstyleMain

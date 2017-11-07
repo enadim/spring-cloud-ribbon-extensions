@@ -15,12 +15,19 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
+import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.validation.constraints.NotNull;
 import java.util.concurrent.Callable;
 
+/**
+ * {@link RibbonRuleContext} Propagator over a delegated {@link AsyncListenableTaskExecutor}.
+ * <p>Copies current {@link RibbonRuleContext} to executor tasks.
+ *
+ * @author Nadim Benabdenbi
+ */
 public class AsyncListenableTaskExecutorPropagator extends AsyncTaskExecutorPropagator implements AsyncListenableTaskExecutor {
     /**
      * the delegate executor service

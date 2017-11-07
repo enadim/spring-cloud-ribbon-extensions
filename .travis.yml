@@ -37,9 +37,9 @@ addons:
       - develop
 
 script:
-  - ./gradlew clean build -PossrhUsername="${ossrhUsername}" -PossrhPassword="${ossrhPassword}"
+  - ./gradlew clean build -Ptravis=true
   - sonar-scanner || echo "Failed to scan on sonarcloud"
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) || echo "Failed to upload coverage reports to Codecov!"
-  - ./gradlew uploadArchives -PossrhUsername=$ossrhUsername -PossrhPassword=$ossrhPassword || echo "Failed to upload archives!"
+# - ./gradlew uploadArchives -PossrhUsername=$ossrhUsername -PossrhPassword=$ossrhPassword || echo "Failed to upload archives!"

@@ -21,11 +21,17 @@ import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutorPropa
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutorServicePropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ScheduledExecutorServicePropagator;
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.SchedulingTaskExecutorPropagator;
-import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ExecutorServicePostProcessor;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.TaskSchedulerPropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ThreadPoolTaskExecutorPropagator;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ThreadPoolTaskSchedulerPropagator;
+import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.ExecutorPostProcessor;
 import org.junit.Test;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.SchedulingTaskExecutor;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -35,22 +41,31 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 
-public class ExecutorServicePostProcessorTest {
+public class ExecutorPostProcessorTest {
 
-    ExecutorServicePostProcessor processor = new ExecutorServicePostProcessor();
+    ExecutorPostProcessor processor = new ExecutorPostProcessor();
 
     @Test
     public void postProcessAfterInitialization() throws Exception {
+        //concurrent
         assertThat(processor.postProcessAfterInitialization(mock(Executor.class), "name").getClass(),
                 equalTo(ExecutorPropagator.class));
-        assertThat(processor.postProcessAfterInitialization(mock(AsyncListenableTaskExecutor.class), "name").getClass(),
-                equalTo(AsyncListenableTaskExecutorPropagator.class));
-        assertThat(processor.postProcessAfterInitialization(mock(AsyncTaskExecutor.class), "name").getClass(),
-                equalTo(AsyncTaskExecutorPropagator.class));
         assertThat(processor.postProcessAfterInitialization(mock(ExecutorService.class), "name").getClass(),
                 equalTo(ExecutorServicePropagator.class));
         assertThat(processor.postProcessAfterInitialization(mock(ScheduledExecutorService.class), "name").getClass(),
                 equalTo(ScheduledExecutorServicePropagator.class));
+
+        //spring
+        assertThat(processor.postProcessAfterInitialization(mock(TaskScheduler.class), "name").getClass(),
+                equalTo(TaskSchedulerPropagator.class));
+        assertThat(processor.postProcessAfterInitialization(new ThreadPoolTaskExecutor(), "name").getClass(),
+                equalTo(ThreadPoolTaskExecutorPropagator.class));
+        assertThat(processor.postProcessAfterInitialization(new ThreadPoolTaskScheduler(), "name").getClass(),
+                equalTo(ThreadPoolTaskSchedulerPropagator.class));
+        assertThat(processor.postProcessAfterInitialization(mock(AsyncListenableTaskExecutor.class), "name").getClass(),
+                equalTo(AsyncListenableTaskExecutorPropagator.class));
+        assertThat(processor.postProcessAfterInitialization(mock(AsyncTaskExecutor.class), "name").getClass(),
+                equalTo(AsyncTaskExecutorPropagator.class));
         assertThat(processor.postProcessAfterInitialization(mock(SchedulingTaskExecutor.class), "name").getClass(),
                 equalTo(SchedulingTaskExecutorPropagator.class));
     }

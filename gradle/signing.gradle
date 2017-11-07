@@ -1,0 +1,6 @@
+apply plugin: 'signing'
+
+signing {
+    required { !(rootProject.hasProperty('travis')) && (isReleaseVersion || gradle.taskGraph.hasTask("uploadArchives")) }
+    sign configurations.archives
+}
