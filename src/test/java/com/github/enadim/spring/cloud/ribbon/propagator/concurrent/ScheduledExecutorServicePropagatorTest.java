@@ -19,14 +19,14 @@ import org.junit.Test;
 
 import java.util.concurrent.ScheduledFuture;
 
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.current;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ScheduledExecutorServicePropagatorTest extends AbstractExecutorPropagatorTest {
-    private final ScheduledExecutorServicePropagator propagator = new ScheduledExecutorServicePropagator(newScheduledThreadPool(4));
+public class ScheduledExecutorServicePropagatorTest extends AbstractExecutionContextAwareExecutorTest {
+    private final ExecutionContextAwareScheduledExecutorService propagator = new ExecutionContextAwareScheduledExecutorService(newScheduledThreadPool(4));
 
     @Test
     public void scheduleRunnable() throws Exception {

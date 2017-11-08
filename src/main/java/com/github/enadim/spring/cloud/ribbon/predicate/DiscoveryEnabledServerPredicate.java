@@ -21,7 +21,7 @@ import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * Convenient class for predicates that are based on {@link DiscoveryEnabledServer} created by the ribbon load balancer
+ * Convenient class for predicates that are based on {@link DiscoveryEnabledServer} created by the {@link DiscoveryEnabledNIWSServerList}.
  * {@link DiscoveryEnabledNIWSServerList}.
  * <p>Concrete implementation needs to implement the {@link #doApply(DiscoveryEnabledServer)} method.
  *

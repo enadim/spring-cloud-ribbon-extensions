@@ -24,8 +24,8 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.current;
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.remove;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;

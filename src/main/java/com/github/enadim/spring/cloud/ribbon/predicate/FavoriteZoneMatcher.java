@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotNull;
 
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.current;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 
 /**
  * Filters Servers against the favorite zone.
@@ -33,17 +33,17 @@ import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.
 @Slf4j
 public class FavoriteZoneMatcher extends NullSafeServerPredicate {
     /**
-     * the favorite zone attribute key.
+     * the favorite zone entry key.
      */
-    private final String key;
+    private final String entryKey;
 
     /**
      * Sole Constructor.
      *
-     * @param key the favorite zone attribute key.
+     * @param entryKey the favorite zone entry key.
      */
-    public FavoriteZoneMatcher(@NotNull String key) {
-        this.key = key;
+    public FavoriteZoneMatcher(@NotNull String entryKey) {
+        this.entryKey = entryKey;
     }
 
     /**
@@ -52,7 +52,7 @@ public class FavoriteZoneMatcher extends NullSafeServerPredicate {
     @Override
     protected boolean doApply(PredicateKey input) {
         Server server = input.getServer();
-        String expected = current().get(key);
+        String expected = current().get(entryKey);
         String actual = server.getZone();
         boolean accept = expected != null && expected.equals(actual);
         log.trace("Expected [{}] vs {}[{}] => {}",

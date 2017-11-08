@@ -46,6 +46,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import(DynamicAttributeMatcherConfig.class)
+@Import(DynamicMatcherConfig.class)
 public @interface EnableRibbonDynamicMatcher {
 }

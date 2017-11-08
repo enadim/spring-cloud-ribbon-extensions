@@ -48,7 +48,7 @@ public class StrictMetadataMatcherConfig extends RuleBaseConfig {
      */
     @Bean
     public StrictMetadataMatcher strictMetadataMatcher(IClientConfig clientConfig) {
-        log.info("Enabled for client [{}].", clientConfig.getClientName());
+        log.info("Strict metadata matcher enabled for client [{}].", clientConfig.getClientName());
         return new StrictMetadataMatcher();
     }
 }

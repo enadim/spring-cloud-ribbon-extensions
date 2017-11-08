@@ -15,9 +15,9 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support.zuul;
 
-import com.github.enadim.spring.cloud.ribbon.propagator.hystrix.HystrixPropagationStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.ContextPropagationConfig.PropagationProperties;
-import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.propagator.hystrix.ExecutionContextAwareHystrixStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.EnableExecutionContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.PropagationProperties;
 import com.netflix.hystrix.strategy.HystrixPlugins;
 import feign.RequestInterceptor;
 import org.junit.Test;
@@ -51,12 +51,12 @@ public class ContextPropagationZuulTest {
         assertNotNull(properties);
         assertNotNull(requestInterceptor);
         assertEquals(HystrixPlugins.getInstance().getConcurrencyStrategy().getClass(),
-                HystrixPropagationStrategy.class);
+                ExecutionContextAwareHystrixStrategy.class);
     }
 
     @SpringBootApplication
     @EnableZuulProxy
-    @EnableRibbonContextPropagation
+    @EnableExecutionContextPropagation
     public static class Application {
         @RequestMapping(method = GET)
         public String getMessage() {

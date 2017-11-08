@@ -22,8 +22,8 @@ import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 
 /**
- * Convenient support of {@link PredicateBasedRule}.
- * <p>Defines a non final property predicate to satisfy the circular dependency between {@link PredicateBasedRule} {@link AbstractServerPredicate} that may requires back this rule reference.
+ * Convenient support of predicate based rule.
+ * <p>Defines a non final property predicate to satisfy the circular dependency between {@link PredicateBasedRule} and {@link AbstractServerPredicate}.
  *
  * @author Nadim Benabdenbi
  */

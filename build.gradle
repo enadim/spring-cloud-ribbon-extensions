@@ -105,8 +105,8 @@ compileJava {
 }
 
 task eureka(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.it.eureka.EurekaApplication'
-    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.eureka.EurekaApplication'
+    classpath = sourceSets.examples.runtimeClasspath
     workingDir = "$buildDir"
     standardOutput = "$buildDir/eureka.log"
     errorOutput = "$buildDir/eureka-error.log"
@@ -115,8 +115,8 @@ task eureka(type: com.github.psxpaul.task.JavaExecFork) {
 }
 
 task application11(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.it.application1.Application1'
-    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.application1.Application1'
+    classpath = sourceSets.examples.runtimeClasspath
     args = ['--spring.config.name=application11']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/application11.log"
@@ -127,8 +127,8 @@ task application11(type: com.github.psxpaul.task.JavaExecFork) {
 application11.dependsOn eureka
 
 task application12(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.it.application1.Application1'
-    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.application1.Application1'
+    classpath = sourceSets.examples.runtimeClasspath
     args = ['--spring.config.name=application12']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/application12.log"
@@ -139,8 +139,8 @@ task application12(type: com.github.psxpaul.task.JavaExecFork) {
 application12.dependsOn application11
 
 task application21(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.it.application2.Application2'
-    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.application2.Application2'
+    classpath = sourceSets.examples.runtimeClasspath
     args = ['--spring.config.name=application21']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/application21.log"
@@ -148,10 +148,12 @@ task application21(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8021
     timeout = 30
 }
+
 application21.dependsOn application12
+
 task application22(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.it.application2.Application2'
-    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.application2.Application2'
+    classpath = sourceSets.examples.runtimeClasspath
     args = ['--spring.config.name=application22']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/application22.log"
@@ -162,8 +164,8 @@ task application22(type: com.github.psxpaul.task.JavaExecFork) {
 application22.dependsOn application21
 
 task zuul(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.it.zuul.ZuulApplication'
-    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.zuul.ZuulApplication'
+    classpath = sourceSets.examples.runtimeClasspath
     workingDir = "$buildDir"
     standardOutput = "$buildDir/zuul.log"
     errorOutput = "$buildDir/zuul-error.log"
@@ -173,8 +175,9 @@ task zuul(type: com.github.psxpaul.task.JavaExecFork) {
 zuul.dependsOn application22
 
 if (project.hasProperty('it')) {
+    examples.dependsOn test
+    zuul.dependsOn examples
     integrationTest.dependsOn zuul
-    integrationTest.mustRunAfter test
     check.dependsOn integrationTest
     project.tasks["sonarqube"].dependsOn integrationTest
 } else {

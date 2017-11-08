@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Convenient configuration initializing the ribbon client config that is required for defining custom rules.
  * <p>Disables server list filter: ({@link ZonePreferenceServerListFilter})
- * otherwise we may experience some weird error {@link NullPointerException} logging.
+ * otherwise we may experience some weird error as {@link NullPointerException} logging.
  * <p>Replaces the default {@link ZoneAwareLoadBalancer} with its super class {@link DynamicServerListLoadBalancer}
  * because of the strong dependency with the {@link ZoneAvoidancePredicate} that leads to worst performance.
  *
@@ -52,14 +52,33 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(EurekaInstanceProperties.class)
 @Slf4j
 public class RuleBaseConfig {
+    /**
+     * The eureka instance properties.
+     */
     @Autowired
     protected EurekaInstanceProperties eurekaInstanceProperties;
 
+    /**
+     * The load balancing rule definition.
+     *
+     * @return the predicate base rule: expect a single predicate defined on the context.
+     */
     @Bean
     public PredicateBasedRuleSupport rule() {
         return new PredicateBasedRuleSupport();
     }
 
+    /**
+     * The load balancer definition.
+     *
+     * @param config            the client config.
+     * @param serverList        the server list.
+     * @param serverListFilter  the server list filter.
+     * @param rule              the load balancing rule.
+     * @param ping              the ping strategy.
+     * @param serverListUpdater the server list updater.
+     * @return The Dynamic Server List Load Balancer.
+     */
     @Bean
     @ConditionalOnMissingBean
     public ILoadBalancer loadBalancer(IClientConfig config,
@@ -72,6 +91,11 @@ public class RuleBaseConfig {
                 serverListFilter, serverListUpdater);
     }
 
+    /**
+     * The server list filter definition.
+     *
+     * @return a pass-through filter.
+     */
     @Bean
     @ConditionalOnMissingBean
     public ServerListFilter<Server> serverListFilter() {

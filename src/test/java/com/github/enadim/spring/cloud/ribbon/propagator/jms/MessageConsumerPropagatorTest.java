@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 public class MessageConsumerPropagatorTest {
     MessageConsumer delegate = mock(MessageConsumer.class);
-    MessageConsumerPropagator propagator = new MessageConsumerPropagator(delegate, null);
+    MessagePropertiesCopyMessageConsumerAdapter propagator = new MessagePropertiesCopyMessageConsumerAdapter(delegate, null);
 
     @Test
     public void getMessageSelector() throws Exception {
@@ -45,12 +45,12 @@ public class MessageConsumerPropagatorTest {
     @Test
     public void setMessageListener() throws Exception {
         propagator.setMessageListener(null);
-        verify(delegate).setMessageListener(any(MessageListenerPropagator.class));
+        verify(delegate).setMessageListener(any(MessagePropertiesCopyMessageListener.class));
     }
 
     @Test
     public void receive() throws Exception {
-        when(delegate.getMessageListener()).thenReturn(mock(MessageListenerPropagator.class));
+        when(delegate.getMessageListener()).thenReturn(mock(MessagePropertiesCopyMessageListener.class));
         propagator.receive();
         verify(delegate).receive();
         reset(delegate);
@@ -61,7 +61,7 @@ public class MessageConsumerPropagatorTest {
 
     @Test
     public void receive1() throws Exception {
-        when(delegate.getMessageListener()).thenReturn(mock(MessageListenerPropagator.class));
+        when(delegate.getMessageListener()).thenReturn(mock(MessagePropertiesCopyMessageListener.class));
         propagator.receive(0);
         verify(delegate).receive(0);
         reset(delegate);
@@ -72,7 +72,7 @@ public class MessageConsumerPropagatorTest {
 
     @Test
     public void receiveNoWait() throws Exception {
-        when(delegate.getMessageListener()).thenReturn(mock(MessageListenerPropagator.class));
+        when(delegate.getMessageListener()).thenReturn(mock(MessagePropertiesCopyMessageListener.class));
         propagator.receiveNoWait();
         verify(delegate).receiveNoWait();
         reset(delegate);

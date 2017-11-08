@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.constraints.NotNull;
 
 /**
- * Filters Servers against the current micro-service zone.
+ * Filters Servers against the current µservice zone.
  *
  * @author Nadim Benabdenbi
  * @see FavoriteZoneConfig for a concrete usage

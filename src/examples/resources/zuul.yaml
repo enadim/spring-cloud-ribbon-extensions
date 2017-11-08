@@ -1,0 +1,83 @@
+server:
+  port: 8001
+  ssl:
+    enabled: false
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+
+spring:
+  application:
+    name: zuul
+    default-domain: zuul
+  cloud:
+    config:
+      enabled: false
+  jmx:
+    enabled: false
+
+endpoints:
+  jmx:
+    enabled: false
+    domain: zuul
+  env:
+    enabled: false
+
+
+eureka:
+  server:
+    port: 8000
+  client:
+    enabled: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:${eureka.server.port}/eureka
+  instance:
+    metadataMap:
+      instanceId: zuul
+      zone: zone2
+    lease-renewal-interval-in-seconds: 3
+    lease-expiration-duration-in-seconds: 3
+
+ribbon:
+  eager-load:
+    enabled: true
+    clients:
+      - application1
+      - application2
+  extensions:
+    propagation:
+      keys:
+        - version
+        - zone
+    rule:
+      strict-matcher:
+        enabled: false
+      favorite-zone:
+        enabled: true
+        entryKey: zone
+
+zuul:
+  ignoredServices: '*'
+  sensitiveHeaders: Cookie,Set-Cookie
+  addProxyHeaders: true
+  addHostHeader: true
+  routes:
+    application1:
+      serviceId: application1
+      path: /application1/**
+      stripPrefix: false
+    application2:
+      serviceId: application2
+      path: /application2/**
+      stripPrefix: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false

@@ -20,8 +20,8 @@ import com.netflix.loadbalancer.Server;
 import org.junit.After;
 import org.junit.Test;
 
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.current;
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.remove;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

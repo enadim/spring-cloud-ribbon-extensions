@@ -15,7 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
+import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
 import com.github.enadim.spring.cloud.ribbon.predicate.FavoriteZoneMatcher;
 import com.github.enadim.spring.cloud.ribbon.predicate.ZoneMatcher;
 import com.github.enadim.spring.cloud.ribbon.rule.PredicateBasedRuleSupport;
@@ -44,7 +44,7 @@ import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
  * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonFavoriteZone}
  * <p>Favorite Rule Definition
  * <ul>
- * <li>Start applying {@link FavoriteZoneMatcher} : choose a server having the same name as the favorite name defined in the {@link RibbonRuleContext}.
+ * <li>Start applying {@link FavoriteZoneMatcher} : choose a server having the same name as the favorite name defined in the {@link ExecutionContext}.
  * <li>Fallbacks to {@link ZoneMatcher}: choose a server in the same name as the current instance.
  * <li>Fallbacks to {@link ZoneAvoidancePredicate} &amp; {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to {@link AvailabilityPredicate}: choose an available server.
@@ -65,7 +65,7 @@ import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
 public class FavoriteZoneConfig extends RuleBaseConfig {
 
     @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.favorite-zone.key:${ribbon.extensions.rule.favorite-zone.key:zone}}")
-    protected String favoriteZoneKey;
+    private String favoriteZoneKey;
 
     /**
      * Favorite zone rule bean.
@@ -80,7 +80,7 @@ public class FavoriteZoneConfig extends RuleBaseConfig {
         ZoneAvoidancePredicate zoneAvoidancePredicate = new ZoneAvoidancePredicate(rule, clientConfig);
         ZoneMatcher zoneMatcher = new ZoneMatcher(eurekaInstanceProperties.getZone());
         FavoriteZoneMatcher favoriteZoneMatcher = new FavoriteZoneMatcher(favoriteZoneKey);
-        log.info("Enabled for client [{}] using context key [{}].", clientConfig.getClientName(), favoriteZoneKey);
+        log.info("Favorite zone enabled for client [{}] using context key [{}].", clientConfig.getClientName(), favoriteZoneKey);
         return withPredicates(favoriteZoneMatcher)
                 .addFallbackPredicate(withPredicates(zoneMatcher).build())
                 .addFallbackPredicate(withPredicates(zoneAvoidancePredicate, availabilityPredicate).build())

@@ -18,8 +18,8 @@ Integration tests for stomp & jms are not yet done.
 [![SonarCloud Coverage](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=coverage)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=Coverage)
 [![SonarCloud Duplication](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures?id=enadim%3Aspring-cloud-ribbon-extensions%3Adevelop&metric=Duplications)
 
-[![Maven Central](https://img.shields.io/maven-central/v/enadim/spring-cloud-ribbon-extensions.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.enadim%7Cspring-cloud-ribbon-extensions%7C1.2.2-SNAPSHOT%7C)
-[![Javadocs](http://www.javadoc.io/badge/com.github.enadim/spring-cloud-ribbon-extensions.svg)](http://www.javadoc.io/doc/com.github.enadim/spring-cloud-ribbon-extensions)
+[![Maven Central](https://img.shields.io/maven-central/v/enadim/spring-cloud-ribbon-extensions.svg)](http://search.maven.org/#artifactdetails%7Ccom.github.enadim%7Cspring-cloud-ribbon-extensions%7C1.3.0-SNAPSHOT%7C)
+[![Javadocs](http://www.javadoc.io/badge/com.github.enadim/spring-cloud-ribbon-extensions/1.3.0-SNAPSHOT.svg)](http://www.javadoc.io/doc/com.github.enadim/spring-cloud-ribbon-extensions/1.3.0-SNAPSHOT)
 
 [![GitHub license](https://img.shields.io/github/license/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/develop/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/issues)
@@ -75,14 +75,14 @@ maven
 <dependency>
   <groupId>com.github.enadim</groupId>
   <artifactId>spring-cloud-ribbon-extensions</artifactId>
-  <version>1.2.2-SNAPSHOT</version>
+  <version>1.3.0-SNAPSHOT</version>
 </dependency>
 ```
 
 gradle
 ```gradle
 dependencies {
-    compile 'com.github.enadim:spring-cloud-ribbon-extensions:1.2.2-SNAPSHOT'
+    compile 'com.github.enadim:spring-cloud-ribbon-extensions:1.3.0-SNAPSHOT'
 }
 ```
 

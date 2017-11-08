@@ -26,46 +26,46 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ThreadPoolTaskSchedulerPropagatorTest extends AbstractExecutorPropagatorTest {
+public class ThreadPoolTaskSchedulerPropagatorTest extends AbstractExecutionContextAwareExecutorTest {
     private TaskScheduler taskScheduler = mock(TaskScheduler.class);
     private SchedulingTaskExecutor schedulingTaskExecutor = mock(SchedulingTaskExecutor.class);
     private AsyncListenableTaskExecutor asyncListenableTaskExecutor = mock(AsyncListenableTaskExecutor.class);
-    private ThreadPoolTaskSchedulerPropagator propagator = new ThreadPoolTaskSchedulerPropagator(asyncListenableTaskExecutor, schedulingTaskExecutor, taskScheduler);
+    private ExecutionContextAwareThreadPoolTaskScheduler propagator = new ExecutionContextAwareThreadPoolTaskScheduler(asyncListenableTaskExecutor, schedulingTaskExecutor, taskScheduler);
 
     @Test
     public void scheduleTrigger() throws Exception {
         propagator.schedule(runnable, trigger);
-        verify(taskScheduler).schedule(any(PropagationRunnable.class), any(Trigger.class));
+        verify(taskScheduler).schedule(any(ExecutionContextAwareRunnable.class), any(Trigger.class));
     }
 
     @Test
     public void scheduleDate() throws Exception {
         propagator.schedule(runnable, date);
-        verify(taskScheduler).schedule(any(PropagationRunnable.class), eq(date));
+        verify(taskScheduler).schedule(any(ExecutionContextAwareRunnable.class), eq(date));
     }
 
     @Test
     public void scheduleAtFixedRateWithDate() throws Exception {
         propagator.scheduleAtFixedRate(runnable, date, period);
-        verify(taskScheduler).scheduleAtFixedRate(any(PropagationRunnable.class), eq(date), eq(period));
+        verify(taskScheduler).scheduleAtFixedRate(any(ExecutionContextAwareRunnable.class), eq(date), eq(period));
     }
 
     @Test
     public void scheduleAtFixedRate() throws Exception {
         propagator.scheduleAtFixedRate(runnable, period);
-        verify(taskScheduler).scheduleAtFixedRate(any(PropagationRunnable.class), eq(period));
+        verify(taskScheduler).scheduleAtFixedRate(any(ExecutionContextAwareRunnable.class), eq(period));
     }
 
     @Test
     public void scheduleWithFixedDelayWithDate() throws Exception {
         propagator.scheduleWithFixedDelay(runnable, date, period);
-        verify(taskScheduler).scheduleWithFixedDelay(any(PropagationRunnable.class), eq(date), eq(period));
+        verify(taskScheduler).scheduleWithFixedDelay(any(ExecutionContextAwareRunnable.class), eq(date), eq(period));
     }
 
     @Test
     public void scheduleWithFixedDelay() throws Exception {
         propagator.scheduleWithFixedDelay(runnable, period);
-        verify(taskScheduler).scheduleWithFixedDelay(any(PropagationRunnable.class), eq(period));
+        verify(taskScheduler).scheduleWithFixedDelay(any(ExecutionContextAwareRunnable.class), eq(period));
     }
 
 }

@@ -22,30 +22,30 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
- * Filters Servers against a specific {@link #attributeKey} that matches the {@link #expectedValue}.
+ * Filters Servers against a specific {@link #entryKey} that matches the {@link #entryValue}.
  *
  * @author Nadim Benabdenbi
  */
 @Slf4j
 public class StaticMatcher extends DiscoveryEnabledServerPredicate {
     /**
-     * the attribute key to match.
+     * the entry key to match.
      */
-    private final String attributeKey;
+    private final String entryKey;
     /**
-     * the expected value
+     * the expected entry value
      */
-    private final String expectedValue;
+    private final String entryValue;
 
     /**
      * Sole constructor
      *
-     * @param attributeKey  the attribute key to match.
-     * @param expectedValue the expected value
+     * @param entryKey   the attribute key to match.
+     * @param entryValue the expected entry value
      */
-    public StaticMatcher(@NotNull String attributeKey, @NotNull String expectedValue) {
-        this.attributeKey = attributeKey;
-        this.expectedValue = expectedValue;
+    public StaticMatcher(@NotNull String entryKey, @NotNull String entryValue) {
+        this.entryKey = entryKey;
+        this.entryValue = entryValue;
     }
 
     /**
@@ -54,10 +54,11 @@ public class StaticMatcher extends DiscoveryEnabledServerPredicate {
     @Override
     protected boolean doApply(DiscoveryEnabledServer server) {
         Map<String, String> metadata = server.getInstanceInfo().getMetadata();
-        String actual = metadata.get(attributeKey);
-        boolean accept = expectedValue.equals(actual);
-        log.trace("Expected [{}] vs {}{} => {}",
-                expectedValue,
+        String actual = metadata.get(entryKey);
+        boolean accept = entryValue.equals(actual);
+        log.trace("Expected [{}={}] vs {}{} => {}",
+                entryKey,
+                entryValue,
                 server.getHostPort(),
                 metadata,
                 accept);

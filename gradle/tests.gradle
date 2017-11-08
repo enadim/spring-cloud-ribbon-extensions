@@ -3,6 +3,10 @@ test {
 }
 
 testSets {
+    examples{
+        createArtifact = true
+        dirName = 'examples'
+    }
     integrationTest {
         dirName = 'it'
         createArtifact = true
@@ -12,6 +16,7 @@ testSets {
 integrationTest {
     ignoreFailures = project.hasProperty('ignoreFailures')
     doFirst {
+         //wait for the server to startup effectively (open port is too late)
          sleep(2 * 1000)
     }
 }

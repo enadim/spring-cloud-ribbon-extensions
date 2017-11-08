@@ -20,7 +20,7 @@ import org.junit.Test;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder.current;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.hamcrest.Matchers.is;
@@ -28,10 +28,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ExecutorServicePropagatorTest extends AbstractExecutorPropagatorTest {
+public class ExecutorServicePropagatorTest extends AbstractExecutionContextAwareExecutorTest {
     private final ExecutorService delegate = mock(ExecutorService.class);
-    private final ExecutorServicePropagator mocked = new ExecutorServicePropagator(delegate);
-    private final ExecutorServicePropagator propagator = new ExecutorServicePropagator(newSingleThreadExecutor());
+    private final ExecutionContextAwareExecutorService mocked = new ExecutionContextAwareExecutorService(delegate);
+    private final ExecutionContextAwareExecutorService propagator = new ExecutionContextAwareExecutorService(newSingleThreadExecutor());
 
 
     @Test
@@ -90,7 +90,7 @@ public class ExecutorServicePropagatorTest extends AbstractExecutorPropagatorTes
         current().put(key, value);
         assertThat(propagator.invokeAll(asList(callable, callable))
                 .stream()
-                .map(AbstractExecutorPropagatorTest::uncheck)
+                .map(AbstractExecutionContextAwareExecutorTest::uncheck)
                 .reduce((x, y) -> x + y)
                 .get(), is(value + value));
     }
@@ -100,7 +100,7 @@ public class ExecutorServicePropagatorTest extends AbstractExecutorPropagatorTes
         current().put(key, value);
         assertThat(propagator.invokeAll(asList(callable, callable), 10, TimeUnit.SECONDS)
                 .stream()
-                .map(AbstractExecutorPropagatorTest::uncheck)
+                .map(AbstractExecutionContextAwareExecutorTest::uncheck)
                 .reduce((x, y) -> x + y)
                 .get(), is(value + value));
     }

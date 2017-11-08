@@ -15,32 +15,32 @@
  */
 package com.github.enadim.spring.cloud.ribbon.predicate;
 
-import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContext;
-import com.github.enadim.spring.cloud.ribbon.api.RibbonRuleContextHolder;
+import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
+import com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
 /**
- * Filters Servers metadata attribute against a specific {@link #attributeKey} defined in {@link RibbonRuleContext}.
+ * Filters Servers metadata against a specific {@link #metadataKey} defined in {@link ExecutionContext}.
  *
  * @author Nadim Benabdenbi
  */
 @Slf4j
 public class AttributeMatcher extends DiscoveryEnabledServerPredicate {
     /**
-     * the attribute key to test against
+     * the metadata key to test against
      */
-    private final String attributeKey;
+    private final String metadataKey;
 
     /**
      * Sole Constructor.
      *
-     * @param attributeKey the attribute key.
+     * @param metadataKey the metadata key.
      */
-    public AttributeMatcher(String attributeKey) {
-        this.attributeKey = attributeKey;
+    public AttributeMatcher(String metadataKey) {
+        this.metadataKey = metadataKey;
     }
 
     /**
@@ -48,12 +48,12 @@ public class AttributeMatcher extends DiscoveryEnabledServerPredicate {
      */
     @Override
     protected boolean doApply(DiscoveryEnabledServer server) {
-        String expected = RibbonRuleContextHolder.current().get(attributeKey);
+        String expected = ExecutionContextHolder.current().get(metadataKey);
         Map<String, String> metadata = server.getInstanceInfo().getMetadata();
-        String actual = metadata.get(attributeKey);
+        String actual = metadata.get(metadataKey);
         boolean accept = (expected == null && actual == null) || (expected != null && expected.equals(actual));
         log.trace("Expected [{}] vs {}{} => {}",
-                attributeKey,
+                metadataKey,
                 expected,
                 server.getHostPort(),
                 metadata,

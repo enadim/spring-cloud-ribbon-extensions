@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Convenient Eureka instance properties access.
+ * Eureka instance properties.
  *
  * @author Nadim Benabdenbi
  */

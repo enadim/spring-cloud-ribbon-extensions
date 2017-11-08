@@ -17,8 +17,8 @@ package com.github.enadim.spring.cloud.ribbon.support.dynamic;
 
 import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest;
 import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest.TestApplicationBase.TestControllerConstants;
+import com.github.enadim.spring.cloud.ribbon.support.EnableExecutionContextPropagation;
 import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonDynamicMatcher;
-import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonContextPropagation;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -88,7 +88,7 @@ public abstract class AbstractDynamicMatcherSupportTest extends AbstractSupportT
     @SpringBootApplication
     @EnableAsync
     @EnableFeignClients(basePackageClasses = TestApplicationResource.class)
-    @EnableRibbonContextPropagation
+    @EnableExecutionContextPropagation
     @RibbonClients(defaultConfiguration = DynamicMatcherClientsConfig.class)
     public static class DynamicMatcherApplication extends TestApplicationBase {
         @Bean
