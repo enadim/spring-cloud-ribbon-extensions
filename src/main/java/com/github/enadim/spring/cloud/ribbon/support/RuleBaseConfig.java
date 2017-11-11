@@ -27,6 +27,7 @@ import com.netflix.loadbalancer.ServerListFilter;
 import com.netflix.loadbalancer.ServerListUpdater;
 import com.netflix.loadbalancer.ZoneAvoidancePredicate;
 import com.netflix.loadbalancer.ZoneAwareLoadBalancer;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -53,10 +54,11 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class RuleBaseConfig {
     /**
-     * The eureka instance properties.
+     * The eureka instance propagationProperties.
      */
     @Autowired
-    protected EurekaInstanceProperties eurekaInstanceProperties;
+    @Getter
+    private EurekaInstanceProperties eurekaInstanceProperties;
 
     /**
      * The load balancing rule definition.

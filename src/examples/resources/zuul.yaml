@@ -20,12 +20,12 @@ spring:
     enabled: false
 
 endpoints:
+  enabled: false
   jmx:
     enabled: false
     domain: zuul
   env:
     enabled: false
-
 
 eureka:
   server:
@@ -38,7 +38,7 @@ eureka:
   instance:
     metadataMap:
       instanceId: zuul
-      zone: zone2
+      zone: zone1
     lease-renewal-interval-in-seconds: 3
     lease-expiration-duration-in-seconds: 3
 
@@ -46,19 +46,14 @@ ribbon:
   eager-load:
     enabled: true
     clients:
-      - application1
-      - application2
+      - service1
+      - service2
   extensions:
     propagation:
       keys:
         - version
-        - zone
-    rule:
-      strict-matcher:
-        enabled: false
-      favorite-zone:
-        enabled: true
-        entryKey: zone
+        - favorite-zone
+        - upstream-zone
 
 zuul:
   ignoredServices: '*'
@@ -66,13 +61,13 @@ zuul:
   addProxyHeaders: true
   addHostHeader: true
   routes:
-    application1:
-      serviceId: application1
-      path: /application1/**
+    service1:
+      serviceId: service1
+      path: /service1/**
       stripPrefix: false
-    application2:
-      serviceId: application2
-      path: /application2/**
+    service2:
+      serviceId: service2
+      path: /service2/**
       stripPrefix: false
 
 hystrix:

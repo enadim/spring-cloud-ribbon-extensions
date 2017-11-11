@@ -30,8 +30,8 @@ import static org.mockito.Mockito.verify;
 
 public class ExecutorServicePropagatorTest extends AbstractExecutionContextAwareExecutorTest {
     private final ExecutorService delegate = mock(ExecutorService.class);
-    private final ExecutionContextAwareExecutorService mocked = new ExecutionContextAwareExecutorService(delegate);
-    private final ExecutionContextAwareExecutorService propagator = new ExecutionContextAwareExecutorService(newSingleThreadExecutor());
+    private final ContextAwareExecutorService mocked = new ContextAwareExecutorService(delegate);
+    private final ContextAwareExecutorService propagator = new ContextAwareExecutorService(newSingleThreadExecutor());
 
 
     @Test

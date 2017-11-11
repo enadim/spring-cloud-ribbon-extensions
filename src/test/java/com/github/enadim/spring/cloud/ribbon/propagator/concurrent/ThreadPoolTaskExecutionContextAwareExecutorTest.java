@@ -27,25 +27,25 @@ import static org.mockito.Mockito.verify;
 public class ThreadPoolTaskExecutionContextAwareExecutorTest extends AbstractExecutionContextAwareExecutorTest {
     private SchedulingTaskExecutor schedulingTaskExecutor = mock(SchedulingTaskExecutor.class);
     private AsyncListenableTaskExecutor asyncListenableTaskExecutor = mock(AsyncListenableTaskExecutor.class);
-    private ExecutionContextAwareThreadPoolTaskExecutor propagator = new ExecutionContextAwareThreadPoolTaskExecutor(asyncListenableTaskExecutor, schedulingTaskExecutor);
+    private ContextAwareThreadPoolTaskExecutor propagator = new ContextAwareThreadPoolTaskExecutor(asyncListenableTaskExecutor, schedulingTaskExecutor);
     private long period = 1;
 
     @Test
     public void execute() throws Exception {
         propagator.execute(runnable, period);
-        verify(schedulingTaskExecutor).execute(any(ExecutionContextAwareRunnable.class), eq(period));
+        verify(schedulingTaskExecutor).execute(any(ContextAwareRunnable.class), eq(period));
     }
 
     @Test
     public void submit() throws Exception {
         propagator.submit(runnable);
-        verify(schedulingTaskExecutor).submit(any(ExecutionContextAwareRunnable.class));
+        verify(schedulingTaskExecutor).submit(any(ContextAwareRunnable.class));
     }
 
     @Test
     public void submit1() throws Exception {
         propagator.submit(callable);
-        verify(schedulingTaskExecutor).submit(any(ExecutionContextAwareCallable.class));
+        verify(schedulingTaskExecutor).submit(any(ContextAwareCallable.class));
     }
 
     @Test
@@ -57,19 +57,19 @@ public class ThreadPoolTaskExecutionContextAwareExecutorTest extends AbstractExe
     @Test
     public void execute1() throws Exception {
         propagator.execute(runnable);
-        verify(asyncListenableTaskExecutor).execute(any(ExecutionContextAwareRunnable.class));
+        verify(asyncListenableTaskExecutor).execute(any(ContextAwareRunnable.class));
     }
 
     @Test
     public void submitListenable() throws Exception {
         propagator.submitListenable(runnable);
-        verify(asyncListenableTaskExecutor).submitListenable(any(ExecutionContextAwareRunnable.class));
+        verify(asyncListenableTaskExecutor).submitListenable(any(ContextAwareRunnable.class));
     }
 
     @Test
     public void submitListenable1() throws Exception {
         propagator.submitListenable(callable);
-        verify(asyncListenableTaskExecutor).submitListenable(any(ExecutionContextAwareCallable.class));
+        verify(asyncListenableTaskExecutor).submitListenable(any(ContextAwareCallable.class));
     }
 
 }

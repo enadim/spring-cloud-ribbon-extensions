@@ -24,17 +24,17 @@ import static org.mockito.Mockito.verify;
 
 public class AsyncListenableTaskExecutionContextAwareExecutorTest extends AbstractExecutionContextAwareExecutorTest {
     private final AsyncListenableTaskExecutor delegate = mock(AsyncListenableTaskExecutor.class);
-    private final ExecutionContextAwareAsyncListenableTaskExecutor propagator = new ExecutionContextAwareAsyncListenableTaskExecutor(delegate);
+    private final ContextAwareAsyncListenableTaskExecutor propagator = new ContextAwareAsyncListenableTaskExecutor(delegate);
 
     @Test
     public void submitRunnable() throws Exception {
         propagator.submitListenable(runnable);
-        verify(delegate).submitListenable(any(ExecutionContextAwareRunnable.class));
+        verify(delegate).submitListenable(any(ContextAwareRunnable.class));
     }
 
     @Test
     public void submitCallable() throws Exception {
         propagator.submitListenable(callable);
-        verify(delegate).submitListenable(any(ExecutionContextAwareCallable.class));
+        verify(delegate).submitListenable(any(ContextAwareCallable.class));
     }
 }

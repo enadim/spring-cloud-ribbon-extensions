@@ -16,7 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.propagator.hystrix;
 
 import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutionContextAwareCallable;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareCallable;
 import com.netflix.hystrix.Hystrix;
 import com.netflix.hystrix.HystrixThreadPoolKey;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
@@ -31,12 +31,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutionContextAwareCallable.wrap;
+import static com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareCallable.wrap;
 
 /**
  * Preserves the {@link ExecutionContext} on async {@link Hystrix} commands: see <a href="https://github.com/Netflix/Hystrix/wiki/Plugins#concurrency-strategy)">Histrix Wiki</a>..
  *
- * @see ExecutionContextAwareCallable
+ * @see ContextAwareCallable
  */
 public class ExecutionContextAwareHystrixStrategy extends HystrixConcurrencyStrategy {
     /**

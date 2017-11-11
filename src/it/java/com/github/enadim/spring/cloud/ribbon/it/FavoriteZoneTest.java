@@ -19,58 +19,81 @@ import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.http.HttpStatus.OK;
 
 public class FavoriteZoneTest extends AbstractTest {
 
     public FavoriteZoneTest() {
-        super("application1", "application12");
+        super("service1", "service1-zone1");
     }
 
     @Test
-    public void favorite_zone_route_to_zone1() {
+    public void should_choose_zone1_when_no_zone_is_requested() {
         given().log().uri().log().headers()
-                .header("zone", "zone1")
+                .param("useCase", "should_choose_zone1_when_no_zone_is_requested")
                 .when()
                 .get("/message")
                 .then()
                 .statusCode(OK.value())
-                .body(is("application12->application21"));
+                .body(is("service1-zone1->service2-zone1"));
     }
 
     @Test
-    public void favorite_zone_route_to_zone1_concurrent() {
-        parallelRun(this::favorite_zone_route_to_zone1);
+    public void should_choose_zone1_when_no_zone_is_requested_concurrent() {
+        parallelRun(this::should_choose_zone1_when_no_zone_is_requested);
     }
 
     @Test
-    public void favorite_zone_route_to_zone2() {
+    public void should_choose_any_zone_when_unknown_zone_is_requested() {
         given().log().uri().log().headers()
-                .header("zone", "zone2")
+                .header("favorite-zone", "zone99")
+                .param("useCase", "should_choose_any_zone_when_unknown_zone_is_requested")
                 .when()
                 .get("/message")
                 .then()
                 .statusCode(OK.value())
-                .body(is("application12->application22"));
+                .body(startsWith("service1-zone1->service2-zone"));
     }
 
     @Test
-    public void favorite_zone_route_to_zone2_concurrent() {
-        parallelRun(this::favorite_zone_route_to_zone2);
+    public void should_choose_any_zone_when_unknown_zone_is_requested_concurrent() {
+        parallelRun(this::should_choose_any_zone_when_unknown_zone_is_requested);
     }
 
     @Test
-    public void favorite_zone_route_to_same_zone() {
+    public void should_choose_zone1_when_zone1_is_requested() {
         given().log().uri().log().headers()
+                .header("favorite-zone", "zone1")
+                .param("useCase", "should_choose_zone1_when_zone1_is_requested")
                 .when()
                 .get("/message")
                 .then()
                 .statusCode(OK.value())
-                .body(is("application12->application22"));
+                .body(is("service1-zone1->service2-zone1"));
     }
 
     @Test
-    public void favorite_zone_route_to_same_zone_concurrent() {
-        parallelRun(this::favorite_zone_route_to_same_zone);
+    public void should_choose_zone1_when_zone1_is_requested_concurrent() {
+        parallelRun(this::should_choose_zone1_when_zone1_is_requested);
     }
+
+    @Test
+    public void should_choose_zone2_when_zone2_is_requested() {
+        given().log().uri().log().headers()
+                .header("favorite-zone", "zone2")
+                .param("useCase", "should_choose_zone2_when_zone2_is_requested")
+                .when()
+                .get("/message")
+                .then()
+                .statusCode(OK.value())
+                .body(is("service1-zone1->service2-zone2"));
+    }
+
+    @Test
+    public void should_choose_zone2_when_zone2_is_requested_concurrent() {
+        parallelRun(this::should_choose_zone2_when_zone2_is_requested);
+    }
+
+
 }

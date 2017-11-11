@@ -33,7 +33,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.withSettings;
 
 public class AbstractExecutionContextCopyTest {
-    private Set<String> keys = new HashSet<>(asList("1", "2"));
+    private Map<String, String> extraStaticEntries = new HashMap<String, String>() {
+        {
+            put("extra", "extra");
+        }
+    };
+    private Set<String> keys = new HashSet<>(asList("1", "2", "extra"));
     private Map<String, String> collector = new HashMap<>();
     private ExecutionContextCopyFunction<Map<String, String>> function = Map::put;
     @SuppressWarnings("unchecked")
@@ -42,12 +47,13 @@ public class AbstractExecutionContextCopyTest {
             = (AbstractExecutionContextCopy<Map<String, String>>)
             mock(AbstractExecutionContextCopy.class, withSettings()
                     .defaultAnswer(CALLS_REAL_METHODS)
-                    .useConstructor((Filter<String>) keys::contains, function));
+                    .useConstructor((Filter<String>) keys::contains, function, extraStaticEntries));
 
     @Test
     public void test_getters() {
         assertThat(propagator.getFilter(), is(notNullValue()));
         assertThat(propagator.getExecutionContextCopyFunction(), is(function));
+        assertThat(propagator.getExtraStaticEntries(), is(extraStaticEntries));
     }
 
     @Test
@@ -56,6 +62,7 @@ public class AbstractExecutionContextCopyTest {
         propagator.copy(collector);
         assertThat(collector.get("1"), is("1"));
         assertThat(collector.get("2"), is("2"));
+        assertThat(collector.get("extra"), is("extra"));
         assertThat(collector.containsKey("3"), is(false));
     }
 
@@ -72,7 +79,7 @@ public class AbstractExecutionContextCopyTest {
         AbstractExecutionContextCopy<Map<String, String>> propagator = (AbstractExecutionContextCopy<Map<String, String>>)
                 mock(AbstractExecutionContextCopy.class, withSettings()
                         .defaultAnswer(CALLS_REAL_METHODS)
-                        .useConstructor((Filter<String>) keys::contains, function));
+                        .useConstructor((Filter<String>) keys::contains, function, extraStaticEntries));
         propagator.copy(collector);
         assertThat(collector.containsKey("1"), is(false));
         assertThat(collector.get("2"), is("2"));

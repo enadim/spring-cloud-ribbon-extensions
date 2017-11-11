@@ -1,0 +1,63 @@
+server:
+  port: 8012
+  ssl:
+    enabled: false
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+
+spring:
+  application:
+    name: service1
+    default-domain: service1-zone2
+  cloud:
+    config:
+      enabled: false
+  jmx:
+    enabled: false
+
+endpoints:
+  enabled: false
+  jmx:
+    enabled: false
+    domain: service1-zone2
+  env:
+    enabled: false
+
+eureka:
+  server:
+    port: 8000
+  client:
+    enabled: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:${eureka.server.port}/eureka
+  instance:
+    metadataMap:
+      instanceId: service1-zone2
+      zone: zone2
+      version: 2.0.0
+    lease-renewal-interval-in-seconds: 3
+    lease-expiration-duration-in-seconds: 3
+
+ribbon:
+  eager-load:
+    enabled: true
+    clients:
+      - service2
+  extensions:
+    propagation:
+      keys:
+        - version
+        - favorite-zone
+        - upstream-zone
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false

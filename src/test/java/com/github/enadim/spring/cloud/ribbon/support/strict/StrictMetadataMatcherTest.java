@@ -15,11 +15,11 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support.strict;
 
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutionContextAwareExecutorService;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareExecutorService;
 import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest;
-import com.github.enadim.spring.cloud.ribbon.support.EnableExecutionContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
 import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonStrictMetadataMatcher;
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultHystrixContextPropagationStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesExecutionContextHystrixStrategy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -54,7 +54,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class StrictMetadataMatcherTest extends AbstractSupportTest {
 
     static {
-        DefaultHystrixContextPropagationStrategy.init();
+        PreservesExecutionContextHystrixStrategy.init();
     }
 
     @Test
@@ -90,13 +90,13 @@ public class StrictMetadataMatcherTest extends AbstractSupportTest {
 
     @SpringBootApplication
     @EnableFeignClients(basePackageClasses = TestApplicationResource.class)
-    @EnableExecutionContextPropagation
+    @EnableContextPropagation
     @RibbonClients(defaultConfiguration = DefaultRibbonClientsConfig.class,
             value = {@RibbonClient(name = TestApplicationResource.SERVICE_ID, configuration = StrictMatcherRibbonClientsConfig.class)})
     public static class StrictMatcherApplication extends TestApplicationBase {
         @Bean
         public ExecutorService executorService() {
-            return new ExecutionContextAwareExecutorService(Executors.newSingleThreadExecutor());
+            return new ContextAwareExecutorService(Executors.newSingleThreadExecutor());
         }
     }
 

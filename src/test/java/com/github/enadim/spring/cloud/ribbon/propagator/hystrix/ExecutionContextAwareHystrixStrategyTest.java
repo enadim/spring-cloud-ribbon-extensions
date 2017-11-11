@@ -15,7 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.hystrix;
 
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ExecutionContextAwareCallable;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareCallable;
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategy;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -54,6 +54,6 @@ public class ExecutionContextAwareHystrixStrategyTest {
 
     @Test
     public void wrapCallable() throws Exception {
-        MatcherAssert.assertThat(strategy.wrapCallable(null).getClass(), Matchers.equalTo(ExecutionContextAwareCallable.class));
+        MatcherAssert.assertThat(strategy.wrapCallable(null).getClass(), Matchers.equalTo(ContextAwareCallable.class));
     }
 }

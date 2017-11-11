@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 
 public class SchedulingTaskExecutionContextAwareExecutorTest extends AbstractExecutionContextAwareExecutorTest {
     private final SchedulingTaskExecutor delegate = mock(SchedulingTaskExecutor.class);
-    private final ExecutionContextAwareSchedulingTaskExecutor propagator = new ExecutionContextAwareSchedulingTaskExecutor(delegate);
+    private final ContextAwareSchedulingTaskExecutor propagator = new ContextAwareSchedulingTaskExecutor(delegate);
 
     @Test
     public void prefersShortLivedTasks() throws Exception {

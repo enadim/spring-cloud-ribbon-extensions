@@ -27,7 +27,7 @@ import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHold
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static org.mockito.Mockito.mock;
 
-public class AbstractExecutionContextAwareExecutorTest {
+public abstract class AbstractExecutionContextAwareExecutorTest {
     protected final String key = "key";
     protected final String value = "value";
     protected final AtomicBoolean holder = new AtomicBoolean();

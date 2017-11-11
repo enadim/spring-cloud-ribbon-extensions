@@ -29,8 +29,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
                 "eureka.instance.metadataMap.zone=zone1",
                 "ribbon.eager-load.enabled=true",
                 "ribbon.eager-load.clients[0]=application2",
-                "ribbon.extensions.propagation.keys[0]=favorite-zone",
-                "ribbon.extensions.client.application.rule.favorite-zone.key=favorite-zone"}
+                "ribbon.extensions.propagation.executor.excludes[0]=taskScheduler",
+                "ribbon.extensions.propagation.keys[0]=my-favorite-zone",
+                "ribbon.extensions.client.application.rule.favorite-zone.key=my-favorite-zone"}
 )
 public class FavoriteZoneGlobalConfigurationTest extends AbstractFavoriteZoneSupportTest {
 

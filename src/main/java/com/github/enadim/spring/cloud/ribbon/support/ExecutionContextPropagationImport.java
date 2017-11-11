@@ -22,16 +22,30 @@ import org.springframework.core.type.AnnotationMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.StringUtils.join;
+import static org.apache.commons.lang.StringUtils.lastIndexOfAny;
+import static org.apache.commons.lang.StringUtils.splitByCharacterTypeCamelCase;
+
 /**
- * Registers the propagation strategies defined within {@link EnableExecutionContextPropagation}.
+ * Registers the propagation strategies defined within {@link EnableContextPropagation}.
  *
  * @author Nadim Benabdenbi
  */
 @Configuration
 @Slf4j
 public class ExecutionContextPropagationImport implements ImportSelector {
+    /**
+     * class name separators
+     */
+    private static final String[] CLASS_NAME_SEPARATORS = new String[]{"$", "."};
+    /**
+     * class name separators
+     */
+    private static final List<String> ATTRIBUTES = asList("inboundHttpRequest", "feign", "executor", "zuul", "hystrix", "jms", "stomp");
 
     /**
      * {@inheritDoc}
@@ -39,44 +53,27 @@ public class ExecutionContextPropagationImport implements ImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata metadata) {
         List<String> imports = new ArrayList<>();
-        Map<String, Object> attributes = metadata.getAnnotationAttributes(EnableExecutionContextPropagation.class.getName(), true);
+        Map<String, Object> attributes = metadata.getAnnotationAttributes(EnableContextPropagation.class.getName(), true);
         if (attributes != null) {
-            if ((boolean) attributes.getOrDefault("inboundHttpRequest", false)) {
-                String strategy = (String) attributes.get("inboundHttpRequestStrategy");
-                imports.add(strategy);
-                log.info("Context propagation enabled inbound http requests using {}.", strategy);
-            }
-            if ((boolean) attributes.getOrDefault("feign", false)) {
-                String strategy = (String) attributes.get("feignStrategy");
-                imports.add(strategy);
-                log.info("Context propagation enabled for feign using {}.", strategy);
-            }
-            if ((boolean) attributes.getOrDefault("executor", false)) {
-                String strategy = (String) attributes.get("executorStrategy");
-                imports.add(strategy);
-                log.info("Context propagation enabled for executors using {}.", strategy);
-            }
-            if ((boolean) attributes.getOrDefault("zuul", false)) {
-                String strategy = (String) attributes.get("zuulStrategy");
-                imports.add(strategy);
-                log.info("Context propagation enabled for zuul using {}.", strategy);
-            }
-            if ((boolean) attributes.getOrDefault("hystrix", false)) {
-                String strategy = (String) attributes.get("hystrixStrategy");
-                imports.add(strategy);
-                log.info("Context propagation enabled for hystrix using {}.", strategy);
-            }
-            if ((boolean) attributes.getOrDefault("jms", false)) {
-                String strategy = (String) attributes.get("jmsStrategy");
-                imports.add(strategy);
-                log.info("Context propagation enabled for jms using {}.", strategy);
-            }
-            if ((boolean) attributes.getOrDefault("stomp", false)) {
-                String strategy = (String) attributes.get("stompStrategy");
-                imports.add(strategy);
-                log.info("Context propagation enabled for stomp using {}.", strategy);
-            }
+            ATTRIBUTES.forEach(x -> importStrategy(imports, attributes, x));
         }
         return imports.toArray(new String[imports.size()]);
+    }
+
+    /**
+     * Adds the strategy to the import list when enabled.
+     *
+     * @param imports    the import list
+     * @param attributes the annotation attributes
+     * @param name       the strategy name
+     */
+    private void importStrategy(List<String> imports, Map<String, Object> attributes, String name) {
+        if ((boolean) attributes.getOrDefault(name, false)) {
+            String strategy = (String) attributes.get(new StringBuilder(name).append("Strategy").toString());
+            imports.add(strategy);
+            log.info("Context propagation: importing {} strategy [{}].",
+                    join(splitByCharacterTypeCamelCase(name), ' ').toLowerCase(Locale.ENGLISH),
+                    strategy.substring(lastIndexOfAny(strategy, CLASS_NAME_SEPARATORS) + 1));
+        }
     }
 }

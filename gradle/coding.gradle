@@ -23,11 +23,12 @@ pmd {
 checkstyle {
     sourceSets = [project.sourceSets.main]
     toolVersion "8.4"
+    ignoreFailures = project.hasProperty('ignoreFailures')
 }
 tasks.withType(Checkstyle) {
     reports {
-        xml.enabled false
-        html.enabled true
+        xml.enabled true
+        html.enabled false
     }
 }
 check.dependsOn checkstyleMain

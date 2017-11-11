@@ -26,42 +26,42 @@ import static org.mockito.Mockito.verify;
 
 public class TaskSchedulerPropagatorTest extends AbstractExecutionContextAwareExecutorTest {
     private TaskScheduler delegate = mock(TaskScheduler.class);
-    private ExecutionContextAwareTaskScheduler propagator = new ExecutionContextAwareTaskScheduler(delegate);
+    private ContextAwareTaskScheduler propagator = new ContextAwareTaskScheduler(delegate);
 
 
     @Test
     public void scheduleTrigger() throws Exception {
         propagator.schedule(runnable, trigger);
-        verify(delegate).schedule(any(ExecutionContextAwareRunnable.class), any(Trigger.class));
+        verify(delegate).schedule(any(ContextAwareRunnable.class), any(Trigger.class));
     }
 
     @Test
     public void scheduleDate() throws Exception {
         propagator.schedule(runnable, date);
-        verify(delegate).schedule(any(ExecutionContextAwareRunnable.class), eq(date));
+        verify(delegate).schedule(any(ContextAwareRunnable.class), eq(date));
     }
 
     @Test
     public void scheduleAtFixedRateWithDate() throws Exception {
         propagator.scheduleAtFixedRate(runnable, date, period);
-        verify(delegate).scheduleAtFixedRate(any(ExecutionContextAwareRunnable.class), eq(date), eq(period));
+        verify(delegate).scheduleAtFixedRate(any(ContextAwareRunnable.class), eq(date), eq(period));
     }
 
     @Test
     public void scheduleAtFixedRate() throws Exception {
         propagator.scheduleAtFixedRate(runnable, period);
-        verify(delegate).scheduleAtFixedRate(any(ExecutionContextAwareRunnable.class), eq(period));
+        verify(delegate).scheduleAtFixedRate(any(ContextAwareRunnable.class), eq(period));
     }
 
     @Test
     public void scheduleWithFixedDelayWithDate() throws Exception {
         propagator.scheduleWithFixedDelay(runnable, date, period);
-        verify(delegate).scheduleWithFixedDelay(any(ExecutionContextAwareRunnable.class), eq(date), eq(period));
+        verify(delegate).scheduleWithFixedDelay(any(ContextAwareRunnable.class), eq(date), eq(period));
     }
 
     @Test
     public void scheduleWithFixedDelay() throws Exception {
         propagator.scheduleWithFixedDelay(runnable, period);
-        verify(delegate).scheduleWithFixedDelay(any(ExecutionContextAwareRunnable.class), eq(period));
+        verify(delegate).scheduleWithFixedDelay(any(ContextAwareRunnable.class), eq(period));
     }
 }

@@ -18,6 +18,7 @@ package com.github.enadim.spring.cloud.ribbon.context;
 import org.junit.After;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -31,6 +32,13 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 
 public class ExecutionContextHolderTest {
+
+    @Test
+    public void testConstructor() throws Exception {
+        Constructor<?> constructor = ExecutionContextHolder.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
 
     @Test
     public void testCurrent() throws Exception {

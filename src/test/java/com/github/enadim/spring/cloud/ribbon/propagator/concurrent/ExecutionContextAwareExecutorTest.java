@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 public class ExecutionContextAwareExecutorTest extends AbstractExecutionContextAwareExecutorTest {
 
-    private final ExecutionContextAwareExecutor propagator = new ExecutionContextAwareExecutor(newSingleThreadExecutor());
+    private final ContextAwareExecutor propagator = new ContextAwareExecutor(newSingleThreadExecutor());
     protected final String key = "key";
     protected final String value = "value";
     protected final AtomicBoolean holder = new AtomicBoolean();

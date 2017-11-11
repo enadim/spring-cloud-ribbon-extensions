@@ -16,48 +16,56 @@
 package com.github.enadim.spring.cloud.ribbon.context;
 
 /**
- * The Ribbon rule context holder.
+ * Execution CONTEXT holder.
  *
  * @author Nadim Benabdenbi
  */
-public interface ExecutionContextHolder {
+public final class ExecutionContextHolder {
+
 
     /**
      * Stores the {@link ExecutionContext} for current thread.
      */
-    ThreadLocal<ExecutionContext> CONTEXT = new InheritableThreadLocal<ExecutionContext>() {
+    private static final ThreadLocal<ExecutionContext> CONTEXT = new InheritableThreadLocal<ExecutionContext>() {
         @Override
         protected ExecutionContext initialValue() {
             return new DefaultExecutionContext();
         }
     };
 
+
     /**
-     * Retrieves the current context
-     *
-     * @return the current context
+     * utility class should not be instantiated
      */
-    static ExecutionContext current() {
+    private ExecutionContextHolder() {
+    }
+
+    /**
+     * Retrieves the current CONTEXT.
+     *
+     * @return the current CONTEXT.
+     */
+    public static ExecutionContext current() {
         return CONTEXT.get();
     }
 
     /**
-     * switches the current context to the provided one
+     * switches the current CONTEXT to the provided one.
      *
-     * @param context the current context replacement
-     * @return the current context
+     * @param context the current CONTEXT replacement.
+     * @return the current CONTEXT.
      */
-    static ExecutionContext switchTo(ExecutionContext context) {
-        CONTEXT.set(context);
+    public static ExecutionContext switchTo(ExecutionContext context) {
+        ExecutionContextHolder.CONTEXT.set(context);
         return context;
     }
 
     /**
-     * removes the current context.
+     * removes the current CONTEXT.
      *
-     * @return the context before removal
+     * @return the CONTEXT that have been removed.
      */
-    static ExecutionContext remove() {
+    public static ExecutionContext remove() {
         ExecutionContext current = CONTEXT.get();
         CONTEXT.remove();
         return current;

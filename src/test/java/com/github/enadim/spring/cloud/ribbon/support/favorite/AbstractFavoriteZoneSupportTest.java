@@ -16,7 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.support.favorite;
 
 import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest;
-import com.github.enadim.spring.cloud.ribbon.support.EnableExecutionContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
 import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonFavoriteZone;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +25,9 @@ import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -85,13 +87,18 @@ public abstract class AbstractFavoriteZoneSupportTest extends AbstractSupportTes
     @SpringBootApplication
     @EnableAsync
     @EnableFeignClients(basePackageClasses = TestApplicationResource.class)
-    @EnableExecutionContextPropagation
+    @EnableContextPropagation
     @RibbonClients(defaultConfiguration = DefaultRibbonClientsConfig.class,
             value = {@RibbonClient(name = TestApplicationResource.SERVICE_ID, configuration = FavoriteZoneRibbonClientsConfig.class)})
     public static class FavoriteZoneApplication extends TestApplicationBase {
         @Bean
         public ExecutorService executorService() {
             return Executors.newSingleThreadExecutor();
+        }
+
+        @Bean
+        public TaskScheduler taskScheduler() {
+            return new ThreadPoolTaskScheduler();
         }
     }
 

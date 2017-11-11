@@ -1,3 +1,8 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="com.netflix" level="WARN"/>
+    <logger name="com.netflix.loadbalancer" level="INFO"/>
+    <logger name="com.github.enadim.spring" level="TRACE"/>
 </configuration>

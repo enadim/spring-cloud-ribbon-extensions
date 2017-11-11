@@ -23,6 +23,8 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 
@@ -46,14 +48,23 @@ public class AbstractExecutionContextCopy<T> {
     private final ExecutionContextCopyFunction<T> executionContextCopyFunction;
 
     /**
+     * The extra static entries to copy.
+     */
+    private final Map<String, String> extraStaticEntries;
+
+    /**
      * Sole Constructor.
      *
      * @param filter                       the context entry key filter
      * @param executionContextCopyFunction the execution context copy function.
+     * @param extraStaticEntries           The extra static entries to copy.
      */
-    public AbstractExecutionContextCopy(@NotNull Filter<String> filter, @NotNull ExecutionContextCopyFunction<T> executionContextCopyFunction) {
+    public AbstractExecutionContextCopy(@NotNull Filter<String> filter,
+                                        @NotNull ExecutionContextCopyFunction<T> executionContextCopyFunction,
+                                        @NotNull Map<String, String> extraStaticEntries) {
         this.filter = filter;
         this.executionContextCopyFunction = executionContextCopyFunction;
+        this.extraStaticEntries = extraStaticEntries;
     }
 
     /**
@@ -64,8 +75,20 @@ public class AbstractExecutionContextCopy<T> {
      */
     protected List<Map.Entry<String, String>> copy(T t) {
         List<Map.Entry<String, String>> result = new ArrayList<>();
-        current().entrySet()
-                .stream()
+        copy(t, current().entrySet(), result);
+        copy(t, extraStaticEntries.entrySet(), result);
+        return result;
+    }
+
+    /**
+     * Copies the entry set that matches {@link #filter} using the {@link #executionContextCopyFunction}.
+     *
+     * @param t        the target type of the copy.
+     * @param entrySet the entry set to copy
+     * @param result   the copied entries
+     */
+    private void copy(T t, Set<Entry<String, String>> entrySet, List<Map.Entry<String, String>> result) {
+        entrySet.stream()
                 .filter(x -> filter.accept(x.getKey()))
                 .forEach(x -> {
                     try {
@@ -75,7 +98,6 @@ public class AbstractExecutionContextCopy<T> {
                         log.debug("Failed to copy {}.", x, e);
                     }
                 });
-        return result;
     }
 
     /**

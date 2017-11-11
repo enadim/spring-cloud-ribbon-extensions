@@ -42,4 +42,4 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) || echo "Failed to upload coverage reports to Codecov!"
-# - ./gradlew uploadArchives -PossrhUsername=$ossrhUsername -PossrhPassword=$ossrhPassword || echo "Failed to upload archives!"
+  - ./gradlew uploadArchives -PossrhUsername=$ossrhUsername -PossrhPassword=$ossrhPassword || echo "Failed to upload archives!"

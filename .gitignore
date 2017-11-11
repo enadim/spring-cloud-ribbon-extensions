@@ -8,7 +8,7 @@ gradle-app.setting
 
 # ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
-!gradle-wrapper.properties
+!gradle-wrapper.propagationProperties
 !gradlew
 !gradlew.bat
 
@@ -69,8 +69,8 @@ atlassian-ide-plugin.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
+crashlytics.propagationProperties
+crashlytics-build.propagationProperties
 
 
 ### Eclipse template
@@ -83,7 +83,7 @@ tmp/
 *.bak
 *.swp
 *~.nib
-local.properties
+local.propagationProperties
 .settings/
 .loadpath
 

@@ -15,13 +15,13 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultConnectionFactoryPropagationStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultExecutorPropagationStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultFeignPropagationStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultHystrixContextPropagationStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultInboundHttpRequestPropagationStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultStompPropagationStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.ExecutionContextPropagationConfig.DefaultZuulPropagationStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesExecutionContextExecutorStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesExecutionContextHystrixStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesHeadersInboundHttpRequestStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesHttpHeadersFeignStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesHttpHeadersZuulStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesJmsMessagePropertiesStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesStompHeadersStrategy;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.core.type.AnnotationMetadata;
@@ -43,24 +43,24 @@ public class ExecutionContextPropagationImportTest {
     public void selectImports() throws Exception {
         assertThat(imports.selectImports(metadata).length, is(0));
 
-        when(metadata.getAnnotationAttributes(EnableExecutionContextPropagation.class.getName(), true)).thenReturn(null);
+        when(metadata.getAnnotationAttributes(EnableContextPropagation.class.getName(), true)).thenReturn(null);
         assertThat(imports.selectImports(metadata).length, is(0));
 
         assertThat(imports.selectImports(metadata).length, is(0));
 
         List<String> actual = Arrays.asList(imports.selectImports(new SimpleMetadataReaderFactory().getMetadataReader(Annotated.class.getName()).getAnnotationMetadata()));
         assertThat(actual, Matchers.containsInAnyOrder(
-                DefaultInboundHttpRequestPropagationStrategy.class.getName(),
-                DefaultFeignPropagationStrategy.class.getName(),
-                DefaultExecutorPropagationStrategy.class.getName(),
-                DefaultZuulPropagationStrategy.class.getName(),
-                DefaultHystrixContextPropagationStrategy.class.getName(),
-                DefaultConnectionFactoryPropagationStrategy.class.getName(),
-                DefaultStompPropagationStrategy.class.getName()
+                PreservesHeadersInboundHttpRequestStrategy.class.getName(),
+                PreservesHttpHeadersFeignStrategy.class.getName(),
+                PreservesExecutionContextExecutorStrategy.class.getName(),
+                PreservesHttpHeadersZuulStrategy.class.getName(),
+                PreservesExecutionContextHystrixStrategy.class.getName(),
+                PreservesJmsMessagePropertiesStrategy.class.getName(),
+                PreservesStompHeadersStrategy.class.getName()
         ));
     }
 
-    @EnableExecutionContextPropagation
+    @EnableContextPropagation
     static class Annotated {
     }
 

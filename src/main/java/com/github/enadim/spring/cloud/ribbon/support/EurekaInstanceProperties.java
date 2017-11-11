@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Eureka instance properties.
+ * Eureka instance propagationProperties.
  *
  * @author Nadim Benabdenbi
  */

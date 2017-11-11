@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ScheduledExecutorServicePropagatorTest extends AbstractExecutionContextAwareExecutorTest {
-    private final ExecutionContextAwareScheduledExecutorService propagator = new ExecutionContextAwareScheduledExecutorService(newScheduledThreadPool(4));
+    private final ContextAwareScheduledExecutorService propagator = new ContextAwareScheduledExecutorService(newScheduledThreadPool(4));
 
     @Test
     public void scheduleRunnable() throws Exception {

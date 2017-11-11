@@ -15,7 +15,6 @@
  */
 package com.github.enadim.spring.cloud.ribbon.it;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.restassured.RestAssured;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,9 +26,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.any;
 
 public abstract class AbstractTest {
     protected int maxConcurrentTasks = 10;
@@ -43,25 +39,10 @@ public abstract class AbstractTest {
     }
 
     @Before
-    @HystrixCommand
     public final void abstractBefore() {
         RestAssured.baseURI = "http://localhost";
-        RestAssured.basePath = "";
-        /*Arrays.asList("application21", "application22", "application11", "application12").forEach(x -> {
-                    RestAssured.port = getApplicationPort(x);
-                    given().when()
-                            .get("message")
-                            .then()
-                            .statusCode(any(Integer.class));
-                }
-        );*/
-        RestAssured.port = getApplicationPort(applicationName);
         RestAssured.basePath = basePath;
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        given().when()
-                .get("message")
-                .then()
-                .statusCode(any(Integer.class));
+        RestAssured.port = getApplicationPort(applicationName);
     }
 
     private int getApplicationPort(String name) {
@@ -70,14 +51,18 @@ public abstract class AbstractTest {
                 return 8000;
             case "zuul":
                 return 8001;
-            case "application11":
+            case "service1-zone1":
                 return 8011;
-            case "application12":
+            case "service1-zone2":
                 return 8012;
-            case "application21":
+            case "service1-developer":
+                return 8019;
+            case "service2-zone1":
                 return 8021;
-            case "application22":
+            case "service2-zone2":
                 return 8022;
+            case "service3-zone1":
+                return 8031;
             default:
                 throw new IllegalArgumentException(name);
         }

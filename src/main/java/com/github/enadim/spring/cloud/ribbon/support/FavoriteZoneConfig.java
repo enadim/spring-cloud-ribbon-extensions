@@ -16,8 +16,8 @@
 package com.github.enadim.spring.cloud.ribbon.support;
 
 import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
-import com.github.enadim.spring.cloud.ribbon.predicate.FavoriteZoneMatcher;
-import com.github.enadim.spring.cloud.ribbon.predicate.ZoneMatcher;
+import com.github.enadim.spring.cloud.ribbon.predicate.DynamicZoneMatcher;
+import com.github.enadim.spring.cloud.ribbon.predicate.ZoneAffinityMatcher;
 import com.github.enadim.spring.cloud.ribbon.rule.PredicateBasedRuleSupport;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.AvailabilityPredicate;
@@ -44,8 +44,8 @@ import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
  * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonFavoriteZone}
  * <p>Favorite Rule Definition
  * <ul>
- * <li>Start applying {@link FavoriteZoneMatcher} : choose a server having the same name as the favorite name defined in the {@link ExecutionContext}.
- * <li>Fallbacks to {@link ZoneMatcher}: choose a server in the same name as the current instance.
+ * <li>Start applying {@link DynamicZoneMatcher} : choose a server having the same name as the favorite name defined in the {@link ExecutionContext}.
+ * <li>Fallbacks to {@link ZoneAffinityMatcher}: choose a server in the same name as the current instance.
  * <li>Fallbacks to {@link ZoneAvoidancePredicate} &amp; {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to any server
@@ -64,8 +64,10 @@ import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
 @Slf4j
 public class FavoriteZoneConfig extends RuleBaseConfig {
 
-    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.favorite-zone.key:${ribbon.extensions.rule.favorite-zone.key:zone}}")
+    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.favorite-zone.key:${ribbon.extensions.rule.favorite-zone.key:favorite-zone}}")
     private String favoriteZoneKey;
+    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.upstream-zone.key:${ribbon.extensions.rule.upstream-zone.key:upstream-zone}}")
+    private String upstreamZoneKey;
 
     /**
      * Favorite zone rule bean.
@@ -78,11 +80,13 @@ public class FavoriteZoneConfig extends RuleBaseConfig {
         PredicateBasedRuleSupport rule = new PredicateBasedRuleSupport();
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(rule, clientConfig);
         ZoneAvoidancePredicate zoneAvoidancePredicate = new ZoneAvoidancePredicate(rule, clientConfig);
-        ZoneMatcher zoneMatcher = new ZoneMatcher(eurekaInstanceProperties.getZone());
-        FavoriteZoneMatcher favoriteZoneMatcher = new FavoriteZoneMatcher(favoriteZoneKey);
+        ZoneAffinityMatcher zoneAffinityMatcher = new ZoneAffinityMatcher(getEurekaInstanceProperties().getZone());
+        DynamicZoneMatcher dynamicZoneMatcher = new DynamicZoneMatcher(favoriteZoneKey);
+        DynamicZoneMatcher upstreamZoneMatcher = new DynamicZoneMatcher(upstreamZoneKey);
         log.info("Favorite zone enabled for client [{}] using context key [{}].", clientConfig.getClientName(), favoriteZoneKey);
-        return withPredicates(favoriteZoneMatcher)
-                .addFallbackPredicate(withPredicates(zoneMatcher).build())
+        return withPredicates(dynamicZoneMatcher)
+                .addFallbackPredicate(withPredicates(zoneAffinityMatcher).build())
+                .addFallbackPredicate(withPredicates(upstreamZoneMatcher).build())
                 .addFallbackPredicate(withPredicates(zoneAvoidancePredicate, availabilityPredicate).build())
                 .addFallbackPredicate(availabilityPredicate)
                 .addFallbackPredicate(alwaysTrue())

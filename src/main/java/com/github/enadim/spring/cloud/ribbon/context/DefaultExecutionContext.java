@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentMap;
 import static java.util.Collections.unmodifiableMap;
 
 /**
- * Execution context that is based on {@link HashMap} which can be converted to a {@link ConcurrentHashMap} when concurrent access is needed.
+ * Execution context that stores entries on a {@link HashMap}. Switches the {@link HashMap} store to {@link ConcurrentHashMap} store on {@link #enableConcurrency()}.
  *
  * @author Nadim Benabdenbi
  */

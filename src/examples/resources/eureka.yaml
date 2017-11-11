@@ -28,6 +28,8 @@ endpoints:
 
 eureka:
   client:
+    enabled: true
+    register-with-eureka: false
     serviceUrl:
       defaultZone: http://localhost:${server.port}/eureka
   instance:

@@ -1,4 +1,4 @@
-release{
+release {
     git {
         requireBranch = ''
     }
@@ -8,70 +8,100 @@ release{
 class ReplaceVersionInFile extends DefaultTask {
     @Input
     String fileName
+
     @TaskAction
     def build() {
         def newVersion = ''
-        new File('gradle.properties').eachLine { line ->
+        new File('gradle.properties').eachLine('UTF-8') { line ->
             if( newVersion.isEmpty() && line.startsWith('version=')){
                 newVersion = line.substring('version='.length())
             }
         }
         println 'Setting new version ' + newVersion + ' on file ' + fileName
         def file = new File(fileName)
-        def newContent = file.text.replaceAll('[0-9]+\\.[0-9]+\\.[0-9]+(-SNAPSHOT)?', newVersion)
-        file.text = newContent
+        def newContent = file.getText('UTF-8').replaceAll('[0-9]+\\.[0-9]+\\.[0-9]+(-SNAPSHOT)?', newVersion)
+        file.setText(newContent,'UTF-8')
     }
 }
+
 class ReadMeBranch extends DefaultTask {
     @Input
     String targetBranch
+
     @TaskAction
     def build() {
         println 'README.md: switching branch to ' + targetBranch
+        def version = ''
+        new File('gradle.properties').eachLine('UTF-8') { line ->
+            if( version.isEmpty() && line.startsWith('version=')){
+                version = line.substring('version='.length())
+            }
+        }
+        def isReleaseVersion=!version.endsWith("SNAPSHOT")
         def content = ''
+        def replace = ''
         def readmeBranch = ''
         def readme = new File('README.md')
-        readme.eachLine { line ->
-            if( readmeBranch.isEmpty() && line.contains('branch=')){
-                readmeBranch = line.substring(line.indexOf('branch=')+'branch='.length())
-                readmeBranch = readmeBranch.substring(0,readmeBranch.indexOf(')'))
+        readme.eachLine('UTF-8') { line ->
+            if (readmeBranch.isEmpty() && line.contains('branch=')) {
+                readmeBranch = line.substring(line.indexOf('branch=') + 'branch='.length())
+                readmeBranch = readmeBranch.substring(0, readmeBranch.indexOf(')'))
             }
         }
         readme = new File('README.md')
-        readme.eachLine { line ->
-            if(line.startsWith('[![')){
-                content += line.replaceAll(readmeBranch,targetBranch) + '\n'
-            }else{
+        readme.eachLine('UTF-8') { line ->
+            if (line.startsWith('[![')) {
+                replace = line.replaceAll(readmeBranch, targetBranch)
+                if (replace.contains("SonarCloud")) {
+                    if (targetBranch == 'master') {
+                        replace = replace.replaceAll(':' + targetBranch, '')
+                    } else if(replace.contains('&metric') && !replace.contains(':' + targetBranch + '&metric')) {
+                        replace = replace.replaceAll('&metric', ':' + targetBranch + '&metric')
+                    }
+                }
+                if (isReleaseVersion && replace.contains('Sonatype Snapshots')) {
+                    replace = replace.replaceAll('Sonatype Snapshots', 'Maven Central')
+                    replace = replace.replaceAll('nexus/s/https/oss.sonatype.org', 'maven-central/v')
+                    replace = replace.replaceAll('https://oss.sonatype.org/#nexus-search;gav', 'http://search.maven.org/#artifactdetails')
+                    replace = replace.replaceAll('~', '|')
+                }
+                if (!isReleaseVersion && replace.contains("Maven Central")) {
+                    replace = replace.replaceAll('Maven Central', 'Sonatype Snapshots')
+                    replace = replace.replaceAll('maven-central/v', 'nexus/s/https/oss.sonatype.org/#artifactdetails')
+                    replace = replace.replaceAll('http://search.maven.org/#artifactdetails', 'https://oss.sonatype.org/#nexus-search;gav')
+                    replace = replace.replaceAll('\\|', '~')
+                }
+                content += replace + '\n'
+            } else {
                 content += line + '\n'
             }
         }
-        readme.text = content
+        readme.setText(content,'UTF-8')
     }
 }
-task updateReadMeProjectReleaseVersion(type: ReplaceVersionInFile){
+
+task updateReadMeProjectVersion(type: ReplaceVersionInFile) {
     fileName = 'README.md'
 }
-task updateSonarProjectReleaseVersion(type: ReplaceVersionInFile){
+updateReadMeProjectVersion.group = 'release'
+task updateSonarProjectVersion(type: ReplaceVersionInFile) {
     fileName = 'sonar-project.properties'
 }
-task updateReadMeProjectVersion(type: ReplaceVersionInFile){
-    fileName = 'README.md'
+updateReadMeProjectVersion.group = 'release'
+task ReadMeForMaster(type: ReadMeBranch) {
+    targetBranch = 'master'
 }
-task updateSonarProjectVersion(type: ReplaceVersionInFile){
-    fileName = 'sonar-project.properties'
-}
-task ReadMeForMaster(type:ReadMeBranch){
-    targetBranch =  'master'
-}
-task ReadMeForCurrent(type:ReadMeBranch){
+ReadMeForMaster.group = 'release'
+task ReadMeForCurrent(type: ReadMeBranch) {
     targetBranch = gitBranchName
 }
+ReadMeForCurrent.group = 'release'
 commitNewVersion.dependsOn ReadMeForCurrent
 commitNewVersion.dependsOn updateSonarProjectVersion
 commitNewVersion.dependsOn updateReadMeProjectVersion
 runBuildTasks.dependsOn ReadMeForMaster
-runBuildTasks.dependsOn updateReadMeProjectReleaseVersion
-runBuildTasks.dependsOn updateSonarProjectReleaseVersion
+runBuildTasks.dependsOn updateReadMeProjectVersion
+runBuildTasks.dependsOn updateSonarProjectVersion
 afterReleaseBuild.dependsOn uploadArchives
 
 uploadArchives {
@@ -79,10 +109,10 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
             repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-                authentication( userName: rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : '', password: rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : '')
+                authentication(userName: rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : '', password: rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : '')
             }
             snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-                authentication( userName: rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : '', password: rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : '')
+                authentication(userName: rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : '', password: rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : '')
             }
             pom.project {
                 name archivesBaseName

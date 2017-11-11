@@ -15,7 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import com.github.enadim.spring.cloud.ribbon.predicate.DynamicMatcher;
+import com.github.enadim.spring.cloud.ribbon.predicate.DynamicMetadataMatcher;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Configuration;
  * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonDynamicMatcher}.
  *
  * @author Nadim Benabdenbi
- * @see DynamicMatcher
+ * @see DynamicMetadataMatcher
  */
 @Configuration
 @ConditionalOnClass(DiscoveryEnabledNIWSServerList.class)
@@ -51,11 +51,11 @@ public class DynamicMatcherConfig extends RuleBaseConfig {
 
     /**
      * @param clientConfig the client config
-     * @return an instance of {@link DynamicMatcher}
+     * @return an instance of {@link DynamicMetadataMatcher}
      */
     @Bean
-    public DynamicMatcher dynamicMatcher(IClientConfig clientConfig) {
-        log.info("Enabled for client [{}] on dynamic key[{}].", clientConfig.getClientName(), key);
-        return new DynamicMatcher(key);
+    public DynamicMetadataMatcher dynamicMatcher(IClientConfig clientConfig) {
+        log.info("Dynamic matcher rule enabled for client [{}] using dynamic key[{}].", clientConfig.getClientName(), key);
+        return new DynamicMetadataMatcher(key);
     }
 }

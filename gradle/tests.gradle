@@ -17,6 +17,6 @@ integrationTest {
     ignoreFailures = project.hasProperty('ignoreFailures')
     doFirst {
          //wait for the server to startup effectively (open port is too late)
-         sleep(2 * 1000)
+         sleep(5 * 1000)
     }
 }
