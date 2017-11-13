@@ -79,7 +79,14 @@ class ReadMeBranch extends DefaultTask {
         readme.setText(content,'UTF-8')
     }
 }
-
+task updateReadMeProjectReleaseVersion(type: ReplaceVersionInFile){
+    fileName = 'README.md'
+}
+updateReadMeProjectReleaseVersion.group = 'release'
+task updateSonarProjectReleaseVersion(type: ReplaceVersionInFile){
+    fileName = 'sonar-project.properties'
+}
+updateSonarProjectReleaseVersion.group = 'release'
 task updateReadMeProjectVersion(type: ReplaceVersionInFile) {
     fileName = 'README.md'
 }
@@ -100,8 +107,8 @@ commitNewVersion.dependsOn ReadMeForCurrent
 commitNewVersion.dependsOn updateSonarProjectVersion
 commitNewVersion.dependsOn updateReadMeProjectVersion
 runBuildTasks.dependsOn ReadMeForMaster
-runBuildTasks.dependsOn updateReadMeProjectVersion
-runBuildTasks.dependsOn updateSonarProjectVersion
+runBuildTasks.dependsOn updateReadMeProjectReleaseVersion
+runBuildTasks.dependsOn updateSonarProjectReleaseVersion
 afterReleaseBuild.dependsOn uploadArchives
 
 uploadArchives {
