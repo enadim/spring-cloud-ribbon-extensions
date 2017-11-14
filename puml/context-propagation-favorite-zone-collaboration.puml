@@ -1,0 +1,118 @@
+@startuml
+title **Favorite Zone & Context Propagation**\n<size:12><&chevron-right>Eureka service directory enabled\n<size:12><&chevron-right>Zuul routing enabled\n<size:12><&chevron-right>Flow:service1->service2->service3->service4
+skinparam interface {
+  backgroundColor<<use case 1>> #C0504D
+  fontColor<<use case 1>> #C0504D
+  borderColor<<use case 1>> #C0504D
+  backgroundColor<<use case 2>> #9BBB59
+  fontColor<<use case 2>> #9BBB59
+  borderColor<<use case 2>> #9BBB59
+  backgroundColor<<use case 3>> #4BACC6
+  fontColor<<use case 3>> #4BACC6
+  borderColor<<use case 3>> #4BACC6
+  backgroundColor<<use case 4>> #8064A2
+  fontColor<<use case 4>> #8064A2
+  borderColor<<use case 4>> #8064A2
+  backgroundColor<<use case 5>> Black
+  fontColor<<use case 5>> Black
+  borderColor<<use case 5>> Black
+  backgroundColor<<use case 6>> #F79646
+  fontColor<<use case 6>> #F79646
+  borderColor<<use case 6>> #F79646
+  backgroundColor<<use case 7>> #A6A6A6
+  fontColor<<use case 7>> #A6A6A6
+  borderColor<<use case 7>> #A6A6A6
+}
+skinparam component {
+  ArrowColor<<use case 1>> #C0504D
+  ArrowFontColor<<use case 1>> #C0504D
+  ArrowColor<<use case 2>> #9BBB59
+  ArrowFontColor<<use case 2>> #9BBB59
+  ArrowColor<<use case 3>> #4BACC6
+  ArrowFontColor<<use case 3>> #4BACC6
+  ArrowColor<<use case 4>> #8064A2
+  ArrowFontColor<<use case 4>> #8064A2
+  ArrowColor<<use case 5>> Black
+  ArrowFontColor<<use case 5>> Black
+  ArrowColor<<use case 6>> #F79646
+  ArrowFontColor<<use case 6>> #F79646
+  ArrowColor<<use case 7>> #A6A6A6
+  ArrowFontColor<<use case 7>> #A6A6A6
+  ArrowColor<<use case 99>> White
+  ArrowFontColor<<use case 99>> White
+}
+
+cloud "zone=zone1"{
+  [service1] as service11
+  [service2] as service21
+  [service3] as service31
+  [service4] as service41
+  [zuul]
+}
+
+cloud "zone=zone2"{
+  [service1] as service12
+  [service2] as service22
+  [service3] as service32
+  [service4] as service42
+}
+
+cloud "zone=developer1"{
+  [service1] as developer1Service1
+  [service3] as developer1Service3
+}
+
+cloud "zone=developer2"{
+  [service3] as developer2Service3
+}
+
+() "http://zuul/service1\nHeaders[]" as request1 <<use case 1>>
+request1 -down-> zuul <<use case 1>>
+zuul -down-> service11 <<use case 1>>
+service11 -down-> service21 <<use case 1>>
+service21 -down-> service31 <<use case 1>>
+service31 -down-> service41 <<use case 1>>
+
+() "http://zuul/service1\nHeaders[favorite-zone=zone1]" as request2 <<use case 2>>
+request2 -down-> zuul <<use case 2>>
+zuul -down-> service11 <<use case 2>>
+service11 -down-> service21 <<use case 2>>
+service21 -down-> service31 <<use case 2>>
+service31 -down-> service41 <<use case 2>>
+
+() "http://zuul/service1\nHeaders[favorite-zone=zone2]" as request3 <<use case 3>>
+request3 -down-> zuul <<use case 3>>
+zuul -down-> service12 <<use case 3>>
+service12 -down-> service22 <<use case 3>>
+service22 -down-> service32 <<use case 3>>
+service32 -down-> service42 <<use case 3>>
+
+() "http://zuul/service1\nHeaders[favorite-zone=zone3]" as request4 <<use case 4>>
+request4 -down-> zuul <<use case 4>>
+zuul -down-> service11 <<use case 4>>
+service11 -down-> service21 <<use case 4>>
+service21 -down-> service31 <<use case 4>>
+service31 -down-> service41 <<use case 4>>
+
+() "http://zuul/service1\nHeaders[favorite-zone=developer1]" as request5 <<use case 5>>
+request5 -right--> zuul <<use case 5>>
+zuul -down-> developer1Service1 <<use case 5>>
+developer1Service1 -down..> developer1Service3 <<use case 99>> : ""
+developer1Service1 -down-> service21 <<use case 5>>
+service21 -down-> developer1Service3 <<use case 5>>
+developer1Service3 -down-> service41 <<use case 5>>
+
+() "http://zuul/service1\nHeaders[]\nzone1 service2 is down" as request6 <<use case 6>>
+request6 -left--> zuul <<use case 6>>
+zuul -down--> service11 <<use case 6>>
+service11 -down-> service22 <<use case 6>>
+service22 -down-> service31 <<use case 6>>
+service31 -down-> service41 <<use case 6>>
+
+() "http://zuul/service1\nHeaders[favorite-zone=developer2]" as request7 <<use case 7>>
+request7 -right--> zuul <<use case 7>>
+zuul -down--> service11 <<use case 7>>
+service11 -down-> service21 <<use case 7>>
+service21 -down-> developer2Service3 <<use case 7>>
+developer2Service3 -down-> service41 <<use case 7>>
+@enduml

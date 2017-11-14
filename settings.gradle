@@ -3,6 +3,8 @@ pluginManagement {
         maven {
             url settings.hasProperty('customMavenPluginsUrl') ? settings.customMavenPluginsUrl : 'https://plugins.gradle.org/m2/'
         }
-        gradlePluginPortal()
+        maven {
+            url settings.hasProperty('customMavenUrl') ? settings.customMavenUrl : 'https://repo.maven.apache.org/maven2/'
+        }
     }
 }

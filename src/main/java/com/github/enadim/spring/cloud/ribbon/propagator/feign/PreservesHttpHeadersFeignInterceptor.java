@@ -50,7 +50,7 @@ public class PreservesHttpHeadersFeignInterceptor extends AbstractExecutionConte
     public PreservesHttpHeadersFeignInterceptor(@NotNull PatternFilter urlFilter,
                                                 @NotNull Filter<String> filter,
                                                 @NotNull Map<String, String> extraStaticEntries) {
-        super(filter, (x, y, z) -> x.header(y, z), extraStaticEntries);
+        super(filter, RequestTemplate::header, extraStaticEntries);
         this.urlFilter = urlFilter;
     }
 

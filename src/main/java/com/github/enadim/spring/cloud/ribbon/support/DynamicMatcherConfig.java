@@ -46,7 +46,7 @@ public class DynamicMatcherConfig extends RuleBaseConfig {
     /**
      * The dynamic key
      */
-    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-matcher.key:${ribbon.extensions.rule.dynamic-matcher.key:dynamic-attribute-key}}")
+    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-matcher.key:${ribbon.extensions.rule.dynamic-matcher.key:dynamic-matcher-key}}")
     private String key;
 
     /**

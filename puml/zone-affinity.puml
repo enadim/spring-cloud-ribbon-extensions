@@ -1,0 +1,48 @@
+@startuml
+title **Zone Affinity**\n<size:12><&chevron-right>service1 using service2
+skinparam interface {
+  backgroundColor<<call service1@zone1>> Red
+  fontColor<<call service1@zone1>> Red
+  borderColor<<call service1@zone1>> Red
+  backgroundColor<<call service1@zone2>> Green
+  fontColor<<call service1@zone2>> Green
+  borderColor<<call service1@zone2>> Green
+  backgroundColor<<call service1@zone3>> Blue
+  fontColor<<call service1@zone3>> Blue
+  borderColor<<call service1@zone3>> Blue
+}
+skinparam component {
+  ArrowColor<<call service1@zone1>> Red
+  ArrowFontColor<<call service1@zone1>> Red
+  ArrowColor<<call service1@zone2>> Green
+  ArrowFontColor<<call service1@zone2>> Green
+  ArrowColor<<call service1@zone3>> Blue
+  ArrowFontColor<<call service1@zone3>> Blue
+}
+
+cloud "zone=zone1"{
+  [service1] as service11
+  [service2] as service21
+}
+
+cloud "zone=zone2"{
+  [service1] as service12
+  [service2] as service22
+}
+
+cloud "zone=zone3"{
+  [service1] as service13
+}
+
+() " " as request1 <<call service1@zone1>>
+request1 -down->  service11 <<call service1@zone1>>
+service11 -down-> service21 <<call service1@zone1>>
+
+() " " as request2 <<call service1@zone2>>
+request2 -down->  service12 <<call service1@zone2>>
+service12 -down-> service22 <<call service1@zone2>>
+
+() " " as request3 <<call service1@zone3>>
+request3 -down-> service13 <<call service1@zone3>>
+service13 -down-> error <<call service1@zone3>>
+@enduml

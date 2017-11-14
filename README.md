@@ -1,6 +1,4 @@
-<div style="text-align: right">v1.4.1-SNAPSHOT</div>
-
-# Spring Cloud Ribbon Extensions :rocket::microscope:
+# [Spring Cloud Ribbon Extensions v1.4.1-SNAPSHOT](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki) :rocket::microscope:
 
 :exclamation:Must Have:exclamation: Enhance your µService testing, maintenance & overall development productivity.
 
@@ -50,31 +48,31 @@ It comes with handy features for easy integration, configuration and customizati
 ### Routing Rules.
 
 #### Zone Affinity
-@EnableRibbonZoneAffinity: Enables routing to the same zone: see the tests for concrete usage and configurations.
+[@EnableRibbonZoneAffinity](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Zone-Affinity): Enables routing to the same zone: see the tests for concrete usage and configurations.
 
 Designed mainly for µServices that should calls others in the same zone.
 
 #### Favorite Zone :gem:
-@EnableRibbonFavoriteZone: Enables routing to a favorite zone: see the tests for concrete usage and configurations.
+[@EnableRibbonFavoriteZone](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Favorite-Zone): Enables routing to a favorite zone: see the tests for concrete usage and configurations.
 
 Designed mainly for testing a µService among an existing µService architecture without disruption. This is the feature that triggered this project.
 
-#### Strict Metadata Routing
-@EnableRibbonStrictMetadataMatcher: Enables routing to servers that have a set of metadata: see the tests for concrete usage and configurations.
+#### Strict Metadata Matcher
+[@EnableRibbonStrictMetadataMatcher](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Strict-Metadata-Matcher): Enables routing to servers that have a set of metadata: see the tests for concrete usage and configurations.
 
 Designed to target a specific µService that holds a point to point connection with an external system (like FIX,...)
 
 Requires Eureka.
 
 #### Dynamic Matcher :gem:
-@EnableDynamicMatcher: Enables routing against a dynamic key: see the tests for concrete usage and configurations.
+[@EnableRibbonDynamicMatcher](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Dynamic-Matcher): Enables routing against a dynamic key: see the tests for concrete usage and configurations.
 
 Designed to target a specific µServices that holds multiple point to point connections with many external systems (like FIX,...)
 
 Requires Eureka.
 
 ### Context Propagation :gem:
-@EnableRibbonContextPropagation: Enables sharing the execution context through all the µServices: see the tests for concrete usage and configurations.
+[@EnableContextPropagation](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Context-Propagation): Enables sharing the execution context through all the µServices: see the tests for concrete usage and configurations.
 
 Designed to propagate the execution context across the µServices architecture.
 
@@ -85,7 +83,7 @@ What does it support:
 
 :warning:You should use only lower case key names (http header limitation).
 
-### Combine Favorite Zone & Context Propagation :sparkles:
+### [Combine Favorite Zone & Context Propagation](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Context-Propagation-And-Favorite-Zone) :sparkles:
 Eureka:exclamation: Let's enter a world of easy development and testing with µService architecture.
 * Developers are able to deploy & debug their own micro-service and get back any request they have initiated disregarding the entry point and without being annoyed by the requests they have not initiated.
 * Deploying in multi region-and let our clients (that have no knowledge of eureka, ribbon, zuul) choose the zone they prefer to target.
@@ -94,7 +92,6 @@ Eureka:exclamation: Let's enter a world of easy development and testing with µS
 ![Illustration](./puml/context-propagation-favorite-zone.png)
 
 ## Setup
-The artifact will never have a third party dependency: please check the compatibility with your dependencies.
 
 maven
 ```xml

@@ -1,0 +1,70 @@
+@startuml
+title **Strict Metadata Matcher**\n<size:12><&chevron-right>service1 using service2
+skinparam interface {
+  backgroundColor<<use case 1>> #C0504D
+  fontColor<<use case 1>> #C0504D
+  borderColor<<use case 1>> #C0504D
+  backgroundColor<<use case 2>> #9BBB59
+  fontColor<<use case 2>> #9BBB59
+  borderColor<<use case 2>> #9BBB59
+  backgroundColor<<use case 3>> #4BACC6
+  fontColor<<use case 3>> #4BACC6
+  borderColor<<use case 3>> #4BACC6
+  backgroundColor<<use case 4>> #8064A2
+  fontColor<<use case 4>> #8064A2
+  borderColor<<use case 4>> #8064A2
+  backgroundColor<<use case 5>> Black
+  fontColor<<use case 5>> Black
+  borderColor<<use case 5>> Black
+  backgroundColor<<use case 6>> #F79646
+  fontColor<<use case 6>> #F79646
+  borderColor<<use case 6>> #F79646
+  backgroundColor<<use case 7>> #A6A6A6
+  fontColor<<use case 7>> #A6A6A6
+  borderColor<<use case 7>> #A6A6A6
+}
+skinparam component {
+  ArrowColor<<use case 1>> #C0504D
+  ArrowLollipopColor<<use case 1>> #C0504D
+  ArrowFontColor<<use case 1>> #C0504D
+  ArrowColor<<use case 2>> #9BBB59
+  ArrowFontColor<<use case 2>> #9BBB59
+  ArrowColor<<use case 3>> #4BACC6
+  ArrowFontColor<<use case 3>> #4BACC6
+  ArrowColor<<use case 4>> #8064A2
+  ArrowFontColor<<use case 4>> #8064A2
+  ArrowColor<<use case 5>> Black
+  ArrowFontColor<<use case 5>> Black
+  ArrowColor<<use case 6>> #F79646
+  ArrowFontColor<<use case 6>> #F79646
+  ArrowColor<<use case 7>> #A6A6A6
+  ArrowFontColor<<use case 7>> #A6A6A6
+  ArrowColor<<use case 99>> White
+  ArrowFontColor<<use case 99>> White
+}
+
+cloud "zone=zone1"{
+  [service1] as service11
+  component service21 [service2
+    eureka.instance.metadataMap.tag=1
+    eureka.instance.metadataMap.version=1.0
+  ]
+  component service22 [service2
+    eureka.instance.metadataMap.tag=2
+    eureka.instance.metadataMap.version=2.0
+  ]
+}
+
+() "service1 code snippet:\ncurrent().put('tag','1');\ncurrent().put('version','1.0');\nservice2.doSomething();" as request1 <<use case 1>>
+request1 -down-> service11 <<use case 1>>
+service11 -down-> service21 <<use case 1>>
+
+() "service1 code snippet:\ncurrent().put('tag','2');\ncurrent().put('version','2.0');\nservice2.doSomething();" as request2 <<use case 2>>
+request2 -down-> service11 <<use case 2>>
+service11 -down-> service22 <<use case 2>>
+
+() "service1 code snippet:\ncurrent().put('tag','1');\ncurrent().put('version','2.0');\nservice2.doSomething();" as request3 <<use case 3>>
+() "error" as error
+request3 -down-> service11 <<use case 3>>
+service11 -down-> error <<use case 3>>
+@enduml

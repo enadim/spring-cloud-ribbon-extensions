@@ -50,7 +50,7 @@ public class PreservesMessagePropertiesMessageProducerAdapter extends AbstractEx
     public PreservesMessagePropertiesMessageProducerAdapter(@NotNull MessageProducer delegate,
                                                             @NotNull Filter<String> keysToPropagate,
                                                             @NotNull Map<String, String> extraStaticEntries) {
-        super(keysToPropagate, (x, y, z) -> x.setStringProperty(y, z), extraStaticEntries);
+        super(keysToPropagate, Message::setStringProperty, extraStaticEntries);
         this.delegate = delegate;
     }
 

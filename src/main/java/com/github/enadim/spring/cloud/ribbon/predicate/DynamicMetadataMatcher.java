@@ -23,7 +23,7 @@ import java.util.Map;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 
 /**
- * Filters Servers that does not have the desired metadata entry.
+ * Filters Servers that does have the desired metadata entry.
  * <p>The metadata key is fetched from the context entry with the desired key {@link #dynamicEntryKey}
  * <p>Concrete use case with a µservice that share a point to point connection with external system (this connection is established only once): market access / FIX connection.
  * This µservice should add the connection up marker to its metadata so that the clients can target the instance holding the connection.

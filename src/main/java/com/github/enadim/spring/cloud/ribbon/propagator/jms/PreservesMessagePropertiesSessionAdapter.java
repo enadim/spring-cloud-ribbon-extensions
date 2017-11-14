@@ -67,7 +67,7 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
     public PreservesMessagePropertiesSessionAdapter(@NotNull Session delegate,
                                                     @NotNull Filter<String> filter,
                                                     @NotNull Map<String, String> extraStaticEntries) {
-        super(filter, (x, y, z) -> x.setStringProperty(y, z), extraStaticEntries);
+        super(filter, Message::setStringProperty, extraStaticEntries);
         this.delegate = delegate;
     }
 

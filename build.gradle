@@ -3,7 +3,7 @@ plugins {
     id 'net.researchgate.release' version '2.6.0'
     id "org.sonarqube" version "2.6"
     id 'org.unbroken-dome.test-sets' version '1.4.2'
-    id 'com.github.psxpaul.execfork' version '0.1.5'
+    id 'com.github.psxpaul.execfork' version '0.1.6'
     id 'io.spring.dependency-management' version '1.0.3.RELEASE'
 }
 
@@ -58,12 +58,12 @@ task wrapper(type: Wrapper) {
 }
 
 repositories {
-    jcenter {
-        url jcenterUrl
-    }
     mavenLocal()
     maven {
         url mavenUrl
+    }
+    jcenter {
+        url jcenterUrl
     }
 }
 
@@ -79,13 +79,13 @@ dependencies {
     compileOnly 'com.google.code.findbugs:annotations:3.0.1'
 
     compile("org.springframework.boot:spring-boot-starter-activemq") { ext.optional = true }
-    compile("org.apache.activemq:activemq-broker")                   { ext.optional = true }
-    compile("com.fasterxml.jackson.core:jackson-databind")           { ext.optional = true }
+    compile("org.apache.activemq:activemq-broker") { ext.optional = true }
+    compile("com.fasterxml.jackson.core:jackson-databind") { ext.optional = true }
     compile('org.springframework.cloud:spring-cloud-starter-ribbon') { ext.optional = true }
-    compile('org.springframework.cloud:spring-cloud-starter-feign')  { ext.optional = true}
-    compile('org.springframework.cloud:spring-cloud-starter-eureka') { ext.optional = true}
-    compile('org.springframework.cloud:spring-cloud-starter-eureka') { ext.optional = true}
-    compile('org.springframework.cloud:spring-cloud-starter-zuul')  { ext.optional = true}
+    compile('org.springframework.cloud:spring-cloud-starter-feign') { ext.optional = true }
+    compile('org.springframework.cloud:spring-cloud-starter-eureka') { ext.optional = true }
+    compile('org.springframework.cloud:spring-cloud-starter-eureka') { ext.optional = true }
+    compile('org.springframework.cloud:spring-cloud-starter-zuul') { ext.optional = true }
     compile('org.springframework.cloud:spring-cloud-starter-eureka-server') {
         exclude group: 'javax.servlet', module: 'servlet-api'
         ext.optional = true
@@ -104,123 +104,4 @@ dependencies {
 
 compileJava {
     options.fork = true
-}
-
-task eureka(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.eureka.EurekaServer'
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    classpath = sourceSets.examples.runtimeClasspath
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/eureka.log"
-    errorOutput = "$buildDir/eureka-error.log"
-    waitForPort = 8000
-    timeout = 30
-}
-eureka.group = 'it'
-
-task service2FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.service2.Service2'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    args = ['--spring.config.name=service2-FavoriteZone-zone1']
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/service2-FavoriteZone-zone1.log"
-    errorOutput = "$buildDir/service2-FavoriteZone-zone1-error.log"
-    waitForPort = 8021
-    timeout = 30
-}
-service2FavoriteZone1.group = 'it'
-service2FavoriteZone1.dependsOn eureka
-
-task service2FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.service2.Service2'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    args = ['--spring.config.name=service2-FavoriteZone-zone2']
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/service2-FavoriteZone-zone2.log"
-    errorOutput = "$buildDir/service2-FavoriteZone-zone2-error.log"
-    waitForPort = 8022
-    timeout = 30
-}
-service2FavoriteZone2.group = 'it'
-service2FavoriteZone2.dependsOn service2FavoriteZone1
-
-task service1FavoriteZoneDeveloper(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.service1.Service1'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    args = ['--spring.config.name=service1-FavoriteZone-developer']
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/service1-FavoriteZone-developer.log"
-    errorOutput = "$buildDir/service1-FavoriteZone-developer-error.log"
-    waitForPort = 8019
-    timeout = 30
-}
-service1FavoriteZoneDeveloper.group = 'it'
-service1FavoriteZoneDeveloper.dependsOn service2FavoriteZone2
-
-task service1FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.service1.Service1'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    args = ['--spring.config.name=service1-FavoriteZone-zone1']
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/service1-FavoriteZone-zone1.log"
-    errorOutput = "$buildDir/service1-FavoriteZone-zone1-error.log"
-    waitForPort = 8011
-    timeout = 30
-}
-service1FavoriteZone1.group = 'it'
-service1FavoriteZone1.dependsOn service1FavoriteZoneDeveloper
-
-task service1FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.service1.Service1'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    args = ['--spring.config.name=service1-FavoriteZone-zone2']
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/service1-FavoriteZone-zone2.log"
-    errorOutput = "$buildDir/service1-FavoriteZone-zone2-error.log"
-    waitForPort = 8012
-    timeout = 30
-}
-service1FavoriteZone2.group = 'it'
-service1FavoriteZone2.dependsOn service1FavoriteZone1
-
-task service3StrictMatcherZone1(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.service3.Service3'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    args = ['--spring.config.name=service3-StrictMatcher-zone1']
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/service3-StrictMatcher-zone1.log"
-    errorOutput = "$buildDir/service3-StrictMatcher-zone1-error.log"
-    waitForPort = 8031
-    timeout = 30
-}
-service3StrictMatcherZone1.group = 'it'
-service3StrictMatcherZone1.dependsOn service1FavoriteZone2
-
-task zuul(type: com.github.psxpaul.task.JavaExecFork) {
-    main = 'com.github.enadim.spring.cloud.ribbon.examples.zuul.ZuulServer'
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    classpath = sourceSets.examples.runtimeClasspath
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/zuul.log"
-    errorOutput = "$buildDir/zuul-error.log"
-    waitForPort = 8001
-    timeout = 30
-}
-zuul.group = 'it'
-zuul.dependsOn service3StrictMatcherZone1
-
-if (project.hasProperty('it')) {
-    examples.dependsOn test
-    zuul.dependsOn examples
-    integrationTest.dependsOn zuul
-    check.dependsOn integrationTest
-    project.tasks["sonarqube"].dependsOn integrationTest
-} else {
-    project.tasks["sonarqube"].dependsOn test
 }

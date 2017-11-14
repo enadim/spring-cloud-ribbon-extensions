@@ -28,12 +28,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
                 "eureka.client.register-with-eureka=false",
                 "ribbon.eager-load.enabled=true",
                 "ribbon.eager-load.clients[0]=application2",
-                "ribbon.extensions.propagation.keys[0]=dynamic-attribute-key",
+                "ribbon.extensions.propagation.keys[0]=dynamic-matcher-key",
                 "ribbon.extensions.propagation.keys[1]=instance-id"}
 )
 public class DynamicMatcherDefaultConfigurationTest extends AbstractDynamicMatcherSupportTest {
     public DynamicMatcherDefaultConfigurationTest() {
-        super("dynamic-attribute-key");
+        super("dynamic-matcher-key");
     }
 
 }
