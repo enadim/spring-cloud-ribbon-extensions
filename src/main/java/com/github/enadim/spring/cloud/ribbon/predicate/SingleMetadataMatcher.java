@@ -16,11 +16,13 @@
 package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
-import com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
+import static java.lang.String.format;
 
 /**
  * Filters Servers metadata against a specific {@link #metadataKey} defined in {@link ExecutionContext}.
@@ -48,7 +50,7 @@ public class SingleMetadataMatcher extends DiscoveryEnabledServerPredicate {
      */
     @Override
     protected boolean doApply(DiscoveryEnabledServer server) {
-        String expected = ExecutionContextHolder.current().get(metadataKey);
+        String expected = current().get(metadataKey);
         Map<String, String> metadata = server.getInstanceInfo().getMetadata();
         String actual = metadata.get(metadataKey);
         boolean accept = (expected == null && actual == null) || (expected != null && expected.equals(actual));
@@ -60,5 +62,13 @@ public class SingleMetadataMatcher extends DiscoveryEnabledServerPredicate {
                 metadata,
                 accept);
         return accept;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return format("SingleMetadataMatcher[%s=%s]", metadataKey, current().get(metadataKey));
     }
 }

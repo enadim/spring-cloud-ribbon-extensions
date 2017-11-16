@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  *  ...
  * }
  * &#064;Configuration
- * &#064;EnableRibbonDynamicMatcher
+ * &#064;EnableRibbonDynamicMetadataMatcher
  * public class RibbonClientsConfig {
  * }
  * </pre></blockquote>
@@ -46,6 +46,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import(DynamicMatcherConfig.class)
-public @interface EnableRibbonDynamicMatcher {
+@Import(DynamicMetadataMatcherConfig.class)
+public @interface EnableRibbonDynamicMetadataMatcher {
 }

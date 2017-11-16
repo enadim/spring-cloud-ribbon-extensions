@@ -52,6 +52,7 @@ public class SingleStaticMetadataMatcherTest {
     public void should_not_filter_server_with_expected_attribute_value() throws Exception {
         metada.put(attributeKey, expectedValue);
         assertThat(predicate.doApply(server), is(true));
+        assertThat(predicate.toString(), is("StrictMetadataMatcher[name=value]"));
     }
 
     @Test

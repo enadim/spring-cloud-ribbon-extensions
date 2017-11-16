@@ -54,6 +54,7 @@ public class SingleMetadataMatcherTest {
         metada.put(attributeKey, attributeValue);
         current().put(attributeKey, "");
         assertThat(predicate.doApply(server), is(false));
+        assertThat(predicate.toString(), is("SingleMetadataMatcher[key=]"));
     }
 
     @Test
@@ -62,12 +63,14 @@ public class SingleMetadataMatcherTest {
         metada.put(attributeKey, attributeValue);
         current().put(attributeKey, null);
         assertThat(predicate.doApply(server), is(false));
+        assertThat(predicate.toString(), is("SingleMetadataMatcher[key=null]"));
     }
 
     @Test
     public void should_not_filter_server_when_empty_context() throws Exception {
         SingleMetadataMatcher predicate = new SingleMetadataMatcher(attributeKey);
         assertThat(predicate.doApply(server), is(true));
+        assertThat(predicate.toString(), is("SingleMetadataMatcher[key=null]"));
     }
 
     @Test

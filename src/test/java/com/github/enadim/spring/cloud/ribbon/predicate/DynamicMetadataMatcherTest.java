@@ -38,7 +38,7 @@ public class DynamicMetadataMatcherTest {
     InstanceInfo instanceInfo = mock(InstanceInfo.class);
     Map<String, String> metada = new HashMap<>();
     DiscoveryEnabledServer server = new DiscoveryEnabledServer(instanceInfo, true);
-    DynamicMetadataMatcher predicate = new DynamicMetadataMatcher(dynamicAttributeKey);
+    DynamicMetadataMatcher predicate = new DynamicMetadataMatcher(dynamicAttributeKey, false);
 
     @Before
     public void before() {
@@ -71,6 +71,16 @@ public class DynamicMetadataMatcherTest {
         metada.put(attributeKey, attributeValue);
         current().put(attributeKey, attributeValue);
         assertThat(predicate.doApply(server), is(false));
+        assertThat(predicate.toString(), is("DynamicMetadataMatcher[(dynamic=null)=null,matchIfMissing=false]"));
+    }
+
+    @Test
+    public void should_not_filter_server_when_dynamic_key_not_defined() throws Exception {
+        DynamicMetadataMatcher predicate = new DynamicMetadataMatcher(dynamicAttributeKey, true);
+        metada.put(attributeKey, attributeValue);
+        current().put(attributeKey, attributeValue);
+        assertThat(predicate.doApply(server), is(true));
+        assertThat(predicate.toString(), is("DynamicMetadataMatcher[(" + dynamicAttributeKey + "=null)=null,matchIfMissing=true]"));
     }
 
     @Test
@@ -79,6 +89,7 @@ public class DynamicMetadataMatcherTest {
         current().put(dynamicAttributeKey, attributeKey);
         current().put(attributeKey, attributeValue);
         assertThat(predicate.doApply(server), is(true));
+        assertThat(predicate.toString(), is("DynamicMetadataMatcher[(" + dynamicAttributeKey + "=" + attributeKey + ")=" + attributeValue + ",matchIfMissing=false]"));
     }
 
     @Test
@@ -88,6 +99,5 @@ public class DynamicMetadataMatcherTest {
         current().put(attributeKey, null);
         assertThat(predicate.doApply(server), is(true));
     }
-
 
 }

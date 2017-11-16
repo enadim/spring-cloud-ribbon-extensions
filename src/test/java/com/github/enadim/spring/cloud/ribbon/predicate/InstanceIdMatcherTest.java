@@ -39,8 +39,9 @@ public class InstanceIdMatcherTest {
     }
 
     @Test
-    public void should_filter_when_favorite_zone_not_provided() {
+    public void should_filter_when_instanceId_not_provided() {
         assertThat(predicate.doApply(server), is(false));
+        assertThat(predicate.toString(), is("InstanceIdMatcher[instanceId=1]"));
     }
 
     @Test
@@ -48,6 +49,7 @@ public class InstanceIdMatcherTest {
         when(instanceInfo.getInstanceId()).thenReturn("2");
         server.setZone("1");
         assertThat(predicate.doApply(server), is(false));
+        assertThat(predicate.toString(), is("InstanceIdMatcher[instanceId=1]"));
     }
 
     @Test

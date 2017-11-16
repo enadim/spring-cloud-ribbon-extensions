@@ -1,5 +1,5 @@
 @startuml
-title **Dynamic matcher**\n<size:12><&chevron-right>service1 using service2
+title **Dynamic metadata matcher**\n<size:12><&chevron-right>matchIfMissing=false\n<size:12><&chevron-right>service1 using service2
 skinparam interface {
   backgroundColor<<use case 1>> #C0504D
   fontColor<<use case 1>> #C0504D
@@ -10,6 +10,9 @@ skinparam interface {
   backgroundColor<<use case 3>> #4BACC6
   fontColor<<use case 3>> #4BACC6
   borderColor<<use case 3>> #4BACC6
+  backgroundColor<<use case 4>> Magenta
+  fontColor<<use case 4>> Magenta
+  borderColor<<use case 4>> Magenta
 }
 skinparam component {
   ArrowColor<<use case 1>> #C0504D
@@ -19,6 +22,8 @@ skinparam component {
   ArrowFontColor<<use case 2>> #9BBB59
   ArrowColor<<use case 3>> #4BACC6
   ArrowFontColor<<use case 3>> #4BACC6
+  ArrowColor<<use case 4>> Magenta
+  ArrowFontColor<<use case 4>> Magenta
 }
 
 cloud "cloud"{
@@ -31,6 +36,8 @@ cloud "cloud"{
   ]
 }
 
+() "error" as error
+
 () "service1 code snippet:\ncurrent().put('dynamic-matcher-key','matcher-key');\ncurrent().put('matcher-key','target1');\nservice2.doSomething();" as request1 <<use case 1>>
 request1 -down-> service11 <<use case 1>>
 service11 -down-> service21 <<use case 1>>
@@ -39,8 +46,11 @@ service11 -down-> service21 <<use case 1>>
 request2 -down-> service11 <<use case 2>>
 service11 -down-> service22 <<use case 2>>
 
-() "service1 code snippet:\ncurrent().put('dynamic-matcher-key','matcher-key');\ncurrent().put('matcher-key','target3');\nservice2.doSomething();" as request3 <<use case 3>>
-() "error" as error
+() "service1 code snippet:\nservice2.doSomething();" as request3 <<use case 3>>
 request3 -down-> service11 <<use case 3>>
 service11 -down-> error <<use case 3>>
+
+() "service1 code snippet:\ncurrent().put('dynamic-matcher-key','matcher-key');\ncurrent().put('matcher-key','target3');\nservice2.doSomething();" as request4 <<use case 4>>
+request4 -left-> service11 <<use case 4>>
+service11 -down-> error <<use case 4>>
 @enduml

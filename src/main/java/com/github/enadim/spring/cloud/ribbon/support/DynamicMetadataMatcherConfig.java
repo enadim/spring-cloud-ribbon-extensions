@@ -16,6 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.support;
 
 import com.github.enadim.spring.cloud.ribbon.predicate.DynamicMetadataMatcher;
+import com.github.enadim.spring.cloud.ribbon.rule.PredicateBasedRuleSupport;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,11 @@ import org.springframework.cloud.netflix.ribbon.RibbonClientConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
+
 /**
  * The dynamic attribute metadata matcher load balancing rule definition.
- * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonDynamicMatcher}.
+ * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonDynamicMetadataMatcher}.
  *
  * @author Nadim Benabdenbi
  * @see DynamicMetadataMatcher
@@ -38,24 +41,34 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass(DiscoveryEnabledNIWSServerList.class)
 @AutoConfigureBefore(RibbonClientConfiguration.class)
-@ConditionalOnProperty(value = "ribbon.extensions.rule.dynamic-matcher.enabled", matchIfMissing = true)
-@ConditionalOnExpression(value = "${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-matcher.enabled:true}")
+@ConditionalOnProperty(value = "ribbon.extensions.rule.dynamic-metadata-matcher.enabled", matchIfMissing = true)
+@ConditionalOnExpression(value = "${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-metadata-matcher.enabled:true}")
 @Slf4j
-public class DynamicMatcherConfig extends RuleBaseConfig {
+public class DynamicMetadataMatcherConfig extends RuleBaseConfig {
 
     /**
      * The dynamic key
      */
-    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-matcher.key:${ribbon.extensions.rule.dynamic-matcher.key:dynamic-matcher-key}}")
+    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-metadata-matcher.key:${ribbon.extensions.rule.dynamic-metadata-matcher.key:dynamic-matcher-key}}")
     private String key;
 
     /**
-     * @param clientConfig the client config
+     * The dynamic key
+     */
+    @Value("${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-metadata-matcher.matchIfMissing:${ribbon.extensions.rule.dynamic-metadata-matcher.matchIfMissing:true}}")
+    private boolean matchIfMissing;
+
+    /**
+     * @param clientConfig the client config.
+     * @param rule         the predicate rule support.
      * @return an instance of {@link DynamicMetadataMatcher}
      */
     @Bean
-    public DynamicMetadataMatcher dynamicMatcher(IClientConfig clientConfig) {
+    public DynamicMetadataMatcher dynamicMetadaMatcher(IClientConfig clientConfig, PredicateBasedRuleSupport rule) {
+        DynamicMetadataMatcher dynamicMetadataMatcher = new DynamicMetadataMatcher(key, matchIfMissing);
+        rule.setPredicate(dynamicMetadataMatcher);
+        rule.setDescription(from(dynamicMetadataMatcher));
         log.info("Dynamic matcher rule enabled for client [{}] using dynamic key[{}].", clientConfig.getClientName(), key);
-        return new DynamicMetadataMatcher(key);
+        return dynamicMetadataMatcher;
     }
 }

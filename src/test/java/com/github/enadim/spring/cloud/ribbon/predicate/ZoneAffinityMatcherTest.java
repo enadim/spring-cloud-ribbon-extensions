@@ -40,6 +40,7 @@ public class ZoneAffinityMatcherTest {
     public void should_filter_when_server_zone_is_different() {
         server.setZone("zone2");
         assertThat(predicate.apply(predicateKey), is(false));
+        assertThat(predicate.toString(), is("ZoneAffinityMatcher[zone=zone1]"));
     }
 
     @Test

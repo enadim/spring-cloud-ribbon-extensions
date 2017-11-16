@@ -19,7 +19,7 @@ import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest;
 import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest.TestApplicationBase.TestControllerConstants;
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
 import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
-import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonDynamicMatcher;
+import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonDynamicMetadataMatcher;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,9 +39,11 @@ import static org.springframework.http.HttpStatus.OK;
 
 public abstract class AbstractDynamicMatcherSupportTest extends AbstractSupportTest {
     private final String dynamicAttributeKey;
+    private final boolean matchIfMissing;
 
-    public AbstractDynamicMatcherSupportTest(String dynamicAttributeKey) {
+    public AbstractDynamicMatcherSupportTest(String dynamicAttributeKey, boolean matchIfMissing) {
         this.dynamicAttributeKey = dynamicAttributeKey;
+        this.matchIfMissing = matchIfMissing;
     }
 
     @Test
@@ -100,7 +102,7 @@ public abstract class AbstractDynamicMatcherSupportTest extends AbstractSupportT
     }
 
     @Configuration
-    @EnableRibbonDynamicMatcher
+    @EnableRibbonDynamicMetadataMatcher
     public static class DynamicMatcherClientsConfig {
     }
 

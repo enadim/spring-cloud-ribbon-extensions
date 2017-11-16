@@ -37,6 +37,7 @@ import org.springframework.cloud.netflix.ribbon.RibbonClientConfiguration;
 import org.springframework.cloud.netflix.ribbon.ZonePreferenceServerListFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Convenient configuration initializing the ribbon client config that is required for defining custom rules.
@@ -63,9 +64,10 @@ public class RuleBaseConfig {
     /**
      * The load balancing rule definition.
      *
-     * @return the predicate base rule: expect a single predicate defined on the context.
+     * @return the predicate base rule: expects a single predicate defined on the context.
      */
     @Bean
+    @Lazy
     public PredicateBasedRuleSupport rule() {
         return new PredicateBasedRuleSupport();
     }

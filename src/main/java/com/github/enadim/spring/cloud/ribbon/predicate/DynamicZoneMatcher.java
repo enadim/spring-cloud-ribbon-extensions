@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.constraints.NotNull;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
+import static java.lang.String.format;
 
 /**
  * Filters Servers having the same zone as the context entry value associated with the {@link #zoneEntryKey}.
@@ -63,5 +64,13 @@ public class DynamicZoneMatcher extends NullSafeServerPredicate {
                 actual,
                 accept);
         return accept;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return format("DynamicZoneMatcher[%s=%s]", zoneEntryKey, current().get(zoneEntryKey));
     }
 }

@@ -15,8 +15,6 @@
  */
 package com.github.enadim.spring.cloud.ribbon.predicate;
 
-import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
-import com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder;
 import com.github.enadim.spring.cloud.ribbon.support.StrictMetadataMatcherConfig;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
+import static java.lang.String.format;
 
 /**
  * Strict server metadata matcher over all the execution context entries.
@@ -39,8 +40,7 @@ public class StrictMetadataMatcher extends DiscoveryEnabledServerPredicate {
      */
     @Override
     protected boolean doApply(DiscoveryEnabledServer server) {
-        ExecutionContext context = ExecutionContextHolder.current();
-        Set<Entry<String, String>> expected = context.entrySet();
+        Set<Entry<String, String>> expected = current().entrySet();
         Map<String, String> actual = server.getInstanceInfo().getMetadata();
         boolean accept = actual.entrySet().containsAll(expected);
         log.trace("Expected {} vs {}:{}{} => {}",
@@ -50,5 +50,13 @@ public class StrictMetadataMatcher extends DiscoveryEnabledServerPredicate {
                 actual,
                 accept);
         return accept;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return format("StrictMetadataMatcher%s", current().entrySet());
     }
 }

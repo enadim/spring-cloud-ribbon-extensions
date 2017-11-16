@@ -40,6 +40,7 @@ public class DynamicZoneMatcherTest {
     @Test
     public void should_filter_when_favorite_zone_not_provided() {
         assertThat(predicate.apply(predicateKey), is(false));
+        assertThat(predicate.toString(), is("DynamicZoneMatcher[favorite-zone=null]"));
     }
 
     @Test
@@ -47,6 +48,7 @@ public class DynamicZoneMatcherTest {
         current().put(favoriteZoneName, "2");
         server.setZone("1");
         assertThat(predicate.apply(predicateKey), is(false));
+        assertThat(predicate.toString(), is("DynamicZoneMatcher[favorite-zone=2]"));
     }
 
     @Test

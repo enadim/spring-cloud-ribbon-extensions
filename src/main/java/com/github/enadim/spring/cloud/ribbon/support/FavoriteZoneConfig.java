@@ -36,22 +36,24 @@ import org.springframework.cloud.netflix.ribbon.ZonePreferenceServerListFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
 import static com.netflix.loadbalancer.AbstractServerPredicate.alwaysTrue;
 import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
 
 /**
- * The Favorite name load balancing rule configuration.
+ * The Favorite zone load balancing rule configuration.
  * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonFavoriteZone}
  * <p>Favorite Rule Definition
  * <ul>
- * <li>Start applying {@link DynamicZoneMatcher} : choose a server having the same name as the favorite name defined in the {@link ExecutionContext}.
- * <li>Fallbacks to {@link ZoneAffinityMatcher}: choose a server in the same name as the current instance.
+ * <li>Start applying {@link DynamicZoneMatcher} : choose a server having the same zone as the favorite zone defined in the {@link ExecutionContext}.
+ * <li>Fallbacks to {@link ZoneAffinityMatcher}: choose a server in the same zone as the current instance.
  * <li>Fallbacks to {@link ZoneAvoidancePredicate} &amp; {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to any server
  * </ul>
  * <p><strong>Warning:</strong> Unless mastering the load balancing rules, do not mix with {@link ZonePreferenceServerListFilter} which is used by {@link DynamicServerListLoadBalancer} @see {@link #serverListFilter()}
- * <p>The favorite name default metadata attribute name is 'name', however it can be configured by the property 'ribbon.rule.favorite.name.name'
+ * <p>The favorite zone default key is 'favorite-zone', it can be configured at client level by 'ribbon.MyRibbonClientName.rule.favorite-zone.key' or globally by 'ribbon.rule.favorite-zone.key'
+ * <p>The upstream zone default name is 'upstream-zone', it can be configured at client level by 'ribbon.MyRibbonClientName.rule.upstream-zone.key' or globally by 'ribbon.rule.upstream-zone.key'
  *
  * @author Nadim Benabdenbi
  * @see EnableRibbonFavoriteZone
@@ -73,23 +75,31 @@ public class FavoriteZoneConfig extends RuleBaseConfig {
      * Favorite zone rule bean.
      *
      * @param clientConfig the ribbon client config
+     * @param rule         the predicate rule support
      * @return the favorite zone rule
      */
     @Bean
-    public CompositePredicate favoriteZone(IClientConfig clientConfig) {
-        PredicateBasedRuleSupport rule = new PredicateBasedRuleSupport();
+    public CompositePredicate favoriteZone(IClientConfig clientConfig, PredicateBasedRuleSupport rule) {
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(rule, clientConfig);
         ZoneAvoidancePredicate zoneAvoidancePredicate = new ZoneAvoidancePredicate(rule, clientConfig);
         ZoneAffinityMatcher zoneAffinityMatcher = new ZoneAffinityMatcher(getEurekaInstanceProperties().getZone());
         DynamicZoneMatcher dynamicZoneMatcher = new DynamicZoneMatcher(favoriteZoneKey);
         DynamicZoneMatcher upstreamZoneMatcher = new DynamicZoneMatcher(upstreamZoneKey);
-        log.info("Favorite zone enabled for client [{}] using context key [{}].", clientConfig.getClientName(), favoriteZoneKey);
-        return withPredicates(dynamicZoneMatcher)
-                .addFallbackPredicate(withPredicates(zoneAffinityMatcher).build())
-                .addFallbackPredicate(withPredicates(upstreamZoneMatcher).build())
+        CompositePredicate predicate = withPredicates(dynamicZoneMatcher)
+                .addFallbackPredicate(zoneAffinityMatcher)
+                .addFallbackPredicate(upstreamZoneMatcher)
                 .addFallbackPredicate(withPredicates(zoneAvoidancePredicate, availabilityPredicate).build())
                 .addFallbackPredicate(availabilityPredicate)
                 .addFallbackPredicate(alwaysTrue())
                 .build();
+        rule.setPredicate(predicate);
+        rule.setDescription(from(dynamicZoneMatcher)
+                .fallback(from(zoneAffinityMatcher))
+                .fallback(from(upstreamZoneMatcher))
+                .fallback(from("ZoneAvoidance").and(from("Availability")))
+                .fallback(from("Availability"))
+                .fallback(from("any()")));
+        log.info("Favorite zone enabled for client [{}] using context key [{}].", clientConfig.getClientName(), favoriteZoneKey);
+        return predicate;
     }
 }

@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotNull;
 
+import static java.lang.String.format;
+
 /**
  * Filters Servers against the current µservice zone.
  *
@@ -56,5 +58,13 @@ public class ZoneAffinityMatcher extends NullSafeServerPredicate {
                 server.getServer().getZone(),
                 accept);
         return accept;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return format("ZoneAffinityMatcher[zone=%s]", zone);
     }
 }

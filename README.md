@@ -1,6 +1,6 @@
 # [Spring Cloud Ribbon Extensions v1.4.3-SNAPSHOT](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki) :rocket::microscope:
 
-:exclamation:Must Have:exclamation: Enhance your µService testing, maintenance & overall development productivity.
+:exclamation:Must Have:exclamation: Enhance your micro-service testing, maintenance & overall development productivity.
 
 **Spring Cloud Ribbon Extensions** is a set of load balancing rules that chooses which server to target.
 It comes with handy features for easy integration, configuration and customization.
@@ -23,7 +23,7 @@ It comes with handy features for easy integration, configuration and customizati
 [![SonarCloud Duplication](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions:develop&metric=Duplications)
 
 ![CoL](https://tokei.rs/b1/github/enadim/spring-cloud-ribbon-extensions)
-[![Sonatype Snapshots](https://img.shields.io/nexus/s/https/oss.sonatype.org/#artifactdetails/#artifactdetails/#artifactdetails/com.github.enadim/spring-cloud-ribbon-extensions.svg)](https://oss.sonatype.org/#nexus-search;gav~com.github.enadim~spring-cloud-ribbon-extensions~1.4.3-SNAPSHOT)
+[![Sonatype Snapshots](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.enadim/spring-cloud-ribbon-extensions.svg)](https://oss.sonatype.org/#nexus-search;gav~com.github.enadim~spring-cloud-ribbon-extensions~1.4.3-SNAPSHOT)
 [![Javadocs](http://www.javadoc.io/badge/com.github.enadim/spring-cloud-ribbon-extensions/1.4.3-SNAPSHOT.svg)](http://www.javadoc.io/doc/com.github.enadim/spring-cloud-ribbon-extensions/1.4.3-SNAPSHOT)
 
 [![GitHub license](https://img.shields.io/github/license/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/develop/LICENSE)
@@ -50,31 +50,31 @@ It comes with handy features for easy integration, configuration and customizati
 #### Zone Affinity
 [@EnableRibbonZoneAffinity](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Zone-Affinity): Enables routing to the same zone: see the tests for concrete usage and configurations.
 
-Designed mainly for µServices that should calls others in the same zone.
+Designed mainly for micro-services that should calls others in the same zone.
 
 #### Favorite Zone :gem:
 [@EnableRibbonFavoriteZone](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Favorite-Zone): Enables routing to a favorite zone: see the tests for concrete usage and configurations.
 
-Designed mainly for testing a µService among an existing µService architecture without disruption. This is the feature that triggered this project.
+Designed mainly for testing a micro-service among an existing micro-service architecture without disruption. This is the feature that triggered this project.
 
 #### Strict Metadata Matcher
 [@EnableRibbonStrictMetadataMatcher](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Strict-Metadata-Matcher): Enables routing to servers that have a set of metadata: see the tests for concrete usage and configurations.
 
-Designed to target a specific µService that holds a point to point connection with an external system (like FIX,...)
+Designed to target a specific micro-service that holds a point to point connection with an external system (like FIX,...)
 
 Requires Eureka.
 
-#### Dynamic Matcher :gem:
-[@EnableRibbonDynamicMatcher](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Dynamic-Matcher): Enables routing against a dynamic key: see the tests for concrete usage and configurations.
+#### Dynamic Metadata Matcher :gem:
+[@EnableRibbonDynamicMetadataMatcher](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Dynamic-Metadata-Matcher): Enables routing against a dynamic key: see the tests for concrete usage and configurations.
 
-Designed to target a specific µServices that holds multiple point to point connections with many external systems (like FIX,...)
+Designed to target a specific micro-services that holds multiple point to point connections with many external systems (like FIX,...)
 
 Requires Eureka.
 
 ### Context Propagation :gem:
-[@EnableContextPropagation](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Context-Propagation): Enables sharing the execution context through all the µServices: see the tests for concrete usage and configurations.
+[@EnableContextPropagation](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Context-Propagation): Enables sharing the execution context through all the micro-services: see the tests for concrete usage and configurations.
 
-Designed to propagate the execution context across the µServices architecture.
+Designed to propagate the execution context across the micro-services architecture.
 
 What does it support:
 * Transport: http, jms, stomp.
@@ -84,7 +84,7 @@ What does it support:
 :warning:You should use only lower case key names (http header limitation).
 
 ### [Combine Favorite Zone & Context Propagation](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki/Context-Propagation-And-Favorite-Zone) :sparkles:
-Eureka:exclamation: Let's enter a world of easy development and testing with µService architecture.
+Eureka:exclamation: Let's enter a world of easy development and testing with micro-service architecture.
 * Developers are able to deploy & debug their own micro-service and get back any request they have initiated disregarding the entry point and without being annoyed by the requests they have not initiated.
 * Deploying in multi region-and let our clients (that have no knowledge of eureka, ribbon, zuul) choose the zone they prefer to target.
 * And other things that I have not thought about...

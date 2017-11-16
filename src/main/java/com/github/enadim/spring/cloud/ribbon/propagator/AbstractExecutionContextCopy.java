@@ -20,8 +20,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -73,8 +72,8 @@ public class AbstractExecutionContextCopy<T> {
      * @param t the target type of the copy.
      * @return the copied {@link ExecutionContext} entries.
      */
-    protected List<Map.Entry<String, String>> copy(T t) {
-        List<Map.Entry<String, String>> result = new ArrayList<>();
+    protected Set<Map.Entry<String, String>> copy(T t) {
+        Set<Map.Entry<String, String>> result = new HashSet<>();
         copy(t, current().entrySet(), result);
         copy(t, extraStaticEntries.entrySet(), result);
         return result;
@@ -87,7 +86,7 @@ public class AbstractExecutionContextCopy<T> {
      * @param entrySet the entry set to copy
      * @param result   the copied entries
      */
-    private void copy(T t, Set<Entry<String, String>> entrySet, List<Map.Entry<String, String>> result) {
+    private void copy(T t, Set<Entry<String, String>> entrySet, Set<Map.Entry<String, String>> result) {
         entrySet.stream()
                 .filter(x -> filter.accept(x.getKey()))
                 .forEach(x -> {

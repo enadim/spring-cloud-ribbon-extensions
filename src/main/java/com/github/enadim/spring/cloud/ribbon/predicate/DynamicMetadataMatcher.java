@@ -18,9 +18,11 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
+import static java.lang.String.format;
 
 /**
  * Filters Servers that does have the desired metadata entry.
@@ -38,12 +40,19 @@ public class DynamicMetadataMatcher extends DiscoveryEnabledServerPredicate {
     private final String dynamicEntryKey;
 
     /**
+     * matches result when dynamic entry key is missing.
+     */
+    private final boolean matchIfMissing;
+
+    /**
      * Sole constructor.
      *
      * @param dynamicEntryKey the dynamic metadata key.
+     * @param matchIfMissing  the result when dynamic entry key is not defined
      */
-    public DynamicMetadataMatcher(String dynamicEntryKey) {
+    public DynamicMetadataMatcher(@NotNull String dynamicEntryKey, boolean matchIfMissing) {
         this.dynamicEntryKey = dynamicEntryKey;
+        this.matchIfMissing = matchIfMissing;
     }
 
     /**
@@ -66,11 +75,21 @@ public class DynamicMetadataMatcher extends DiscoveryEnabledServerPredicate {
                     accept);
             return accept;
         } else {
-            log.trace("[{}] not defined! : {}{} => false",
+            log.trace("[{}] not defined! : {}{} => %b",
                     dynamicEntryKey,
                     server.getHostPort(),
-                    metadata);
-            return false;
+                    metadata,
+                    matchIfMissing);
+            return matchIfMissing;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        String metadataKey = current().get(dynamicEntryKey);
+        return format("DynamicMetadataMatcher[(%s=%s)=%s,matchIfMissing=%b]", dynamicEntryKey, metadataKey, metadataKey == null ? null : current().get(metadataKey), matchIfMissing);
     }
 }

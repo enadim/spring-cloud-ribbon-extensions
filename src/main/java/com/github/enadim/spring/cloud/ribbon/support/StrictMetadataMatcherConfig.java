@@ -16,6 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.support;
 
 import com.github.enadim.spring.cloud.ribbon.predicate.StrictMetadataMatcher;
+import com.github.enadim.spring.cloud.ribbon.rule.PredicateBasedRuleSupport;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.netflix.ribbon.RibbonClientConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
 
 /**
  * The strict metadata matcher load balancing rule definition.
@@ -44,11 +47,15 @@ public class StrictMetadataMatcherConfig extends RuleBaseConfig {
 
     /**
      * @param clientConfig the client config
+     * @param rule         the predicate rule support
      * @return an instance of {@link StrictMetadataMatcher}
      */
     @Bean
-    public StrictMetadataMatcher strictMetadataMatcher(IClientConfig clientConfig) {
+    public StrictMetadataMatcher strictMetadataMatcher(IClientConfig clientConfig, PredicateBasedRuleSupport rule) {
+        StrictMetadataMatcher strictMetadataMatcher = new StrictMetadataMatcher();
+        rule.setPredicate(strictMetadataMatcher);
+        rule.setDescription(from(strictMetadataMatcher));
         log.info("Strict metadata matcher enabled for client [{}].", clientConfig.getClientName());
-        return new StrictMetadataMatcher();
+        return strictMetadataMatcher;
     }
 }

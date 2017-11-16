@@ -15,8 +15,6 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
-import com.github.enadim.spring.cloud.ribbon.predicate.DynamicZoneMatcher;
 import com.github.enadim.spring.cloud.ribbon.predicate.ZoneAffinityMatcher;
 import com.github.enadim.spring.cloud.ribbon.rule.PredicateBasedRuleSupport;
 import com.netflix.client.config.IClientConfig;
@@ -35,25 +33,24 @@ import org.springframework.cloud.netflix.ribbon.ZonePreferenceServerListFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
 import static com.netflix.loadbalancer.AbstractServerPredicate.alwaysTrue;
 import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
 
 /**
- * The Favorite name load balancing rule configuration.
- * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonFavoriteZone}
- * <p>Favorite Rule Definition
+ * The Zone Affinity load balancing rule configuration.
+ * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonZoneAffinity}
+ * <p>Zone Affinity Rule Definition
  * <ul>
- * <li>Start applying {@link DynamicZoneMatcher} : choose a server having the same name as the favorite name defined in the {@link ExecutionContext}.
- * <li>Fallbacks to {@link ZoneAffinityMatcher}: choose a server in the same name as the current instance.
+ * <li>Fallbacks to {@link ZoneAffinityMatcher}: choose a server in the same description as the current instance.
  * <li>Fallbacks to {@link ZoneAvoidancePredicate} &amp; {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to any server
  * </ul>
  * <p><strong>Warning:</strong> Unless mastering the load balancing rules, do not mix with {@link ZonePreferenceServerListFilter} which is used by {@link DynamicServerListLoadBalancer} @see {@link #serverListFilter()}
- * <p>The favorite name default metadata attribute name is 'name', however it can be configured by the property 'ribbon.rule.favorite.name.name'
  *
  * @author Nadim Benabdenbi
- * @see EnableRibbonFavoriteZone
+ * @see EnableRibbonZoneAffinity
  */
 @Configuration
 @ConditionalOnClass(DiscoveryEnabledNIWSServerList.class)
@@ -67,19 +64,25 @@ public class ZoneAffinityConfig extends RuleBaseConfig {
      * Zone affinity rule.
      *
      * @param clientConfig the ribbon client config.
+     * @param rule         the predicate rule support
      * @return the zone affinity rule.
      */
     @Bean
-    public CompositePredicate zoneAffinity(IClientConfig clientConfig) {
-        PredicateBasedRuleSupport rule = new PredicateBasedRuleSupport();
+    public CompositePredicate zoneAffinity(IClientConfig clientConfig, PredicateBasedRuleSupport rule) {
         AvailabilityPredicate availabilityPredicate = new AvailabilityPredicate(rule, clientConfig);
         ZoneAvoidancePredicate zoneAvoidancePredicate = new ZoneAvoidancePredicate(rule, clientConfig);
         ZoneAffinityMatcher zoneAffinityMatcher = new ZoneAffinityMatcher(getEurekaInstanceProperties().getZone());
-        log.info("Zone affinity enabled for client [{}].", clientConfig.getClientName());
-        return withPredicates(zoneAffinityMatcher)
+        CompositePredicate predicate = withPredicates(zoneAffinityMatcher)
                 .addFallbackPredicate(withPredicates(zoneAvoidancePredicate, availabilityPredicate).build())
                 .addFallbackPredicate(availabilityPredicate)
                 .addFallbackPredicate(alwaysTrue())
                 .build();
+        rule.setPredicate(predicate);
+        rule.setDescription(from(zoneAffinityMatcher)
+                .fallback(from("ZoneAvoidance").and(from("Availability")))
+                .fallback(from("Availability"))
+                .fallback(from("Any()")));
+        log.info("Zone affinity enabled for client [{}].", clientConfig.getClientName());
+        return predicate;
     }
 }

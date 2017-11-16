@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotNull;
 
+import static java.lang.String.format;
+
 /**
  * Filters servers against the {@link #expectedInstanceId}.
  *
@@ -55,5 +57,13 @@ public class InstanceIdMatcher extends DiscoveryEnabledServerPredicate {
                 actual,
                 accept);
         return accept;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return format("InstanceIdMatcher[instanceId=%s]", expectedInstanceId);
     }
 }

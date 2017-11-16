@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
+import static java.lang.String.format;
+
 /**
  * Filters Servers against a specific {@link #entryKey} that matches the {@link #entryValue}.
  *
@@ -64,5 +66,13 @@ public class SingleStaticMetadataMatcher extends DiscoveryEnabledServerPredicate
                 metadata,
                 accept);
         return accept;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return format("StrictMetadataMatcher[%s=%s]", entryKey, entryValue);
     }
 }

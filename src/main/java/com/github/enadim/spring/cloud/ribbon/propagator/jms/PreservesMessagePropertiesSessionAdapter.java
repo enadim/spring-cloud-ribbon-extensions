@@ -40,9 +40,9 @@ import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Session adapter that preserves the {@link ExecutionContext} by copying message propagationProperties from/to the current {@link ExecutionContext} entry pre-filtering property names or entry keys using the provided {@link #filter}.
@@ -80,7 +80,7 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
      * @throws JMSException thrown by the delegate
      */
     private <T extends Message> T copyExecutionContextToMessageProperties(T message) throws JMSException {
-        List<Entry<String, String>> entries = copy(message);
+        Set<Entry<String, String>> entries = copy(message);
         log.trace("propagated {}", entries);
         return message;
     }

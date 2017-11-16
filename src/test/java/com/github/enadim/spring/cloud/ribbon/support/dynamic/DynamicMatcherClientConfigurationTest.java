@@ -30,11 +30,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
                 "ribbon.eager-load.clients[0]=application2",
                 "ribbon.extensions.propagation.keys[0]=instance-id",
                 "ribbon.extensions.propagation.keys[1]=mykey",
-                "ribbon.extensions.client.application.rule.dynamic-matcher.key=mykey"}
+                "ribbon.extensions.client.application.rule.dynamic-metadata-matcher.key=mykey",
+                "ribbon.extensions.client.application.rule.dynamic-metadata-matcher.accept-when-missing=false"}
 )
 public class DynamicMatcherClientConfigurationTest extends AbstractDynamicMatcherSupportTest {
     public DynamicMatcherClientConfigurationTest() {
-        super("mykey");
+        super("mykey", false);
     }
 
 }

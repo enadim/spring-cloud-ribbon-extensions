@@ -17,9 +17,12 @@ package com.github.enadim.spring.cloud.ribbon.rule;
 
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateBasedRule;
+import com.netflix.loadbalancer.Server;
+import lombok.Setter;
 
-import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
+
+import static java.lang.String.format;
 
 /**
  * Convenient support of predicate based rule.
@@ -28,10 +31,16 @@ import javax.validation.constraints.NotNull;
  * @author Nadim Benabdenbi
  */
 public class PredicateBasedRuleSupport extends PredicateBasedRule {
+
+    /**
+     * the rule description.
+     */
+    @Setter
+    private RuleDescription description;
     /**
      * the delegate predicate.
      */
-    @Inject
+    @Setter
     private AbstractServerPredicate predicate;
 
     /**
@@ -47,17 +56,8 @@ public class PredicateBasedRuleSupport extends PredicateBasedRule {
      * @param predicate the server predicate, can't be null
      * @throws IllegalArgumentException if {@code predicate} is {@code null}
      */
-    public PredicateBasedRuleSupport(AbstractServerPredicate predicate) {
+    public PredicateBasedRuleSupport(@NotNull AbstractServerPredicate predicate) {
         setPredicate(predicate);
-    }
-
-    /**
-     * Convenient delegate predicate setter.
-     *
-     * @param predicate the rule predicate.
-     */
-    public void setPredicate(@NotNull AbstractServerPredicate predicate) {
-        this.predicate = predicate;
     }
 
     /**
@@ -66,5 +66,18 @@ public class PredicateBasedRuleSupport extends PredicateBasedRule {
     @Override
     public AbstractServerPredicate getPredicate() {
         return predicate;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Server choose(Object key) {
+        Server server = super.choose(key);
+        if (server == null) {
+            throw new ChooseServerException(format("There is so server satisfying rule %s.", description == null ? toString() : description.describe()));
+        } else {
+            return server;
+        }
     }
 }

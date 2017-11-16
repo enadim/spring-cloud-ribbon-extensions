@@ -53,6 +53,7 @@ public class StrictMetadataMatcherTest {
         asList("1", "2").forEach(x -> metada.put(x, x));
         asList("1", "2").forEach(x -> current().put(x, x));
         assertThat(predicate.doApply(server), is(true));
+        assertThat(predicate.toString(), is("StrictMetadataMatcher[1=1, 2=2]"));
     }
 
     @Test
@@ -60,6 +61,7 @@ public class StrictMetadataMatcherTest {
         asList("1", "2", "3").forEach(x -> metada.put(x, x));
         asList("1", "2").forEach(x -> current().put(x, x));
         assertThat(predicate.doApply(server), is(true));
+        assertThat(predicate.toString(), is("StrictMetadataMatcher[1=1, 2=2]"));
     }
 
     @Test

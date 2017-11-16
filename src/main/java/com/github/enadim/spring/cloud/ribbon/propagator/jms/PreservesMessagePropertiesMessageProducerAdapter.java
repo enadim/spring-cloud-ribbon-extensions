@@ -25,8 +25,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Message producer adapter that copies the current {@link ExecutionContext} to the message propagationProperties pre-filtering entry keys using the provided {@link #filter}.
@@ -149,7 +149,7 @@ public class PreservesMessagePropertiesMessageProducerAdapter extends AbstractEx
      *
      * @param copiedEntries the copied entries.
      */
-    private void trace(List<Map.Entry<String, String>> copiedEntries) {
+    private void trace(Set<Map.Entry<String, String>> copiedEntries) {
         log.trace("Context entries copied to message propagationProperties {}", copiedEntries);
     }
 

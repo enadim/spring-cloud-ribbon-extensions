@@ -15,17 +15,26 @@
  */
 package com.github.enadim.spring.cloud.ribbon.rule;
 
+import com.google.common.base.Optional;
 import com.netflix.loadbalancer.AbstractServerPredicate;
+import com.netflix.loadbalancer.ILoadBalancer;
+import com.netflix.loadbalancer.Server;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PredicateBasedRuleSupportTest {
 
     AbstractServerPredicate predicate = mock(AbstractServerPredicate.class);
+    ILoadBalancer loadBalancer = mock(ILoadBalancer.class);
+    Server server = mock(Server.class);
 
     @Test
     public void testConstructor() {
@@ -39,5 +48,25 @@ public class PredicateBasedRuleSupportTest {
         Assert.assertThat(support.getPredicate(), is(nullValue()));
         support.setPredicate(predicate);
         Assert.assertThat(support.getPredicate(), is(predicate));
+    }
+
+    @Test
+    public void shouldChooseServer() throws Exception {
+        PredicateBasedRuleSupport support = new PredicateBasedRuleSupport(predicate);
+        support.setLoadBalancer(loadBalancer);
+        List<Server> servers = asList(server);
+        when(loadBalancer.getAllServers()).thenReturn(servers);
+        when(predicate.chooseRoundRobinAfterFiltering(servers, null)).thenReturn(Optional.of(server));
+        Assert.assertThat(support.choose(null), is(server));
+    }
+
+    @Test(expected = ChooseServerException.class)
+    public void shouldNotChooseServer() throws Exception {
+        PredicateBasedRuleSupport support = new PredicateBasedRuleSupport(predicate);
+        support.setLoadBalancer(loadBalancer);
+        List<Server> servers = asList(server);
+        when(loadBalancer.getAllServers()).thenReturn(servers);
+        when(predicate.chooseRoundRobinAfterFiltering(servers, null)).thenReturn(Optional.fromNullable(null));
+        support.choose(null);
     }
 }

@@ -33,7 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 )
 public class DynamicMatcherDefaultConfigurationTest extends AbstractDynamicMatcherSupportTest {
     public DynamicMatcherDefaultConfigurationTest() {
-        super("dynamic-matcher-key");
+        super("dynamic-matcher-key", true);
     }
 
 }

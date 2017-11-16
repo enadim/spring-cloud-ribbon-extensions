@@ -24,9 +24,9 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Stomp session adapter that preserves the {@link ExecutionContext} by copying stomp headers from/to the current {@link ExecutionContext} entry pre-filtering header names or entry keys using the provided {@link #filter}.
@@ -91,7 +91,7 @@ public class PreservesHeadersStompSessionAdapter extends AbstractExecutionContex
      */
     @Override
     public Receiptable send(StompHeaders headers, Object payload) {
-        List<Entry<String, String>> entries = copy(headers);
+        Set<Entry<String, String>> entries = copy(headers);
         log.trace("Execution context copied to stomp headers: {}.", entries);
         return delegate.send(headers, payload);
     }

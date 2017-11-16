@@ -24,9 +24,9 @@ import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 
 /**
@@ -61,7 +61,7 @@ public class PreservesHttpHeadersFeignInterceptor extends AbstractExecutionConte
     public void apply(RequestTemplate template) {
         String url = template.request().url();
         if (urlFilter.accept(url)) {
-            List<Entry<String, String>> propagatedAttributes = copy(template);
+            Set<Entry<String, String>> propagatedAttributes = copy(template);
             log.trace("Propagated outbound headers {} for url [{}].", propagatedAttributes, url);
         } else {
             log.trace("Propagation disabled for url [{}]", url);

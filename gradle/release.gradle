@@ -67,7 +67,7 @@ class ReadMeBranch extends DefaultTask {
                 }
                 if (!isReleaseVersion && replace.contains("Maven Central")) {
                     replace = replace.replaceAll('Maven Central', 'Sonatype Snapshots')
-                    replace = replace.replaceAll('maven-central/v', 'nexus/s/https/oss.sonatype.org/#artifactdetails')
+                    replace = replace.replaceAll('maven-central/v', 'nexus/s/https/oss.sonatype.org')
                     replace = replace.replaceAll('http://search.maven.org/#artifactdetails', 'https://oss.sonatype.org/#nexus-search;gav')
                     replace = replace.replaceAll('\\|', '~')
                 }
