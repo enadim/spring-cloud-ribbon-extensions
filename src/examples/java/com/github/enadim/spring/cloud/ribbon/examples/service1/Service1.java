@@ -18,8 +18,8 @@ package com.github.enadim.spring.cloud.ribbon.examples.service1;
 import com.github.enadim.spring.cloud.ribbon.examples.api.service2.Service2Resource;
 import com.github.enadim.spring.cloud.ribbon.examples.ribbon.RibbonClientsFavoriteZoneConfig;
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.EurekaInstanceProperties;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -27,8 +27,8 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,7 +45,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RibbonClients(defaultConfiguration = RibbonClientsFavoriteZoneConfig.class)
 @EnableFeignClients(basePackageClasses = Service2Resource.class)
 @RestController
-@Slf4j
+@EnableHttpLogging
 public class Service1 {
     @Inject
     protected EurekaInstanceProperties eurekaInstanceMetadataProperties;
@@ -55,8 +55,7 @@ public class Service1 {
 
     @RequestMapping(method = GET, value = "/service1/message")
     @ResponseStatus(HttpStatus.OK)
-    public String getMessage(@RequestParam(value = "useCase") String useCase) {
-        log.info("use case: {}", useCase);
+    public String getMessage(@RequestBody String useCase) {
         return format("%s->%s", eurekaInstanceMetadataProperties.getInstanceId(), service2.getMessage(useCase));
     }
 

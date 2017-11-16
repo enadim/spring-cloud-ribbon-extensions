@@ -56,10 +56,11 @@ public class SingleStaticMetadataMatcher extends DiscoveryEnabledServerPredicate
         Map<String, String> metadata = server.getInstanceInfo().getMetadata();
         String actual = metadata.get(entryKey);
         boolean accept = entryValue.equals(actual);
-        log.trace("Expected [{}={}] vs {}{} => {}",
+        log.trace("Expected [{}={}] vs {}:{}{} => {}",
                 entryKey,
                 entryValue,
                 server.getHostPort(),
+                server.getMetaInfo().getAppName(),
                 metadata,
                 accept);
         return accept;

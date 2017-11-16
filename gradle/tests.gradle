@@ -29,10 +29,6 @@ testSets {
 
 integrationTest {
     ignoreFailures = project.hasProperty('ignoreFailures')
-    doFirst {
-        //wait for the server to startup effectively (open port is too late)
-        sleep(5 * 1000)
-    }
 }
 
 task eureka(type: com.github.psxpaul.task.JavaExecFork) {
@@ -45,8 +41,8 @@ task eureka(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8000
     timeout = 30
 }
-eureka.group = 'it'
-
+eureka.group 'it'
+eureka_stop.group 'it'
 task service2FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service2.Service2'
     classpath = sourceSets.examples.runtimeClasspath
@@ -58,7 +54,13 @@ task service2FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8021
     timeout = 30
 }
-service2FavoriteZone1.group = 'it'
+service2FavoriteZone1 {
+    doLast {
+        sleep(1000)
+    }
+}
+service2FavoriteZone1.group 'it'
+service2FavoriteZone1_stop.group 'it'
 service2FavoriteZone1.dependsOn eureka
 
 task service2FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
@@ -72,7 +74,13 @@ task service2FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8022
     timeout = 30
 }
-service2FavoriteZone2.group = 'it'
+service2FavoriteZone2 {
+    doLast {
+        sleep(2000)
+    }
+}
+service2FavoriteZone2.group 'it'
+service2FavoriteZone2_stop.group 'it'
 service2FavoriteZone2.dependsOn service2FavoriteZone1
 
 task service1FavoriteZoneDeveloper(type: com.github.psxpaul.task.JavaExecFork) {
@@ -86,7 +94,13 @@ task service1FavoriteZoneDeveloper(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8019
     timeout = 30
 }
-service1FavoriteZoneDeveloper.group = 'it'
+service1FavoriteZoneDeveloper {
+    doLast {
+        sleep(2000)
+    }
+}
+service1FavoriteZoneDeveloper.group 'it'
+service1FavoriteZoneDeveloper_stop.group 'it'
 service1FavoriteZoneDeveloper.dependsOn service2FavoriteZone2
 
 task service1FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
@@ -100,7 +114,13 @@ task service1FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8011
     timeout = 30
 }
-service1FavoriteZone1.group = 'it'
+service1FavoriteZone1 {
+    doLast {
+        sleep(2000)
+    }
+}
+service1FavoriteZone1.group 'it'
+service1FavoriteZone1_stop.group 'it'
 service1FavoriteZone1.dependsOn service1FavoriteZoneDeveloper
 
 task service1FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
@@ -114,7 +134,13 @@ task service1FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8012
     timeout = 30
 }
-service1FavoriteZone2.group = 'it'
+service1FavoriteZone2 {
+    doLast {
+        sleep(2000)
+    }
+}
+service1FavoriteZone2.group 'it'
+service1FavoriteZone2_stop.group 'it'
 service1FavoriteZone2.dependsOn service1FavoriteZone1
 
 task service3StrictMatcherZone1(type: com.github.psxpaul.task.JavaExecFork) {
@@ -128,7 +154,13 @@ task service3StrictMatcherZone1(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8031
     timeout = 30
 }
-service3StrictMatcherZone1.group = 'it'
+service3StrictMatcherZone1 {
+    doLast {
+        sleep(2000)
+    }
+}
+service3StrictMatcherZone1.group 'it'
+service3StrictMatcherZone1_stop.group 'it'
 service3StrictMatcherZone1.dependsOn service1FavoriteZone2
 
 task zuul(type: com.github.psxpaul.task.JavaExecFork) {
@@ -141,7 +173,13 @@ task zuul(type: com.github.psxpaul.task.JavaExecFork) {
     waitForPort = 8001
     timeout = 30
 }
-zuul.group = 'it'
+zuul {
+    doLast {
+        sleep(2000)
+    }
+}
+zuul.group 'it'
+zuul_stop.group 'it'
 zuul.dependsOn service3StrictMatcherZone1
 
 if (project.hasProperty('it')) {
@@ -153,3 +191,19 @@ if (project.hasProperty('it')) {
 } else {
     project.tasks["sonarqube"].dependsOn test
 }
+processExamplesResources.group 'build'
+compileExamplesJava.group 'build'
+processIntegrationTestResources.group 'build'
+compileIntegrationTestJava.group 'build'
+
+checkstyleIntegrationTest.group 'coding'
+checkstyleExamples.group 'coding'
+findbugsExamples.group 'coding'
+findbugsIntegrationTest.group 'coding'
+pmdExamples.group 'coding'
+pmdIntegrationTest.group 'coding'
+licenseExamples.group 'license'
+licenseFormatExamples.group 'license'
+licenseFormatIntegrationTest.group 'license'
+licenseFormatMain.group 'license'
+licenseIntegrationTest.group 'license'

@@ -105,3 +105,16 @@ dependencies {
 compileJava {
     options.fork = true
 }
+compileJava.group 'build'
+compileTestJava.group 'build'
+processResources.group 'build'
+sourcesJar.group 'build'
+javadocJar.group 'build'
+testSourcesJar.group 'build'
+testJar.group 'build'
+processTestResources.group 'build'
+install.group 'build'
+dependencyReport.group 'report'
+htmlDependencyReport.group 'report'
+taskReport.group 'report'
+propertyReport.group 'report'

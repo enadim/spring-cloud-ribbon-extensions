@@ -17,6 +17,7 @@ package com.github.enadim.spring.cloud.ribbon.support.zuul;
 
 import com.github.enadim.spring.cloud.ribbon.propagator.hystrix.ExecutionContextAwareHystrixStrategy;
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.PropagationProperties;
 import com.netflix.hystrix.strategy.HystrixPlugins;
 import feign.RequestInterceptor;
@@ -39,6 +40,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"eureka.client.register-with-eureka=false"}
 )
+@EnableHttpLogging
 public class ContextPropagationZuulTest {
 
     @Inject

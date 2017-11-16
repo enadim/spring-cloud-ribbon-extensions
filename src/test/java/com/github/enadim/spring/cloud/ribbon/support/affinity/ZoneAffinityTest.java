@@ -18,7 +18,9 @@ package com.github.enadim.spring.cloud.ribbon.support.affinity;
 import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareExecutorService;
 import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest;
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonZoneAffinity;
+import com.github.enadim.spring.cloud.ribbon.support.affinity.ZoneAffinityTest.ZoneAffinityApplication;
 import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesExecutionContextHystrixStrategy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +41,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.http.HttpStatus.OK;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {ZoneAffinityTest.StrictMatcherApplication.class},
+@SpringBootTest(classes = {ZoneAffinityApplication.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
                 "spring.application.name=zone-affinity-test",
@@ -80,7 +82,8 @@ public class ZoneAffinityTest extends AbstractSupportTest {
     @EnableContextPropagation
     @RibbonClients(defaultConfiguration = DefaultRibbonClientsConfig.class,
             value = {@RibbonClient(name = TestApplicationResource.SERVICE_ID, configuration = ZoneAffinityRibbonClientsConfig.class)})
-    public static class StrictMatcherApplication extends TestApplicationBase {
+    @EnableHttpLogging
+    public static class ZoneAffinityApplication extends TestApplicationBase {
         @Bean
         public ExecutorService executorService() {
             return new ContextAwareExecutorService(Executors.newSingleThreadExecutor());

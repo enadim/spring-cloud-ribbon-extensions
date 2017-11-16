@@ -9,3 +9,8 @@ license {
     include '**/*.java'
     ext.year = Calendar.getInstance().get(Calendar.YEAR)
 }
+
+licenseFormatTest.group 'license'
+licenseMain.group 'license'
+licenseTest.group 'license'
+licenseFormatMain.group 'license'

@@ -48,9 +48,10 @@ public class InstanceIdMatcher extends DiscoveryEnabledServerPredicate {
     protected boolean doApply(DiscoveryEnabledServer server) {
         String actual = server.getInstanceInfo().getInstanceId();
         boolean accept = expectedInstanceId.equals(actual);
-        log.trace("Expected [{}] vs {}[{}] => {}",
+        log.trace("Expected [{}] vs {}:{}[{}] => {}",
                 expectedInstanceId,
                 server.getHostPort(),
+                server.getMetaInfo().getAppName(),
                 actual,
                 accept);
         return accept;

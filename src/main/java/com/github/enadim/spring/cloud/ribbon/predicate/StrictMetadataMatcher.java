@@ -43,9 +43,10 @@ public class StrictMetadataMatcher extends DiscoveryEnabledServerPredicate {
         Set<Entry<String, String>> expected = context.entrySet();
         Map<String, String> actual = server.getInstanceInfo().getMetadata();
         boolean accept = actual.entrySet().containsAll(expected);
-        log.trace("Expected {} vs {}{} => {}",
+        log.trace("Expected {} vs {}:{}{} => {}",
                 expected,
                 server.getHostPort(),
+                server.getMetaInfo().getAppName(),
                 actual,
                 accept);
         return accept;

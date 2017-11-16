@@ -13,14 +13,14 @@ class ReplaceVersionInFile extends DefaultTask {
     def build() {
         def newVersion = ''
         new File('gradle.properties').eachLine('UTF-8') { line ->
-            if( newVersion.isEmpty() && line.startsWith('version=')){
+            if (newVersion.isEmpty() && line.startsWith('version=')) {
                 newVersion = line.substring('version='.length())
             }
         }
         println 'Setting new version ' + newVersion + ' on file ' + fileName
         def file = new File(fileName)
         def newContent = file.getText('UTF-8').replaceAll('[0-9]+\\.[0-9]+\\.[0-9]+(-SNAPSHOT)?', newVersion)
-        file.setText(newContent,'UTF-8')
+        file.setText(newContent, 'UTF-8')
     }
 }
 
@@ -33,11 +33,11 @@ class ReadMeBranch extends DefaultTask {
         println 'README.md: switching branch to ' + targetBranch
         def version = ''
         new File('gradle.properties').eachLine('UTF-8') { line ->
-            if( version.isEmpty() && line.startsWith('version=')){
+            if (version.isEmpty() && line.startsWith('version=')) {
                 version = line.substring('version='.length())
             }
         }
-        def isReleaseVersion=!version.endsWith("SNAPSHOT")
+        def isReleaseVersion = !version.endsWith("SNAPSHOT")
         def content = ''
         def replace = ''
         def readmeBranch = ''
@@ -55,7 +55,7 @@ class ReadMeBranch extends DefaultTask {
                 if (replace.contains("SonarCloud")) {
                     if (targetBranch == 'master') {
                         replace = replace.replaceAll(':' + targetBranch, '')
-                    } else if(replace.contains('&metric') && !replace.contains(':' + targetBranch + '&metric')) {
+                    } else if (replace.contains('&metric') && !replace.contains(':' + targetBranch + '&metric')) {
                         replace = replace.replaceAll('&metric', ':' + targetBranch + '&metric')
                     }
                 }
@@ -76,14 +76,15 @@ class ReadMeBranch extends DefaultTask {
                 content += line + '\n'
             }
         }
-        readme.setText(content,'UTF-8')
+        readme.setText(content, 'UTF-8')
     }
 }
-task updateReadMeProjectReleaseVersion(type: ReplaceVersionInFile){
+
+task updateReadMeProjectReleaseVersion(type: ReplaceVersionInFile) {
     fileName = 'README.md'
 }
 updateReadMeProjectReleaseVersion.group = 'release'
-task updateSonarProjectReleaseVersion(type: ReplaceVersionInFile){
+task updateSonarProjectReleaseVersion(type: ReplaceVersionInFile) {
     fileName = 'sonar-project.properties'
 }
 updateSonarProjectReleaseVersion.group = 'release'
@@ -94,7 +95,7 @@ updateReadMeProjectVersion.group = 'release'
 task updateSonarProjectVersion(type: ReplaceVersionInFile) {
     fileName = 'sonar-project.properties'
 }
-updateReadMeProjectVersion.group = 'release'
+updateSonarProjectVersion.group = 'release'
 task ReadMeForMaster(type: ReadMeBranch) {
     targetBranch = 'master'
 }

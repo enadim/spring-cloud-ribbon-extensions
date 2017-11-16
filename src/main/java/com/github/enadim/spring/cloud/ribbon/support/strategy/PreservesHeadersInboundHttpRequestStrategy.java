@@ -47,6 +47,6 @@ public class PreservesHeadersInboundHttpRequestStrategy extends WebMvcConfigurer
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new PreservesHttpHeadersInterceptor(properties.buildEntriesFilter())).addPathPatterns(
                 "/**");
-        log.debug("Context propagation enabled for http request on keys={}.", properties.getKeys());
+        log.info("Context propagation enabled for http request on keys={}.", properties.getKeys());
     }
 }

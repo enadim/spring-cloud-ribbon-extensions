@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.enadim.spring.cloud.ribbon.examples.eureka;
+package com.github.enadim.spring.cloud.ribbon.support;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+import org.springframework.context.annotation.Import;
 
-@SpringBootApplication
-@EnableEurekaServer
-@EnableDiscoveryClient
-public class EurekaServer {
-    public static void main(String[] args) {
-        SpringApplication.run(EurekaServer.class, "--spring.config.name=eureka");
-    }
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Enables spring http logging filter.
+ */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@Import(HttpLoggingConfig.class)
+public @interface EnableHttpLogging {
 }

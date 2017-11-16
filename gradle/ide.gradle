@@ -10,6 +10,14 @@ idea {
 
 eclipse {
     classpath {
-        downloadSources=true
+        downloadSources = true
     }
 }
+
+cleanEclipseClasspath.group 'ide'
+cleanEclipseJdt.group 'ide'
+cleanEclipseProject.group 'ide'
+eclipseClasspath.group 'ide'
+eclipseJdt.group 'ide'
+eclipseProject.group 'ide'
+eclipseClasspath.group 'ide'

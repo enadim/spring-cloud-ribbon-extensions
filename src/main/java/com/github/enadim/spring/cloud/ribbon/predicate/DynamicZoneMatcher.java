@@ -55,10 +55,11 @@ public class DynamicZoneMatcher extends NullSafeServerPredicate {
         String expected = current().get(zoneEntryKey);
         String actual = server.getZone();
         boolean accept = expected != null && expected.equals(actual);
-        log.trace("Expected [{}={}] vs {}[zone={}] => {}",
+        log.trace("Expected [{}={}] vs {}:{}[zone={}] => {}",
                 zoneEntryKey,
                 expected,
                 server.getHostPort(),
+                server.getMetaInfo().getAppName(),
                 actual,
                 accept);
         return accept;

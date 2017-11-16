@@ -62,7 +62,7 @@ public class PreservesHttpHeadersFeignInterceptor extends AbstractExecutionConte
         String url = template.request().url();
         if (urlFilter.accept(url)) {
             List<Entry<String, String>> propagatedAttributes = copy(template);
-            log.trace("Propagated attributes {} for url [{}]", propagatedAttributes, url);
+            log.trace("Propagated outbound headers {} for url [{}].", propagatedAttributes, url);
         } else {
             log.trace("Propagation disabled for url [{}]", url);
         }

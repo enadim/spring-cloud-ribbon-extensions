@@ -32,6 +32,7 @@ public abstract class AbstractTest {
     protected ExecutorService executorService = Executors.newFixedThreadPool(maxConcurrentTasks * 2);
     private final String basePath;
     private final String applicationName;
+    protected boolean parrallelRunEnabled = true;
 
     public AbstractTest(String basePath, String applicationName) {
         this.basePath = basePath;
@@ -69,32 +70,37 @@ public abstract class AbstractTest {
     }
 
     protected void parallelRun(Runnable r) {
-        AtomicInteger errors = new AtomicInteger();
-        List<Future<?>> futures = new ArrayList<>(maxConcurrentTasks);
-        for (int i = 0; i < maxConcurrentTasks; i++) {
-            futures.add(
-                    executorService.submit(() -> {
-                        try {
-                            r.run();
-                        } catch (AssertionError e) {
-                            errors.incrementAndGet();
-                        }
-                    }));
-        }
-        futures.forEach(x -> {
-            try {
-                x.get();
-            } catch (Exception e) {
-                errors.incrementAndGet();
+        if (parrallelRunEnabled) {
+            AtomicInteger errors = new AtomicInteger();
+            List<Future<?>> futures = new ArrayList<>(maxConcurrentTasks);
+            for (int i = 0; i < maxConcurrentTasks; i++) {
+                futures.add(
+                        executorService.submit(() -> {
+                            try {
+                                r.run();
+                            } catch (AssertionError e) {
+                                errors.incrementAndGet();
+                            }
+                        }));
             }
-        });
-        if (errors.get() > 0) {
-            throw new IllegalStateException();
+            futures.forEach(x -> {
+                try {
+                    x.get();
+                } catch (Exception e) {
+                    errors.incrementAndGet();
+                }
+            });
+            if (errors.get() > 0) {
+                throw new IllegalStateException();
+            }
         }
     }
 
     @Test(expected = IllegalStateException.class)
     public void parallelRunTest() {
         parallelRun(Assert::fail);
+        if (!parrallelRunEnabled) {
+            throw new IllegalStateException();
+        }
     }
 }

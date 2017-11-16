@@ -17,9 +17,9 @@ package com.github.enadim.spring.cloud.ribbon.examples.api.service1;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @FeignClient("service1")
@@ -27,5 +27,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public interface Service1Resource {
     @RequestMapping(value = "/message", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    String getMessage(@RequestParam(value = "useCase") String useCase);
+    String getMessage(@RequestBody String useCase);
 }

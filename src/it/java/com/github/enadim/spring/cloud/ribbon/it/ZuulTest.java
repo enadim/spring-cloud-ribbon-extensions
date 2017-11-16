@@ -25,12 +25,13 @@ public class ZuulTest extends AbstractTest {
 
     public ZuulTest() {
         super("service1", "zuul");
+        parrallelRunEnabled = false;
     }
 
     @Test
     public void should_choose_same_zone1_when_no_zone_is_requested() {
         given().log().uri().log().headers()
-                .param("useCase", "should_choose_zone1_when_no_zone_is_requested")
+                .body("should_choose_zone1_when_no_zone_is_requested")
                 .when()
                 .get("/message")
                 .then()
@@ -47,7 +48,7 @@ public class ZuulTest extends AbstractTest {
     public void should_choose_same_zone1_when_unknown_zone_is_requested() {
         given().log().uri().log().headers()
                 .header("favorite-zone", "zone99")
-                .param("useCase", "should_choose_any_zone_when_unknown_zone_is_requested")
+                .body("should_choose_any_zone_when_unknown_zone_is_requested")
                 .when()
                 .get("/message")
                 .then()
@@ -64,7 +65,7 @@ public class ZuulTest extends AbstractTest {
     public void should_choose_zone1_when_zone1_is_requested() {
         given().log().uri().log().headers()
                 .header("favorite-zone", "zone1")
-                .param("useCase", "should_choose_zone1_when_zone1_is_requested")
+                .body("should_choose_zone1_when_zone1_is_requested")
                 .when()
                 .get("/message")
                 .then()
@@ -81,7 +82,7 @@ public class ZuulTest extends AbstractTest {
     public void should_choose_zone2_when_zone2_is_requested() {
         given().log().uri().log().headers()
                 .header("favorite-zone", "zone2")
-                .param("useCase", "should_choose_zone2_when_zone2_is_requested")
+                .body("should_choose_zone2_when_zone2_is_requested")
                 .when()
                 .get("/message")
                 .then()
@@ -98,7 +99,7 @@ public class ZuulTest extends AbstractTest {
     public void should_choose_service1_developer_when_developer_zone_is_requested() {
         given().log().uri().log().headers()
                 .header("favorite-zone", "developer")
-                .param("useCase", "should_choose_service1_developer_when_developer_zone_is_requested")
+                .body("should_choose_service1_developer_when_developer_zone_is_requested")
                 .when()
                 .get("/message")
                 .then()

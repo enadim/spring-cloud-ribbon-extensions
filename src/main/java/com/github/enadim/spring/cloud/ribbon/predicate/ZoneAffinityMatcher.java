@@ -49,9 +49,10 @@ public class ZoneAffinityMatcher extends NullSafeServerPredicate {
     @Override
     protected boolean doApply(PredicateKey server) {
         boolean accept = zone.equals(server.getServer().getZone());
-        log.trace("Expected zone [{}] vs {}[{}] => {}",
+        log.trace("Expected zone [{}] vs {}:{}[{}] => {}",
                 zone,
                 server.getServer().getHostPort(),
+                server.getServer().getMetaInfo().getAppName(),
                 server.getServer().getZone(),
                 accept);
         return accept;

@@ -18,8 +18,8 @@ package com.github.enadim.spring.cloud.ribbon.examples.service3;
 import com.github.enadim.spring.cloud.ribbon.examples.api.service2.Service2Resource;
 import com.github.enadim.spring.cloud.ribbon.examples.ribbon.RibbonClientsStrictMetadataMatcherConfig;
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.EurekaInstanceProperties;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -45,7 +45,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @EnableFeignClients(basePackageClasses = Service2Resource.class)
 @EnableConfigurationProperties(EurekaInstanceProperties.class)
 @RestController
-@Slf4j
+@EnableHttpLogging
 public class Service3 {
     @Inject
     protected EurekaInstanceProperties eurekaInstanceMetadataProperties;
@@ -56,7 +56,6 @@ public class Service3 {
     @RequestMapping(method = GET, value = "/service3/message")
     @ResponseStatus(HttpStatus.OK)
     public String getMessage(@RequestParam(value = "useCase") String useCase) {
-        log.info("use case: {}", useCase);
         return format("%s->%s", eurekaInstanceMetadataProperties.getInstanceId(), service2.getMessage(useCase));
     }
 

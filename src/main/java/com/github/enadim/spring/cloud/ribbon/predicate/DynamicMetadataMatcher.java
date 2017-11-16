@@ -57,10 +57,11 @@ public class DynamicMetadataMatcher extends DiscoveryEnabledServerPredicate {
             String expected = current().get(metadataKey);
             String actual = metadata.get(metadataKey);
             boolean accept = (expected == null && actual == null) || (expected != null && expected.equals(actual));
-            log.trace("Expected [{}={}] vs {}{} => {}",
+            log.trace("Expected [{}={}] vs {}:{}{} => {}",
                     metadataKey,
                     expected,
                     server.getHostPort(),
+                    server.getMetaInfo().getAppName(),
                     metadata,
                     accept);
             return accept;

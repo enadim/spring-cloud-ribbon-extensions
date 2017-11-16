@@ -17,6 +17,7 @@ package com.github.enadim.spring.cloud.ribbon.support.favorite;
 
 import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest;
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
+import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonFavoriteZone;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -90,6 +91,7 @@ public abstract class AbstractFavoriteZoneSupportTest extends AbstractSupportTes
     @EnableContextPropagation
     @RibbonClients(defaultConfiguration = DefaultRibbonClientsConfig.class,
             value = {@RibbonClient(name = TestApplicationResource.SERVICE_ID, configuration = FavoriteZoneRibbonClientsConfig.class)})
+    @EnableHttpLogging
     public static class FavoriteZoneApplication extends TestApplicationBase {
         @Bean
         public ExecutorService executorService() {

@@ -32,3 +32,10 @@ tasks.withType(Checkstyle) {
     }
 }
 check.dependsOn checkstyleMain
+
+checkstyleMain.group 'coding'
+checkstyleTest.group 'coding'
+findbugsMain.group 'coding'
+findbugsTest.group 'coding'
+pmdMain.group 'coding'
+pmdTest.group 'coding'
