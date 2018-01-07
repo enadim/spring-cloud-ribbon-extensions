@@ -18,6 +18,7 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +44,7 @@ public class SingleMetadataMatcherTest {
         when(instanceInfo.getMetadata()).thenReturn(metada);
     }
 
-    @Before
+    @After
     public void after() {
         remove();
     }

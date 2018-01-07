@@ -24,6 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -34,7 +35,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ConditionalOnProperty(value = "ribbon.extensions.propagation.http.enabled", matchIfMissing = true)
 @ConditionalOnExpression(value = "${ribbon.extensions.propagation.enabled:true}")
 @Slf4j
-public class PreservesHeadersInboundHttpRequestStrategy extends WebMvcConfigurerAdapter {
+public class PreservesHeadersInboundHttpRequestStrategy implements WebMvcConfigurer {
     @Autowired
     private PropagationProperties properties;
 
@@ -45,8 +46,7 @@ public class PreservesHeadersInboundHttpRequestStrategy extends WebMvcConfigurer
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new PreservesHttpHeadersInterceptor(properties.buildEntriesFilter())).addPathPatterns(
-                "/**");
+        registry.addInterceptor(new PreservesHttpHeadersInterceptor(properties.buildEntriesFilter())).addPathPatterns("/**");
         log.info("Context propagation enabled for http request on keys={}.", properties.getKeys());
     }
 }

@@ -17,11 +17,10 @@ package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
 import org.junit.Test;
 
-import java.util.concurrent.ScheduledFuture;
-
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -31,37 +30,29 @@ public class ScheduledExecutorServicePropagatorTest extends AbstractExecutionCon
     @Test
     public void scheduleRunnable() throws Exception {
         current().put(key, value);
-        ScheduledFuture<?> scheduledFuture = propagator.schedule(runnable, 1, MILLISECONDS);
-        Thread.sleep(1000);
-        assertThat(holder.get(), is(true));
-        scheduledFuture.cancel(true);
+        propagator.schedule(runnable, 1, MILLISECONDS);
+        assertThat(signal.poll(1, SECONDS), is(value));
     }
 
     @Test
     public void scheduleCallable() throws Exception {
         current().put(key, value);
-        ScheduledFuture<?> scheduledFuture = propagator.schedule(() -> holder.getAndSet(current().containsKey(key)), 1, MILLISECONDS);
-        Thread.sleep(1000);
-        assertThat(holder.get(), is(true));
-        scheduledFuture.cancel(true);
+        propagator.schedule(callable, 1, MILLISECONDS);
+        assertThat(signal.poll(1, SECONDS), is(value));
     }
 
     @Test
     public void scheduleAtFixedRate() throws Exception {
         current().put(key, value);
-        ScheduledFuture<?> scheduledFuture = propagator.scheduleAtFixedRate(runnable, 1, 1000, MILLISECONDS);
-        Thread.sleep(1000);
-        assertThat(holder.get(), is(true));
-        scheduledFuture.cancel(true);
+        propagator.scheduleAtFixedRate(runnable, 1, 1000, MILLISECONDS);
+        assertThat(signal.poll(1, SECONDS), is(value));
     }
 
     @Test
     public void scheduleWithFixedDelay() throws Exception {
         current().put(key, value);
-        ScheduledFuture<?> scheduledFuture = propagator.scheduleWithFixedDelay(runnable, 1, 1000, MILLISECONDS);
-        Thread.sleep(1000);
-        assertThat(holder.get(), is(true));
-        scheduledFuture.cancel(true);
+        propagator.scheduleWithFixedDelay(runnable, 1, 1000, MILLISECONDS);
+        assertThat(signal.poll(1, SECONDS), is(value));
     }
 
 }

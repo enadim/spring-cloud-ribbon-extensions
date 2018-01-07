@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.enadim.spring.cloud.ribbon.support.dynamic;
+package com.github.enadim.spring.cloud.ribbon.support.favorite;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {AbstractDynamicMatcherSupportTest.DynamicMatcherApplication.class},
+@SpringBootTest(classes = {AbstractFavoriteZoneSupportTest.FavoriteZoneApplication.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
-                "spring.application.name=dynamic-matcher-test",
+                "spring.application.name=favorite-zone-test",
                 "endpoints.enabled=false",
                 "eureka.client.enabled=false",
+                "eureka.instance.metadataMap.zone=zone1",
                 "ribbon.eager-load.enabled=true",
                 "ribbon.eager-load.clients[0]=application2",
-                "ribbon.extensions.propagation.keys[0]=instance-id",
-                "ribbon.extensions.propagation.keys[1]=mykey",
-                "ribbon.extensions.rule.dynamic-metadata-matcher.key=mykey",
-                "ribbon.extensions.rule.dynamic-metadata-matcher.matchIfMissing=false"}
+                "ribbon.extensions.propagation.keys[0]=my-favorite-zone",
+                "ribbon.extensions.rule.favorite-zone.key=my-favorite-zone"}
 )
-public class DynamicMatcherGlobalConfigurationTest extends AbstractDynamicMatcherSupportTest {
-    public DynamicMatcherGlobalConfigurationTest() {
-        super("mykey", false);
-    }
+public class FavoriteZoneClientConfigurationTest extends AbstractFavoriteZoneSupportTest {
 
+    public FavoriteZoneClientConfigurationTest() {
+        super("favorite-zone");
+    }
 }

@@ -10,6 +10,11 @@ buildscript {
     }
 }
 
+ext {
+    examplesLauncherPath = project.buildDir.absolutePath + '/libs/spring-cloud-ribbon-extensions-examples-launcher-' + version + '.jar'
+    examplesLauncherClasspath = files(examplesLauncherPath)
+}
+
 apply plugin: com.github.psxpaul.ExecForkPlugin
 
 test {
@@ -31,10 +36,29 @@ integrationTest {
     ignoreFailures = project.hasProperty('ignoreFailures')
 }
 
+String toPath(String x) {
+    x = x.replaceAll("\\\\", "/")
+    return x.startsWith("/") ? x : "/" + x
+}
+
+task examplesLauncherJar(type: Jar) {
+    appendix = 'examples-launcher'
+    from file(project.buildDir.absolutePath + '/classes/java/examples/Launcher.class')
+    doFirst {
+        manifest {
+            attributes "Class-Path": configurations.runtime.files.collect { File file -> toPath(file.absolutePath) }.join(" ") +
+                    " " + toPath(project.buildDir.absolutePath + '/classes/java/examples/') +
+                    " " + toPath(project.buildDir.absolutePath + '/resources/examples/') +
+                    " " + toPath(project.buildDir.absolutePath + '/classes/java/main/')
+            attributes "Main-Class": 'Launcher'
+        }
+    }
+}
+
 task eureka(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.eureka.EurekaServer'
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    classpath = sourceSets.examples.runtimeClasspath
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     workingDir = "$buildDir"
     standardOutput = "$buildDir/eureka.log"
     errorOutput = "$buildDir/eureka-error.log"
@@ -43,10 +67,13 @@ task eureka(type: com.github.psxpaul.task.JavaExecFork) {
 }
 eureka.group 'it'
 eureka_stop.group 'it'
+eureka.dependsOn examples
+eureka.dependsOn examplesLauncherJar
+
 task artemis(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.artemis.Artemis'
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    classpath = sourceSets.examples.runtimeClasspath
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     workingDir = "$buildDir"
     standardOutput = "$buildDir/artemis.log"
     errorOutput = "$buildDir/artemis-error.log"
@@ -63,8 +90,8 @@ artemis {
 }
 task jms(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.jms.JmsTest'
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    classpath = sourceSets.examples.runtimeClasspath
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     workingDir = "$buildDir"
     standardOutput = "$buildDir/artemis.log"
     errorOutput = "$buildDir/artemis-error.log"
@@ -72,10 +99,11 @@ task jms(type: com.github.psxpaul.task.JavaExecFork) {
 jms.group 'it'
 jms_stop.group 'it'
 jms.dependsOn artemis
+
 task service2FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service2.Service2'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     args = ['--spring.config.name=service2-FavoriteZone-zone1']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/service2-FavoriteZone-zone1.log"
@@ -94,8 +122,8 @@ service2FavoriteZone1.dependsOn jms
 
 task service2FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service2.Service2'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     args = ['--spring.config.name=service2-FavoriteZone-zone2']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/service2-FavoriteZone-zone2.log"
@@ -105,7 +133,7 @@ task service2FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
 }
 service2FavoriteZone2 {
     doLast {
-        sleep(2000)
+        sleep(1000)
     }
 }
 service2FavoriteZone2.group 'it'
@@ -114,8 +142,8 @@ service2FavoriteZone2.dependsOn service2FavoriteZone1
 
 task service1FavoriteZoneDeveloper(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service1.Service1'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     args = ['--spring.config.name=service1-FavoriteZone-developer']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/service1-FavoriteZone-developer.log"
@@ -125,7 +153,7 @@ task service1FavoriteZoneDeveloper(type: com.github.psxpaul.task.JavaExecFork) {
 }
 service1FavoriteZoneDeveloper {
     doLast {
-        sleep(2000)
+        sleep(1000)
     }
 }
 service1FavoriteZoneDeveloper.group 'it'
@@ -134,8 +162,8 @@ service1FavoriteZoneDeveloper.dependsOn service2FavoriteZone2
 
 task service1FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service1.Service1'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     args = ['--spring.config.name=service1-FavoriteZone-zone1']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/service1-FavoriteZone-zone1.log"
@@ -145,7 +173,7 @@ task service1FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
 }
 service1FavoriteZone1 {
     doLast {
-        sleep(2000)
+        sleep(1000)
     }
 }
 service1FavoriteZone1.group 'it'
@@ -154,8 +182,8 @@ service1FavoriteZone1.dependsOn service1FavoriteZoneDeveloper
 
 task service1FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service1.Service1'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     args = ['--spring.config.name=service1-FavoriteZone-zone2']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/service1-FavoriteZone-zone2.log"
@@ -165,7 +193,7 @@ task service1FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
 }
 service1FavoriteZone2 {
     doLast {
-        sleep(2000)
+        sleep(1000)
     }
 }
 service1FavoriteZone2.group 'it'
@@ -174,8 +202,8 @@ service1FavoriteZone2.dependsOn service1FavoriteZone1
 
 task service3StrictMatcherZone1(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service3.Service3'
-    classpath = sourceSets.examples.runtimeClasspath
-    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     args = ['--spring.config.name=service3-StrictMatcher-zone1']
     workingDir = "$buildDir"
     standardOutput = "$buildDir/service3-StrictMatcher-zone1.log"
@@ -185,7 +213,7 @@ task service3StrictMatcherZone1(type: com.github.psxpaul.task.JavaExecFork) {
 }
 service3StrictMatcherZone1 {
     doLast {
-        sleep(2000)
+        sleep(1000)
     }
 }
 service3StrictMatcherZone1.group 'it'
@@ -194,8 +222,8 @@ service3StrictMatcherZone1.dependsOn service1FavoriteZone2
 
 task zuul(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.zuul.ZuulServer'
-    jvmArgs = ['-Xms64m', '-Xmx64m']
-    classpath = sourceSets.examples.runtimeClasspath
+    classpath = files('.')
+    jvmArgs = ['-Xms64m', '-Xmx64m', '-jar', examplesLauncherPath]
     workingDir = "$buildDir"
     standardOutput = "$buildDir/zuul.log"
     errorOutput = "$buildDir/zuul-error.log"
@@ -204,15 +232,15 @@ task zuul(type: com.github.psxpaul.task.JavaExecFork) {
 }
 zuul {
     doLast {
-        sleep(2000)
+        sleep(3000)
     }
 }
 zuul.group 'it'
 zuul_stop.group 'it'
 zuul.dependsOn service3StrictMatcherZone1
 
+examples.dependsOn test
 if (project.hasProperty('it')) {
-    examples.dependsOn test
     zuul.dependsOn examples
     integrationTest.dependsOn zuul
     check.dependsOn integrationTest

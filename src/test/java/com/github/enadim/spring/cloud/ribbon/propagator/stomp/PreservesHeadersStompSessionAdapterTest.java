@@ -53,25 +53,25 @@ public class PreservesHeadersStompSessionAdapterTest {
     }
 
     @Test
-    public void testGetSessionId() throws Exception {
+    public void testGetSessionId() {
         propagator.getSessionId();
         verify(delegate).getSessionId();
     }
 
     @Test
-    public void testIsConnected() throws Exception {
+    public void testIsConnected() {
         propagator.isConnected();
         verify(delegate).isConnected();
     }
 
     @Test
-    public void testSetAutoReceipt() throws Exception {
+    public void testSetAutoReceipt() {
         propagator.setAutoReceipt(true);
         verify(delegate).setAutoReceipt(true);
     }
 
     @Test
-    public void testSendEmptyContext() throws Exception {
+    public void testSendEmptyContext() {
         propagator.send(destination, payload);
         ArgumentHolder<StompHeaders> headers = new ArgumentHolder<>();
         verify(delegate).send(headers.eq(), eq(payload));
@@ -79,7 +79,7 @@ public class PreservesHeadersStompSessionAdapterTest {
     }
 
     @Test
-    public void testNotEmptyContext() throws Exception {
+    public void testNotEmptyContext() {
         asList("1", "3", "2").forEach(x -> current().put(x, x));
         propagator.send(destination, payload);
         ArgumentHolder<StompHeaders> headers = new ArgumentHolder<>();
@@ -89,7 +89,7 @@ public class PreservesHeadersStompSessionAdapterTest {
     }
 
     @Test
-    public void testSendWithStompHeaders() throws Exception {
+    public void testSendWithStompHeaders() {
         asList("1", "3", "2").forEach(x -> current().put(x, x));
         propagator.send(headers, payload);
         verify(delegate).send(headers, payload);
@@ -98,25 +98,31 @@ public class PreservesHeadersStompSessionAdapterTest {
     }
 
     @Test
-    public void testSubscribe() throws Exception {
+    public void testSubscribe() {
         propagator.subscribe(destination, handler);
         verify(delegate).subscribe(eq(destination), any(PreservesHeadersStompFrameHandlerAdapter.class));
     }
 
     @Test
-    public void testSubscribeWithStompHeaders() throws Exception {
+    public void testSubscribeWithStompHeaders() {
         propagator.subscribe(headers, handler);
         verify(delegate).subscribe(eq(headers), any(PreservesHeadersStompFrameHandlerAdapter.class));
     }
 
     @Test
-    public void testAcknowledge() throws Exception {
-        propagator.acknowledge(null, true);
-        verify(delegate).acknowledge(null, true);
+    public void testAcknowledgeMessageId() {
+        propagator.acknowledge("", true);
+        verify(delegate).acknowledge("", true);
     }
 
     @Test
-    public void testDisconnect() throws Exception {
+    public void testAcknowledgeHeaders() {
+        propagator.acknowledge(new StompHeaders(), true);
+        verify(delegate).acknowledge(new StompHeaders(), true);
+    }
+
+    @Test
+    public void testDisconnect() {
         propagator.disconnect();
         verify(delegate).disconnect();
     }

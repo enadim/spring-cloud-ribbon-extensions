@@ -124,8 +124,17 @@ public class PreservesHeadersStompSessionAdapter extends AbstractExecutionContex
      * {@inheritDoc}
      */
     @Override
+    public Receiptable acknowledge(StompHeaders headers, boolean consumed) {
+        return delegate.acknowledge(headers,consumed);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void disconnect() {
         delegate.disconnect();
     }
+
 
 }

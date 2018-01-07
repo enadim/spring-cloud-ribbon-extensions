@@ -37,7 +37,7 @@ addons:
       - develop
 
 script:
-  - ./gradlew clean build -Ptravis=true
+  - ./gradlew clean build -Ptravis=true --info
   - sonar-scanner || echo "Failed to scan on sonarcloud"
 
 after_success:

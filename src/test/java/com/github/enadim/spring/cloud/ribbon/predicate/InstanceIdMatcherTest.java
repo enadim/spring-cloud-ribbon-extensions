@@ -18,7 +18,7 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
@@ -33,7 +33,7 @@ public class InstanceIdMatcherTest {
     DiscoveryEnabledServer server = new DiscoveryEnabledServer(instanceInfo, true);
     InstanceIdMatcher predicate = new InstanceIdMatcher(expected);
 
-    @Before
+    @After
     public void after() {
         remove();
     }

@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -75,14 +76,14 @@ public class ExecutorServicePropagatorTest extends AbstractExecutionContextAware
     public void testSubmitRunnable() throws Exception {
         current().put(key, value);
         propagator.submit(runnable).get();
-        assertThat(holder.get(), is(true));
+        assertThat(signal.poll(1, SECONDS), is(value));
     }
 
     @Test
     public void testSubmitRunnableWithResult() throws Exception {
         current().put(key, value);
-        propagator.submit(runnable, holder).get();
-        assertThat(holder.get(), is(true));
+        propagator.submit(runnable, true).get();
+        assertThat(signal.poll(1, SECONDS), is(value));
     }
 
     @Test
@@ -98,7 +99,7 @@ public class ExecutorServicePropagatorTest extends AbstractExecutionContextAware
     @Test
     public void testInvokeAllWithTimeOut() throws Exception {
         current().put(key, value);
-        assertThat(propagator.invokeAll(asList(callable, callable), 10, TimeUnit.SECONDS)
+        assertThat(propagator.invokeAll(asList(callable, callable), 10, SECONDS)
                 .stream()
                 .map(AbstractExecutionContextAwareExecutorTest::uncheck)
                 .reduce((x, y) -> x + y)
@@ -114,6 +115,6 @@ public class ExecutorServicePropagatorTest extends AbstractExecutionContextAware
     @Test
     public void testInvokeAnyWithTimeOut() throws Exception {
         current().put(key, value);
-        assertThat(propagator.invokeAny(asList(callable, callable), 10, TimeUnit.SECONDS), is(value));
+        assertThat(propagator.invokeAny(asList(callable, callable), 10, SECONDS), is(value));
     }
 }

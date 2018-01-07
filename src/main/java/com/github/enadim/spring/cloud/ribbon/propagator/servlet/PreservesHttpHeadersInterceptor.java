@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import java.util.Enumeration;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
@@ -62,10 +63,13 @@ public class PreservesHttpHeadersInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
         try {
             ExecutionContext context = current();
-            list(request.getHeaderNames())
-                    .stream()
-                    .filter(filter::accept)
-                    .forEach(x -> context.put(x, request.getHeader(x)));
+            Enumeration<String> headerNames = request.getHeaderNames();
+            if (headerNames != null) {
+                list(headerNames)
+                        .stream()
+                        .filter(filter::accept)
+                        .forEach(x -> context.put(x, request.getHeader(x)));
+            }
             log.trace("Propagated inbound headers {} from url=[{}].", context.entrySet(), request.getRequestURL());
         } catch (Exception e) {
             log.debug("Failed to propagate http request header.", e);

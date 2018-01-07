@@ -54,7 +54,7 @@ public class SingleMetadataMatcher extends DiscoveryEnabledServerPredicate {
         Map<String, String> metadata = server.getInstanceInfo().getMetadata();
         String actual = metadata.get(metadataKey);
         boolean accept = (expected == null && actual == null) || (expected != null && expected.equals(actual));
-        log.trace("Expected [{}] vs {}:{}{} => {}",
+        log.trace("Expected {}=[{}] vs {}:{}{} => {}",
                 metadataKey,
                 expected,
                 server.getHostPort(),

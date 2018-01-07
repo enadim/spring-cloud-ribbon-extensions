@@ -26,9 +26,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -46,7 +46,7 @@ import static org.springframework.http.HttpStatus.OK;
         properties = {
                 "spring.application.name=zone-affinity-test",
                 "endpoints.enabled=false",
-                "eureka.client.register-with-eureka=false",
+                "eureka.client.enabled=false",
                 "eureka.instance.metadataMap.zone=zone1",
                 "ribbon.eager-load.enabled=true",
                 "ribbon.eager-load.clients[0]=application2"}

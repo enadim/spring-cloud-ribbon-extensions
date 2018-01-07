@@ -19,9 +19,10 @@ import org.junit.After;
 import org.springframework.scheduling.Trigger;
 
 import java.util.Date;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
@@ -30,9 +31,22 @@ import static org.mockito.Mockito.mock;
 public abstract class AbstractExecutionContextAwareExecutorTest {
     protected final String key = "key";
     protected final String value = "value";
-    protected final AtomicBoolean holder = new AtomicBoolean();
-    protected final Runnable runnable = () -> holder.set(current().containsKey(key));
-    protected final Callable<String> callable = () -> current().get(key);
+    protected final BlockingQueue<String> signal = new ArrayBlockingQueue<>(10);
+    protected final Runnable runnable = () -> {
+        try {
+            signal.put(current().get(key));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    };
+    protected final Callable<String> callable = () -> {
+        try {
+            signal.put(current().get(key));
+            return current().get(key);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    };
     protected final long period = 1;
     protected final Date date = new Date();
     protected final Trigger trigger = mock(Trigger.class);

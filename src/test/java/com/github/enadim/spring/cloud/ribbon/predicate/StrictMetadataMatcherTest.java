@@ -40,16 +40,18 @@ public class StrictMetadataMatcherTest {
 
     @Before
     public void before() {
+        remove();
         when(instanceInfo.getMetadata()).thenReturn(metada);
     }
 
     @After
     public void after() {
         remove();
+        metada.clear();
     }
 
     @Test
-    public void should_not_filter_server_having_exactly_the_sames_attributes() throws Exception {
+    public void should_not_filter_server_having_exactly_the_sames_attributes() {
         asList("1", "2").forEach(x -> metada.put(x, x));
         asList("1", "2").forEach(x -> current().put(x, x));
         assertThat(predicate.doApply(server), is(true));
@@ -57,7 +59,7 @@ public class StrictMetadataMatcherTest {
     }
 
     @Test
-    public void should_not_filter_server_having_required_attributes() throws Exception {
+    public void should_not_filter_server_having_required_attributes() {
         asList("1", "2", "3").forEach(x -> metada.put(x, x));
         asList("1", "2").forEach(x -> current().put(x, x));
         assertThat(predicate.doApply(server), is(true));
@@ -65,14 +67,14 @@ public class StrictMetadataMatcherTest {
     }
 
     @Test
-    public void should_filter_server_having_a_missing_attributes() throws Exception {
+    public void should_filter_server_having_a_missing_attributes() {
         asList("1", "3").forEach(x -> metada.put(x, x));
         asList("1", "2").forEach(x -> current().put(x, x));
         assertThat(predicate.doApply(server), is(false));
     }
 
     @Test
-    public void should_filter_server_having_same_attributes_with_different_value() throws Exception {
+    public void should_filter_server_having_same_attributes_with_different_value() {
         asList("1", "2").forEach(x -> metada.put(x, x));
         metada.put("2", "3");
         asList("1", "2").forEach(x -> current().put(x, x));

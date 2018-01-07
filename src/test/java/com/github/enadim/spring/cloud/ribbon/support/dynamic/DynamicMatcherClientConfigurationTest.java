@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         properties = {
                 "spring.application.name=dynamic-matcher-test",
                 "endpoints.enabled=false",
-                "eureka.client.register-with-eureka=false",
+                "eureka.client.enabled=false",
                 "ribbon.eager-load.enabled=true",
                 "ribbon.eager-load.clients[0]=application2",
                 "ribbon.extensions.propagation.keys[0]=instance-id",

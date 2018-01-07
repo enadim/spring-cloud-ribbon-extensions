@@ -23,17 +23,22 @@ It comes with handy features for easy integration, configuration and customizati
 [![GitHub issues](https://img.shields.io/github/issues/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/issues)
 [![GitHub network/members](https://img.shields.io/github/forks/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/network/members)
 
-## Requirements
+## Requirements 1.4.5
 * java 8
-* spring boot 1.5.x or newer
-* spring cloud ribbon.
-* spring cloud Daslton-SR3 or newer.
+* spring boot 1.5.x
+* spring cloud Daslton.
+
+## Requirements 2.x.x
+* java 8
+* spring boot 2.0.x
+* spring cloud Finchley
 
 ## Compatibility
-* spring cloud eureka.
-* spring cloud feign.
-* spring cloud zuul.
-* spring cloud hystrix.
+* spring cloud netflix ribbon.
+* spring cloud netflix eureka.
+* spring cloud netflix zuul.
+* spring cloud netflix hystrix.
+* spring cloud openfeign.
 * spring and java executors.
 * spring stomp.
 * jms.

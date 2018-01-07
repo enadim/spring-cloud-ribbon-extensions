@@ -25,8 +25,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.context.embedded.LocalServerPort;
-import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.boot.web.server.LocalServerPort;
+
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,8 @@ import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+//import org.springframework.boot.web.server.LocalServerPort;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public abstract class AbstractSupportTest {
