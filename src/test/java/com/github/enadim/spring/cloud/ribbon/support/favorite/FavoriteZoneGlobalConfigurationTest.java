@@ -31,7 +31,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
                 "ribbon.eager-load.clients[0]=application2",
                 "ribbon.extensions.propagation.executor.excludes[0]=taskScheduler",
                 "ribbon.extensions.propagation.keys[0]=my-favorite-zone",
-                "ribbon.extensions.client.application.rule.favorite-zone.key=my-favorite-zone"}
+                "ribbon.extensions.propagation.keys[1]=upstream-zone",
+                "ribbon.extensions.rule.favorite-zone.key=my-favorite-zone",
+                "ribbon.extensions.rule.favorite-zone.fallback=zone"}
 )
 public class FavoriteZoneGlobalConfigurationTest extends AbstractFavoriteZoneSupportTest {
 

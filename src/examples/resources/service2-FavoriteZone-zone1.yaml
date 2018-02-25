@@ -55,6 +55,7 @@ ribbon:
         enabled: true
       favorite-zone:
         enabled: false
+        fallback: zone1
 
 hystrix:
   command:

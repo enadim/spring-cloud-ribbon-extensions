@@ -30,6 +30,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.DYNAMIC_METADATA_MATCHER_RULE_CLIENT_ENABLED_EXPRESSION;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.DYNAMIC_METADATA_MATCHER_RULE_ENABLED;
 
 /**
  * The dynamic attribute metadata matcher load balancing rule definition.
@@ -41,8 +43,8 @@ import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
 @Configuration
 @ConditionalOnClass(DiscoveryEnabledNIWSServerList.class)
 @AutoConfigureBefore(RibbonClientConfiguration.class)
-@ConditionalOnProperty(value = "ribbon.extensions.rule.dynamic-metadata-matcher.enabled", matchIfMissing = true)
-@ConditionalOnExpression(value = "${ribbon.extensions.client.${ribbon.client.name}.rule.dynamic-metadata-matcher.enabled:true}")
+@ConditionalOnProperty(value = DYNAMIC_METADATA_MATCHER_RULE_ENABLED, matchIfMissing = true)
+@ConditionalOnExpression(value = DYNAMIC_METADATA_MATCHER_RULE_CLIENT_ENABLED_EXPRESSION)
 @Slf4j
 public class DynamicMetadataMatcherConfig extends RuleBaseConfig {
 

@@ -54,6 +54,9 @@ ribbon:
         - version
         - favorite-zone
         - upstream-zone
+    rule:
+      favorite-zone:
+        fallback: zone2
 
 hystrix:
   command:

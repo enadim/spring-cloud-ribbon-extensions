@@ -75,7 +75,7 @@ public class PredicateBasedRuleSupport extends PredicateBasedRule {
     public Server choose(Object key) {
         Server server = super.choose(key);
         if (server == null) {
-            throw new ChooseServerException(format("There is so server satisfying rule %s.", description == null ? toString() : description.describe()));
+            throw new ChooseServerException(format("There is no server satisfying rule %s.", description == null ? toString() : description.describe()));
         } else {
             return server;
         }

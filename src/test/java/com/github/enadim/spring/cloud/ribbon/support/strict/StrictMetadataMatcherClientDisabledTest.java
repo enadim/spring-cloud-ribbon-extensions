@@ -29,7 +29,7 @@ import javax.inject.Inject;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = StrictMetadataMatcherConfig.class, properties = {
         "ribbon.client.name=application",
-        "ribbon.extensions.client.application.rule.strict-matcher.enabled=false"})
+        "ribbon.extensions.client.application.rule.strict-metadata-matcher.enabled=false"})
 public class StrictMetadataMatcherClientDisabledTest {
 
     @Inject

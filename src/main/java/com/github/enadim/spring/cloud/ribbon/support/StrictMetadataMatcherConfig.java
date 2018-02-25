@@ -29,6 +29,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.STRICT_METADATA_MATCHER_RULE_CLIENT_ENABLED_EXPRESSION;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.STRICT_METADATA_MATCHER_RULE_ENABLED;
 
 /**
  * The strict metadata matcher load balancing rule definition.
@@ -40,8 +42,8 @@ import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
 @Configuration
 @ConditionalOnClass(DiscoveryEnabledNIWSServerList.class)
 @AutoConfigureBefore(RibbonClientConfiguration.class)
-@ConditionalOnProperty(value = "ribbon.extensions.rule.strict-matcher.enabled", matchIfMissing = true)
-@ConditionalOnExpression(value = "${ribbon.extensions.client.${ribbon.client.name}.rule.strict-matcher.enabled:true}")
+@ConditionalOnProperty(value = STRICT_METADATA_MATCHER_RULE_ENABLED, matchIfMissing = true)
+@ConditionalOnExpression(value = STRICT_METADATA_MATCHER_RULE_CLIENT_ENABLED_EXPRESSION)
 @Slf4j
 public class StrictMetadataMatcherConfig extends RuleBaseConfig {
 

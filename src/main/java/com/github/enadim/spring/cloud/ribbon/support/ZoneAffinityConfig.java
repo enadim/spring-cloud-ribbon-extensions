@@ -34,6 +34,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.ANY_PREDICATE_DESCRIPTION;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.AVAILABILITY_PREDICATE_DESCRIPTION;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.ZONE_AFFINITY_RULE_CLIENT_ENABLED_EXPRESSION;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.ZONE_AFFINITY_RULE_ENABLED;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.ZONE_AVOIDANCE_PREDICATE_DESCRIPTION;
 import static com.netflix.loadbalancer.AbstractServerPredicate.alwaysTrue;
 import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
 
@@ -42,8 +47,8 @@ import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
  * <p>Should not be imported directly for further compatibility reason: please use {@link EnableRibbonZoneAffinity}
  * <p>Zone Affinity Rule Definition
  * <ul>
- * <li>Fallbacks to {@link ZoneAffinityMatcher}: choose a server in the same description as the current instance.
- * <li>Fallbacks to {@link ZoneAvoidancePredicate} &amp; {@link AvailabilityPredicate}: choose an available server.
+ * <li>Fallbacks to {@link ZoneAffinityMatcher}: choose a server in the same zone as the current instance.
+ * <li>Fallbacks to {@link ZoneAvoidancePredicate} &amp; {@link AvailabilityPredicate}: choose an available server avoiding blacklisted zones.
  * <li>Fallbacks to {@link AvailabilityPredicate}: choose an available server.
  * <li>Fallbacks to any server
  * </ul>
@@ -55,8 +60,8 @@ import static com.netflix.loadbalancer.CompositePredicate.withPredicates;
 @Configuration
 @ConditionalOnClass(DiscoveryEnabledNIWSServerList.class)
 @AutoConfigureBefore(RibbonClientConfiguration.class)
-@ConditionalOnProperty(value = "ribbon.extensions.rule.zone-affinity.enabled", matchIfMissing = true)
-@ConditionalOnExpression(value = "${ribbon.extensions.client.${ribbon.client.name}.rule.zone-affinity.enabled:true}")
+@ConditionalOnProperty(value = ZONE_AFFINITY_RULE_ENABLED, matchIfMissing = true)
+@ConditionalOnExpression(value = ZONE_AFFINITY_RULE_CLIENT_ENABLED_EXPRESSION)
 @Slf4j
 public class ZoneAffinityConfig extends RuleBaseConfig {
 
@@ -79,9 +84,9 @@ public class ZoneAffinityConfig extends RuleBaseConfig {
                 .build();
         rule.setPredicate(predicate);
         rule.setDescription(from(zoneAffinityMatcher)
-                .fallback(from("ZoneAvoidance").and(from("Availability")))
-                .fallback(from("Availability"))
-                .fallback(from("Any()")));
+                .fallback(from(ZONE_AVOIDANCE_PREDICATE_DESCRIPTION).and(from(AVAILABILITY_PREDICATE_DESCRIPTION)))
+                .fallback(from(AVAILABILITY_PREDICATE_DESCRIPTION))
+                .fallback(from(ANY_PREDICATE_DESCRIPTION)));
         log.info("Zone affinity enabled for client [{}].", clientConfig.getClientName());
         return predicate;
     }

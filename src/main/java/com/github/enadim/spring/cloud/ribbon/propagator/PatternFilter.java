@@ -43,7 +43,7 @@ public class PatternFilter implements Filter<String> {
      * Default constructor with accepts any behaviour.
      */
     public PatternFilter() {
-        //initialize with array list for org.springframework.boot.context.propagationProperties.ConfigurationProperties compatibility.
+        //initialize with array list for org.springframework.boot.context.properties.ConfigurationProperties compatibility.
         this(new ArrayList<>(asList(Pattern.compile(".*"))), new ArrayList<>());
     }
 

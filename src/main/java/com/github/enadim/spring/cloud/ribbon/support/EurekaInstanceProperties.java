@@ -23,12 +23,17 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.DEFAULT_EUREKA_ZONE;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.EUREKA_INSTANCE_ID;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.EUREKA_INSTANCE_PREFIX;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.EUREKA_ZONE_PROPERTY;
+
 /**
- * Eureka instance propagationProperties.
+ * Eureka instance properties.
  *
  * @author Nadim Benabdenbi
  */
-@ConfigurationProperties(prefix = "eureka.instance")
+@ConfigurationProperties(prefix = EUREKA_INSTANCE_PREFIX)
 @Component
 @Getter
 @Setter
@@ -42,13 +47,13 @@ public class EurekaInstanceProperties {
      * @return the eureka client instance id
      */
     public String getInstanceId() {
-        return metadataMap.get("instanceId");
+        return metadataMap.get(EUREKA_INSTANCE_ID);
     }
 
     /**
      * @return the eureka client zone
      */
     public String getZone() {
-        return metadataMap.getOrDefault("zone", "default");
+        return metadataMap.getOrDefault(EUREKA_ZONE_PROPERTY, DEFAULT_EUREKA_ZONE);
     }
 }

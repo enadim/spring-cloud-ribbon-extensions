@@ -28,10 +28,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.DEFAULT_UPSTREAM_ZONE_KEY;
+import static com.github.enadim.spring.cloud.ribbon.support.RibbonExtensionsConstants.PROPAGATION_PREFIX;
+
 /**
- * The propagation propagationProperties.
+ * The propagation properties.
  */
-@ConfigurationProperties(prefix = "ribbon.extensions.propagation")
+@ConfigurationProperties(prefix = PROPAGATION_PREFIX)
 @Component
 @Getter
 public class PropagationProperties {
@@ -98,6 +101,6 @@ public class PropagationProperties {
         /**
          * the upstream zone key.
          */
-        private String key = "upstream-zone";
+        private String key = DEFAULT_UPSTREAM_ZONE_KEY;
     }
 }
