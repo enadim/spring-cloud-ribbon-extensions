@@ -17,6 +17,7 @@ package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
 import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
 import com.github.enadim.spring.cloud.ribbon.propagator.Filter;
+import lombok.AllArgsConstructor;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionConsumer;
@@ -27,8 +28,6 @@ import javax.jms.JMSException;
 import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 import javax.jms.Topic;
-import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,33 +35,42 @@ import java.util.Map;
  *
  * @author Nadim Benabdenbi
  */
+@AllArgsConstructor
 public class PreservesMessagePropertiesConnectionAdapter implements Connection {
     /**
      * The delegate connection.
      */
     private final Connection delegate;
+
     /**
      * The context entry key or message property name filter.
      */
     private final Filter<String> filter;
+
     /**
      * the extra static entries to copy.
      */
-    private Map<String, String> extraStaticEntries = new HashMap<>();
+    private final Map<String, String> extraStaticEntries;
 
     /**
-     * Sole constructor.
-     *
-     * @param delegate           the delegate connection factory.
-     * @param filter             the keys to copy.
-     * @param extraStaticEntries The extra static entries to copy.
+     * The message property encoder.
      */
-    public PreservesMessagePropertiesConnectionAdapter(@NotNull Connection delegate,
-                                                       @NotNull Filter<String> filter,
-                                                       @NotNull Map<String, String> extraStaticEntries) {
-        this.delegate = delegate;
-        this.filter = filter;
-        this.extraStaticEntries = extraStaticEntries;
+    private final MessagePropertyEncoder encoder;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Session createSession() throws JMSException {
+        return new PreservesMessagePropertiesSessionAdapter(delegate.createSession(), filter, extraStaticEntries, encoder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Session createSession(int sessionMode) throws JMSException {
+        return new PreservesMessagePropertiesSessionAdapter(delegate.createSession(sessionMode), filter, extraStaticEntries, encoder);
     }
 
     /**
@@ -70,7 +78,7 @@ public class PreservesMessagePropertiesConnectionAdapter implements Connection {
      */
     @Override
     public Session createSession(boolean transacted, int acknowledgeMode) throws JMSException {
-        return new PreservesMessagePropertiesSessionAdapter(delegate.createSession(transacted, acknowledgeMode), filter, extraStaticEntries);
+        return new PreservesMessagePropertiesSessionAdapter(delegate.createSession(transacted, acknowledgeMode), filter, extraStaticEntries, encoder);
     }
 
     /**
@@ -151,5 +159,21 @@ public class PreservesMessagePropertiesConnectionAdapter implements Connection {
     @Override
     public ConnectionConsumer createDurableConnectionConsumer(Topic topic, String subscriptionName, String messageSelector, ServerSessionPool sessionPool, int maxMessages) throws JMSException {
         return delegate.createDurableConnectionConsumer(topic, subscriptionName, messageSelector, sessionPool, maxMessages);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ConnectionConsumer createSharedConnectionConsumer(Topic topic, String subscriptionName, String messageSelector, ServerSessionPool sessionPool, int maxMessages) throws JMSException {
+        return delegate.createSharedConnectionConsumer(topic, subscriptionName, messageSelector, sessionPool, maxMessages);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ConnectionConsumer createSharedDurableConnectionConsumer(Topic topic, String subscriptionName, String messageSelector, ServerSessionPool sessionPool, int maxMessages) throws JMSException {
+        return delegate.createSharedDurableConnectionConsumer(topic, subscriptionName, messageSelector, sessionPool, maxMessages);
     }
 }

@@ -5,13 +5,6 @@
 **Spring Cloud Ribbon Extensions** is a set of load balancing rules that chooses which server to target.
 It comes with handy features for easy integration, configuration and customization.
 
-:warning: This is an experimental version designed for dev environments.
-
-:dash: Official version coming soon.
-
-:warning: stomp & jms integration tests has not been performed yet.
-
-
 [![Build Status](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions.svg?branch=develop)](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions)
 [![Codecov Coverage](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions/branch/develop/graph/badge.svg)](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions)
 [![Codacy](https://api.codacy.com/project/badge/Grade/bf7e3455f2894da19b1e250173c9ace1)](https://www.codacy.com/app/enadim/spring-cloud-ribbon-extensions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=enadim/spring-cloud-ribbon-extensions&amp;utm_campaign=Badge_Grade)
@@ -31,8 +24,10 @@ It comes with handy features for easy integration, configuration and customizati
 [![GitHub network/members](https://img.shields.io/github/forks/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/network/members)
 
 ## Requirements
+* java 8
+* spring boot 1.5.x or newer
 * spring cloud ribbon.
-* spring cloud Daslton-SR3.
+* spring cloud Daslton-SR3 or newer.
 
 ## Compatibility
 * spring cloud eureka.

@@ -43,6 +43,35 @@ task eureka(type: com.github.psxpaul.task.JavaExecFork) {
 }
 eureka.group 'it'
 eureka_stop.group 'it'
+task artemis(type: com.github.psxpaul.task.JavaExecFork) {
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.artemis.Artemis'
+    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = sourceSets.examples.runtimeClasspath
+    workingDir = "$buildDir"
+    standardOutput = "$buildDir/artemis.log"
+    errorOutput = "$buildDir/artemis-error.log"
+    waitForPort = 8002
+    timeout = 30
+}
+artemis.group 'it'
+artemis_stop.group 'it'
+artemis.dependsOn eureka
+artemis {
+    doLast {
+        sleep(1000)
+    }
+}
+task jms(type: com.github.psxpaul.task.JavaExecFork) {
+    main = 'com.github.enadim.spring.cloud.ribbon.examples.jms.JmsTest'
+    jvmArgs = ['-Xms64m', '-Xmx64m']
+    classpath = sourceSets.examples.runtimeClasspath
+    workingDir = "$buildDir"
+    standardOutput = "$buildDir/artemis.log"
+    errorOutput = "$buildDir/artemis-error.log"
+}
+jms.group 'it'
+jms_stop.group 'it'
+jms.dependsOn artemis
 task service2FavoriteZone1(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service2.Service2'
     classpath = sourceSets.examples.runtimeClasspath
@@ -61,7 +90,7 @@ service2FavoriteZone1 {
 }
 service2FavoriteZone1.group 'it'
 service2FavoriteZone1_stop.group 'it'
-service2FavoriteZone1.dependsOn eureka
+service2FavoriteZone1.dependsOn jms
 
 task service2FavoriteZone2(type: com.github.psxpaul.task.JavaExecFork) {
     main = 'com.github.enadim.spring.cloud.ribbon.examples.service2.Service2'

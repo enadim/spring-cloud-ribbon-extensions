@@ -1,0 +1,45 @@
+server:
+  port: 8010
+  ssl:
+    enabled: false
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+
+spring:
+  application:
+    name: test
+    default-domain: test
+  cloud:
+    config:
+      enabled: false
+  jmx:
+    enabled: false
+
+  activemq:
+    pool:
+      enabled: true
+  artemis:
+    host: localhost
+    port: 8003
+    user: admin
+    password: secret
+
+eureka:
+  client:
+    enabled: false
+
+ribbon:
+  extensions:
+    propagation:
+      keys:
+        - version
+        - favorite-zone
+        - upstream-zone
+
+logging:
+  level:
+    com.github.enadim.spring: TRACE

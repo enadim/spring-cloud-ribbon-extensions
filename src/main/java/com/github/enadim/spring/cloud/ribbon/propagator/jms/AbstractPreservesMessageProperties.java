@@ -17,12 +17,12 @@ package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
 import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
 import com.github.enadim.spring.cloud.ribbon.propagator.Filter;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -36,20 +36,17 @@ import static java.util.Collections.list;
  */
 @Slf4j
 @Getter
+@AllArgsConstructor
 public abstract class AbstractPreservesMessageProperties {
     /**
-     * The message property name filter
+     * The message property name filter.
      */
     private final Filter<String> filter;
 
     /**
-     * Sole constructor.
-     *
-     * @param filter the attribute keys to copy
+     * The message property encoder.
      */
-    public AbstractPreservesMessageProperties(@NotNull Filter<String> filter) {
-        this.filter = filter;
-    }
+    private final MessagePropertyEncoder encoder;
 
     /**
      * Copies message propagationProperties to the current {@link ExecutionContext}.
@@ -57,18 +54,16 @@ public abstract class AbstractPreservesMessageProperties {
      * @param message the message to process.
      * @return the same message after process
      */
-    @SuppressWarnings("unchecked")
     protected Message copyFromMessage(Message message) {
         if (message != null) {
             try {
                 ExecutionContext context = current();
                 List<String> eligiblePropertyNames = new ArrayList<>();
                 list((Enumeration<String>) message.getPropertyNames()).stream()
-                        .filter(filter::accept)
-                        .forEach(x -> put(context, message, x, eligiblePropertyNames));
+                        .forEach(x -> copy(context, message, x, eligiblePropertyNames));
                 log.trace("Message Properties copied {}", eligiblePropertyNames);
             } catch (JMSException e) {
-                log.debug("Failed to copy message propagationProperties", e);
+                log.debug("Failed to copy message properties", e);
             }
         }
         return message;
@@ -82,11 +77,15 @@ public abstract class AbstractPreservesMessageProperties {
      * @param propertyName the property name to copy
      * @param collected    the propagationProperties that have been copied
      */
-    private void put(ExecutionContext context, Message message, String propertyName, List<String> collected) {
+    private void copy(ExecutionContext context, Message message, String propertyName, List<String> collected) {
         try {
-            context.put(propertyName, message.getStringProperty(propertyName));
-            collected.add(propertyName);
-        } catch (Exception e) {
+            String decoded = encoder.decode(propertyName);
+            if (filter.accept(decoded)) {
+                String value = message.getStringProperty(propertyName);
+                context.put(decoded, value);
+                collected.add(decoded);
+            }
+        } catch (JMSException e) {
             log.debug("Failed to copy message property [{}]", propertyName);
         }
     }

@@ -56,7 +56,7 @@ apply from: 'gradle/release.gradle'
 apply plugin: "com.dorongold.task-tree"
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
+    gradleVersion = '4.7'
 }
 
 repositories {
@@ -71,18 +71,17 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.SR3'
-        mavenBom 'org.springframework.boot:spring-boot:1.5.6.RELEASE'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.SR5'
+        mavenBom 'org.springframework.boot:spring-boot:1.5.12.RELEASE'
     }
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.16.16'
+    compileOnly 'org.projectlombok:lombok:1.16.20'
     compileOnly 'com.google.code.findbugs:annotations:3.0.1'
 
-    compile("org.springframework.boot:spring-boot-starter-activemq") { ext.optional = true }
-    compile("org.apache.activemq:activemq-broker") { ext.optional = true }
-    compile("com.fasterxml.jackson.core:jackson-databind") { ext.optional = true }
+
+    compile('com.fasterxml.jackson.core:jackson-databind') { ext.optional = true }
     compile('org.springframework.cloud:spring-cloud-starter-ribbon') { ext.optional = true }
     compile('org.springframework.cloud:spring-cloud-starter-feign') { ext.optional = true }
     compile('org.springframework.cloud:spring-cloud-starter-eureka') { ext.optional = true }
@@ -92,16 +91,22 @@ dependencies {
         exclude group: 'javax.servlet', module: 'servlet-api'
         ext.optional = true
     }
+    //compile('org.apache.activemq:activemq-broker') { ext.optional = true }
+    compile('org.apache.activemq:artemis-jms-server') { ext.optional = true }
+    compile("org.springframework.boot:spring-boot-starter-activemq") {
+        ext.optional = true
+        exclude group: 'org.apache.geronimo.specs', module: 'geronimo-jms_1.1_spec'
+    }
 
-    testCompileOnly 'org.projectlombok:lombok:1.16.16'
+    testCompileOnly 'org.projectlombok:lombok:1.16.20'
     testCompile 'org.springframework.boot:spring-boot-starter-web'
     testCompile 'org.springframework.boot:spring-boot-test'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'org.mockito:mockito-core:2.11.0'
-    testCompile 'net.bytebuddy:byte-buddy:1.7.4'
-    testCompile 'io.rest-assured:rest-assured:3.0.3'
+    testCompile 'org.mockito:mockito-core:2.18.0'
+    testCompile 'net.bytebuddy:byte-buddy:1.8.5'
+    testCompile 'io.rest-assured:rest-assured:3.0.7'
 
-    examplesCompileOnly 'org.projectlombok:lombok:1.16.16'
+    examplesCompileOnly 'org.projectlombok:lombok:1.16.20'
 }
 
 compileJava {

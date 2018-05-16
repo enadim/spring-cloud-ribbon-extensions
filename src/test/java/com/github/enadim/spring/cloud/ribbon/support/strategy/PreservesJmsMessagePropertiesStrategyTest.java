@@ -15,6 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support.strategy;
 
+import com.github.enadim.spring.cloud.ribbon.propagator.jms.EchoMessagePropertyEncoder;
 import com.github.enadim.spring.cloud.ribbon.propagator.jms.PreservesMessagePropertiesConnectionFactoryAdapter;
 import com.github.enadim.spring.cloud.ribbon.propagator.stomp.PreservesHeadersStompSessionAdapter;
 import com.github.enadim.spring.cloud.ribbon.support.EurekaInstanceProperties;
@@ -42,15 +43,33 @@ public class PreservesJmsMessagePropertiesStrategyTest {
 
     @Test
     public void should_skip_propagator() {
-        PreservesMessagePropertiesConnectionFactoryAdapter bean = new PreservesMessagePropertiesConnectionFactoryAdapter(null, null, null);
+        PreservesMessagePropertiesConnectionFactoryAdapter bean = new PreservesMessagePropertiesConnectionFactoryAdapter(null, null, null, new EchoMessagePropertyEncoder());
         assertThat(processor.postProcessAfterInitialization(bean, beanName), is(bean));
     }
 
     @Test
     public void should_decorate() {
+        processor.setEncoderType(EchoMessagePropertyEncoder.class);
         processor.setProperties(new PropagationProperties());
         processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
         assertThat(processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName).getClass(), equalTo(PreservesMessagePropertiesConnectionFactoryAdapter.class));
+        processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_fail_to_decorate_unaccessible_encoder_class() {
+        processor.setEncoderType(EchoMessagePropertyEncoder1.class);
+        processor.setProperties(new PropagationProperties());
+        processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
+        processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_fail_to_decorate_encoder_with_no_default_constructor() {
+        processor.setEncoderType(EchoMessagePropertyEncoder2.class);
+        processor.setProperties(new PropagationProperties());
+        processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
+        processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
     }
 
     @Test
@@ -60,5 +79,13 @@ public class PreservesJmsMessagePropertiesStrategyTest {
         processor.setProperties(propagationProperties);
         processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
         assertThat(processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName).getClass(), not(equalTo(PreservesHeadersStompSessionAdapter.class)));
+    }
+
+    private static class EchoMessagePropertyEncoder1 extends EchoMessagePropertyEncoder {
+    }
+
+    public static class EchoMessagePropertyEncoder2 extends EchoMessagePropertyEncoder {
+        public EchoMessagePropertyEncoder2(String toto) {
+        }
     }
 }

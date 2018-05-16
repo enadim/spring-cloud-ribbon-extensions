@@ -43,11 +43,19 @@ public class PreservesHttpHeadersInterceptorTest {
     }
 
     @Test
-    public void testPreHandle() throws Exception {
+    public void should_skip_propagate_request_headers() throws Exception {
         when(request.getHeaderNames()).thenReturn(enumeration(asList("1", "2", "3")));
         attributes.forEach(x -> when(request.getHeader(x)).thenReturn(x));
         propagator.preHandle(request, null, null);
         attributes.forEach(x -> assertThat(current().get(x), equalTo(x)));
+    }
+
+    @Test
+    public void should_skip_propagation_on_null_request_headers() throws Exception {
+        when(request.getHeaderNames()).thenReturn(null);
+        attributes.forEach(x -> when(request.getHeader(x)).thenReturn(x));
+        propagator.preHandle(request, null, null);
+        assertThat(current().entrySet().size(), equalTo(0));
     }
 
     @Test

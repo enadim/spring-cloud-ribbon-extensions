@@ -38,11 +38,14 @@ public class PreservesMessagePropertiesMessageListener extends AbstractPreserves
     /**
      * Sole constructor.
      *
-     * @param delegate the delegate {@link MessageListener}
-     * @param filter   the message property name filter
+     * @param delegate the delegate {@link MessageListener}.
+     * @param filter   the message property name filter.
+     * @param encoder  the message property encoder.
      */
-    public PreservesMessagePropertiesMessageListener(@NotNull MessageListener delegate, @NotNull Filter<String> filter) {
-        super(filter);
+    public PreservesMessagePropertiesMessageListener(@NotNull MessageListener delegate,
+                                                     @NotNull Filter<String> filter,
+                                                     @NotNull MessagePropertyEncoder encoder) {
+        super(filter, encoder);
         this.delegate = delegate;
     }
 

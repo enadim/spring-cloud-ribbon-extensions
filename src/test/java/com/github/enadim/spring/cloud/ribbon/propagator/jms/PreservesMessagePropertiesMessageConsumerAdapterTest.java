@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 public class PreservesMessagePropertiesMessageConsumerAdapterTest {
     MessageConsumer delegate = mock(MessageConsumer.class);
-    PreservesMessagePropertiesMessageConsumerAdapter propagator = new PreservesMessagePropertiesMessageConsumerAdapter(delegate, null);
+    PreservesMessagePropertiesMessageConsumerAdapter propagator = new PreservesMessagePropertiesMessageConsumerAdapter(delegate, null, new EchoMessagePropertyEncoder());
 
     @Test
     public void getMessageSelector() throws Exception {

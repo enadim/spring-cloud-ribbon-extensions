@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 public class PreservesMessagePropertiesMessageListenerTest {
     MessageListener delegate = mock(MessageListener.class);
-    PreservesMessagePropertiesMessageListener listener = new PreservesMessagePropertiesMessageListener(delegate, new HashSet<>()::contains);
+    PreservesMessagePropertiesMessageListener listener = new PreservesMessagePropertiesMessageListener(delegate, new HashSet<>()::contains, new EchoMessagePropertyEncoder());
     Message message = mock(Message.class);
 
     @Test

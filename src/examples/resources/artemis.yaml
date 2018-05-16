@@ -1,0 +1,50 @@
+server:
+  port: 8002
+  ssl:
+    enabled: false
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+
+spring:
+  application:
+    name: artemis
+    default-domain: artemis
+  cloud:
+    config:
+      enabled: false
+  jmx:
+    enabled: false
+
+  activemq:
+    pool:
+      enabled: true
+  artemis:
+    mode: embedded
+    host: localhost
+    port: 8003
+    user: admin
+    password: secret
+    embedded:
+      enabled: true
+      persistent: false
+      queues: queue
+      topics: topic
+
+eureka:
+  server:
+    port: 8000
+  client:
+    enabled: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:${eureka.server.port}/eureka
+  instance:
+    metadataMap:
+      instanceId: artemis
+      zone: zone1
+    lease-renewal-interval-in-seconds: 3
+    lease-expiration-duration-in-seconds: 3

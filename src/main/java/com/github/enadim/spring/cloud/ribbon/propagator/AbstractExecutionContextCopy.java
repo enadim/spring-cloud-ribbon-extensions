@@ -41,6 +41,7 @@ public class AbstractExecutionContextCopy<T> {
      * The context entry key filter.
      */
     private final Filter<String> filter;
+
     /**
      * The execution context copy function.
      */

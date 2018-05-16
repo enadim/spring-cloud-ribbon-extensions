@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         properties = {
                 "spring.application.name=favorite-zone-test",
                 "endpoints.enabled=false",
-                "eureka.client.register-with-eureka=false",
+                "eureka.client.enabled=false",
                 "eureka.instance.metadataMap.zone=zone1",
                 "ribbon.eager-load.enabled=true",
                 "ribbon.eager-load.clients[0]=application2",

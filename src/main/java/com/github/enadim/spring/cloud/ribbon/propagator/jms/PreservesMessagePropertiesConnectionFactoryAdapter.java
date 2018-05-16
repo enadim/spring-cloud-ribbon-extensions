@@ -17,12 +17,12 @@ package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
 import com.github.enadim.spring.cloud.ribbon.context.ExecutionContext;
 import com.github.enadim.spring.cloud.ribbon.propagator.Filter;
+import lombok.AllArgsConstructor;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSContext;
 import javax.jms.JMSException;
-import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,33 +30,58 @@ import java.util.Map;
  *
  * @author Nadim Benabdenbi
  */
+@AllArgsConstructor
 public class PreservesMessagePropertiesConnectionFactoryAdapter implements ConnectionFactory {
     /**
      * The delegate connection factory.
      */
     private final ConnectionFactory delegate;
+
     /**
      * The context entry key or message property name filter.
      */
     private final Filter<String> filter;
+
     /**
      * the extra static entries to copy.
      */
-    private Map<String, String> extraStaticEntries = new HashMap<>();
+    private Map<String, String> extraStaticEntries;
 
     /**
-     * Sole constructor
-     *
-     * @param delegate           The delegate connection factory.
-     * @param filter             The context entry key or message property name filter.
-     * @param extraStaticEntries The extra static entries to copy.
+     * The message property encoder.
      */
-    public PreservesMessagePropertiesConnectionFactoryAdapter(@NotNull ConnectionFactory delegate,
-                                                              @NotNull Filter<String> filter,
-                                                              @NotNull Map<String, String> extraStaticEntries) {
-        this.delegate = delegate;
-        this.filter = filter;
-        this.extraStaticEntries = extraStaticEntries;
+    private final MessagePropertyEncoder encoder;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JMSContext createContext() {
+        return delegate.createContext();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JMSContext createContext(int sessionMode) {
+        return delegate.createContext(sessionMode);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JMSContext createContext(String userName, String password) {
+        return delegate.createContext(userName, password);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JMSContext createContext(String userName, String password, int sessionMode) {
+        return delegate.createContext(userName, password, sessionMode);
     }
 
     /**
@@ -64,7 +89,7 @@ public class PreservesMessagePropertiesConnectionFactoryAdapter implements Conne
      */
     @Override
     public Connection createConnection() throws JMSException {
-        return new PreservesMessagePropertiesConnectionAdapter(delegate.createConnection(), filter, extraStaticEntries);
+        return new PreservesMessagePropertiesConnectionAdapter(delegate.createConnection(), filter, extraStaticEntries, encoder);
     }
 
     /**
@@ -72,6 +97,6 @@ public class PreservesMessagePropertiesConnectionFactoryAdapter implements Conne
      */
     @Override
     public Connection createConnection(String userName, String password) throws JMSException {
-        return new PreservesMessagePropertiesConnectionAdapter(delegate.createConnection(userName, password), filter, extraStaticEntries);
+        return new PreservesMessagePropertiesConnectionAdapter(delegate.createConnection(userName, password), filter, extraStaticEntries, encoder);
     }
 }

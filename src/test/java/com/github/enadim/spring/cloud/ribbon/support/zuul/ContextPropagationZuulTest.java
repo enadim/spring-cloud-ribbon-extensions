@@ -38,7 +38,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {ContextPropagationZuulTest.Application.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {"eureka.client.register-with-eureka=false"}
+        properties = {"eureka.client.enabled=false"}
 )
 @EnableHttpLogging
 public class ContextPropagationZuulTest {

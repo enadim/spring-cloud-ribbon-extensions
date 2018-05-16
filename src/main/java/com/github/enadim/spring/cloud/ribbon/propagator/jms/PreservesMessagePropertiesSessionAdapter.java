@@ -58,17 +58,25 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
     private final Session delegate;
 
     /**
+     * The message property encoder.
+     */
+    private final MessagePropertyEncoder encoder;
+
+    /**
      * Sole Constructor
      *
      * @param delegate           the delegate session
      * @param filter             the context entry key filter
      * @param extraStaticEntries The extra static entries to copy.
+     * @param encoder            the message property encoder.
      */
     public PreservesMessagePropertiesSessionAdapter(@NotNull Session delegate,
                                                     @NotNull Filter<String> filter,
-                                                    @NotNull Map<String, String> extraStaticEntries) {
-        super(filter, Message::setStringProperty, extraStaticEntries);
+                                                    @NotNull Map<String, String> extraStaticEntries,
+                                                    @NotNull MessagePropertyEncoder encoder) {
+        super(filter, (message, key, value) -> message.setStringProperty(encoder.encode(key), value), extraStaticEntries);
         this.delegate = delegate;
+        this.encoder = encoder;
     }
 
     /**
@@ -210,7 +218,7 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
      */
     @Override
     public void setMessageListener(MessageListener listener) throws JMSException {
-        delegate.setMessageListener(listener instanceof PreservesMessagePropertiesMessageListener ? listener : new PreservesMessagePropertiesMessageListener(listener, getFilter()));
+        delegate.setMessageListener(listener instanceof PreservesMessagePropertiesMessageListener ? listener : new PreservesMessagePropertiesMessageListener(listener, getFilter(), encoder));
     }
 
     /**
@@ -226,7 +234,7 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
      */
     @Override
     public MessageProducer createProducer(Destination destination) throws JMSException {
-        return new PreservesMessagePropertiesMessageProducerAdapter(delegate.createProducer(destination), getFilter(), getExtraStaticEntries());
+        return new PreservesMessagePropertiesMessageProducerAdapter(delegate.createProducer(destination), getFilter(), getExtraStaticEntries(), encoder);
     }
 
     /**
@@ -234,7 +242,7 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
      */
     @Override
     public MessageConsumer createConsumer(Destination destination) throws JMSException {
-        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createConsumer(destination), getFilter());
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createConsumer(destination), getFilter(), encoder);
     }
 
     /**
@@ -242,7 +250,7 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
      */
     @Override
     public MessageConsumer createConsumer(Destination destination, String messageSelector) throws JMSException {
-        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createConsumer(destination, messageSelector), getFilter());
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createConsumer(destination, messageSelector), getFilter(), encoder);
     }
 
     /**
@@ -250,7 +258,7 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
      */
     @Override
     public MessageConsumer createConsumer(Destination destination, String messageSelector, boolean noLocal) throws JMSException {
-        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createConsumer(destination, messageSelector, noLocal), getFilter());
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createConsumer(destination, messageSelector, noLocal), getFilter(), encoder);
     }
 
     /**
@@ -323,5 +331,35 @@ public class PreservesMessagePropertiesSessionAdapter extends AbstractExecutionC
     @Override
     public void unsubscribe(String name) throws JMSException {
         delegate.unsubscribe(name);
+    }
+
+    @Override
+    public MessageConsumer createSharedConsumer(Topic topic, String sharedSubscriptionName) throws JMSException {
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createSharedConsumer(topic, sharedSubscriptionName), getFilter(), encoder);
+    }
+
+    @Override
+    public MessageConsumer createSharedConsumer(Topic topic, String sharedSubscriptionName, String messageSelector) throws JMSException {
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createSharedConsumer(topic, sharedSubscriptionName, messageSelector), getFilter(), encoder);
+    }
+
+    @Override
+    public MessageConsumer createDurableConsumer(Topic topic, String name) throws JMSException {
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createDurableConsumer(topic, name), getFilter(), encoder);
+    }
+
+    @Override
+    public MessageConsumer createDurableConsumer(Topic topic, String name, String messageSelector, boolean noLocal) throws JMSException {
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createDurableConsumer(topic, name, messageSelector, noLocal), getFilter(), encoder);
+    }
+
+    @Override
+    public MessageConsumer createSharedDurableConsumer(Topic topic, String name) throws JMSException {
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createSharedDurableConsumer(topic, name), getFilter(), encoder);
+    }
+
+    @Override
+    public MessageConsumer createSharedDurableConsumer(Topic topic, String name, String messageSelector) throws JMSException {
+        return new PreservesMessagePropertiesMessageConsumerAdapter(delegate.createSharedDurableConsumer(topic, name, messageSelector), getFilter(), encoder);
     }
 }

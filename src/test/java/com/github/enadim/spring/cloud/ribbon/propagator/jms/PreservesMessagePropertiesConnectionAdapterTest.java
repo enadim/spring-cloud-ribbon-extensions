@@ -26,10 +26,22 @@ import static org.mockito.Mockito.verify;
 
 public class PreservesMessagePropertiesConnectionAdapterTest {
     Connection delegate = mock(Connection.class);
-    PreservesMessagePropertiesConnectionAdapter propagator = new PreservesMessagePropertiesConnectionAdapter(delegate, null, null);
+    PreservesMessagePropertiesConnectionAdapter propagator = new PreservesMessagePropertiesConnectionAdapter(delegate, null, null, new EchoMessagePropertyEncoder());
 
     @Test
     public void createSession() throws Exception {
+        assertThat(propagator.createSession().getClass(), equalTo(PreservesMessagePropertiesSessionAdapter.class));
+        verify(delegate).createSession();
+    }
+
+    @Test
+    public void createSession1() throws Exception {
+        assertThat(propagator.createSession(0).getClass(), equalTo(PreservesMessagePropertiesSessionAdapter.class));
+        verify(delegate).createSession(0);
+    }
+
+    @Test
+    public void createSession2() throws Exception {
         assertThat(propagator.createSession(true, 1).getClass(), equalTo(PreservesMessagePropertiesSessionAdapter.class));
         verify(delegate).createSession(true, 1);
     }
@@ -92,5 +104,17 @@ public class PreservesMessagePropertiesConnectionAdapterTest {
     public void createDurableConnectionConsumer() throws Exception {
         propagator.createDurableConnectionConsumer(null, null, null, null, 0);
         verify(delegate).createDurableConnectionConsumer(null, null, null, null, 0);
+    }
+
+    @Test
+    public void createSharedConnectionConsumer() throws Exception {
+        propagator.createSharedConnectionConsumer(null, null, null, null, 0);
+        verify(delegate).createSharedConnectionConsumer(null, null, null, null, 0);
+    }
+
+    @Test
+    public void createSharedDurableConnectionConsumer() throws Exception {
+        propagator.createSharedDurableConnectionConsumer(null, null, null, null, 0);
+        verify(delegate).createSharedDurableConnectionConsumer(null, null, null, null, 0);
     }
 }

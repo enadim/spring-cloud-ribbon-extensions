@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 
 public class AbstractPreservesMessagePropertiesTest {
     private Set<String> keys = new HashSet<>(asList("1", "2"));
-    private AbstractPreservesMessageProperties propagator = new AbstractPreservesMessageProperties(keys::contains) {
+    private AbstractPreservesMessageProperties propagator = new AbstractPreservesMessageProperties(keys::contains, new EchoMessagePropertyEncoder()) {
     };
     private Message message = mock(Message.class);
 

@@ -27,7 +27,31 @@ import static org.mockito.Mockito.verify;
 public class PreservesMessagePropertiesConnectionFactoryAdapterTest {
 
     ConnectionFactory delegate = mock(ConnectionFactory.class);
-    PreservesMessagePropertiesConnectionFactoryAdapter propagator = new PreservesMessagePropertiesConnectionFactoryAdapter(delegate, null, null);
+    PreservesMessagePropertiesConnectionFactoryAdapter propagator = new PreservesMessagePropertiesConnectionFactoryAdapter(delegate, null, null, new EchoMessagePropertyEncoder());
+
+    @Test
+    public void createContext() {
+        propagator.createContext();
+        verify(delegate).createContext();
+    }
+
+    @Test
+    public void createContext1() {
+        propagator.createContext(0);
+        verify(delegate).createContext(0);
+    }
+
+    @Test
+    public void createContext2() {
+        propagator.createContext(null, null);
+        verify(delegate).createContext(null, null);
+    }
+
+    @Test
+    public void createContext3() throws Exception {
+        propagator.createContext(null, null, 0);
+        verify(delegate).createContext(null, null, 0);
+    }
 
     @Test
     public void createConnection() throws Exception {

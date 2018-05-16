@@ -40,11 +40,14 @@ public class PreservesMessagePropertiesMessageConsumerAdapter extends AbstractPr
     /**
      * Sole constructor.
      *
-     * @param delegate the delegate message consumer
-     * @param filter   the message property name filter
+     * @param delegate the delegate message consumer.
+     * @param filter   the message property name filter.
+     * @param encoder  the message property encoder.
      */
-    public PreservesMessagePropertiesMessageConsumerAdapter(@NotNull MessageConsumer delegate, @NotNull Filter<String> filter) {
-        super(filter);
+    public PreservesMessagePropertiesMessageConsumerAdapter(@NotNull MessageConsumer delegate,
+                                                            @NotNull Filter<String> filter,
+                                                            @NotNull MessagePropertyEncoder encoder) {
+        super(filter, encoder);
         this.delegate = delegate;
     }
 
@@ -69,7 +72,7 @@ public class PreservesMessagePropertiesMessageConsumerAdapter extends AbstractPr
      */
     @Override
     public void setMessageListener(MessageListener listener) throws JMSException {
-        delegate.setMessageListener(new PreservesMessagePropertiesMessageListener(listener, getFilter()));
+        delegate.setMessageListener(new PreservesMessagePropertiesMessageListener(listener, getFilter(), getEncoder()));
     }
 
     /**
