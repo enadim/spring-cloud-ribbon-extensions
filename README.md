@@ -1,29 +1,29 @@
-# [Spring Cloud Ribbon Extensions v2.0.0-SNAPSHOT](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki) :rocket::microscope:
+# [Spring Cloud Ribbon Extensions v2.0.0](https://github.com/enadim/spring-cloud-ribbon-extensions/wiki) :rocket::microscope:
 
 :exclamation:Must Have:exclamation: Enhance your micro-service testing, maintenance & overall development productivity.
 
 **Spring Cloud Ribbon Extensions** is a set of load balancing rules that chooses which server to target.
 It comes with handy features for easy integration, configuration and customization.
 
-[![Build Status](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions.svg?branch=develop)](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions)
-[![Codecov Coverage](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions/branch/develop/graph/badge.svg)](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions)
+[![Build Status](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions.svg?branch=master)](https://travis-ci.org/enadim/spring-cloud-ribbon-extensions)
+[![Codecov Coverage](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions/branch/master/graph/badge.svg)](https://codecov.io/gh/enadim/spring-cloud-ribbon-extensions)
 [![Codacy](https://api.codacy.com/project/badge/Grade/bf7e3455f2894da19b1e250173c9ace1)](https://www.codacy.com/app/enadim/spring-cloud-ribbon-extensions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=enadim/spring-cloud-ribbon-extensions&amp;utm_campaign=Badge_Grade)
 
-[![SonarCloud Reliability](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions:develop&metric=reliability_rating)
-[![SonarCloud Security](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=security_rating)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions:develop&metric=security_rating)
-[![SonarCloud Squale](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions:develop&metric=sqale_rating)
-[![SonarCloud Coverage](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=coverage)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions:develop&metric=Coverage)
-[![SonarCloud Duplication](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions:develop&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions:develop&metric=Duplications)
+[![SonarCloud Reliability](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions&metric=reliability_rating)
+[![SonarCloud Security](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions&metric=security_rating)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions&metric=security_rating)
+[![SonarCloud Squale](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions&metric=sqale_rating)
+[![SonarCloud Coverage](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions&metric=coverage)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions&metric=Coverage)
+[![SonarCloud Duplication](https://sonarcloud.io/api/badges/measure?key=enadim:spring-cloud-ribbon-extensions&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures?id=enadim:spring-cloud-ribbon-extensions&metric=Duplications)
 
 ![CoL](https://tokei.rs/b1/github/enadim/spring-cloud-ribbon-extensions)
-[![Sonatype Snapshots](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.enadim/spring-cloud-ribbon-extensions.svg)](https://oss.sonatype.org/#nexus-search;gav~com.github.enadim~spring-cloud-ribbon-extensions~2.0.0-SNAPSHOT)
-[![Javadocs](http://www.javadoc.io/badge/com.github.enadim/spring-cloud-ribbon-extensions/2.0.0-SNAPSHOT.svg)](http://www.javadoc.io/doc/com.github.enadim/spring-cloud-ribbon-extensions/2.0.0-SNAPSHOT)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.enadim/spring-cloud-ribbon-extensions.svg)](http://search.maven.org/#artifactdetails|com.github.enadim|spring-cloud-ribbon-extensions|2.0.0)
+[![Javadocs](http://www.javadoc.io/badge/com.github.enadim/spring-cloud-ribbon-extensions/2.0.0.svg)](http://www.javadoc.io/doc/com.github.enadim/spring-cloud-ribbon-extensions/2.0.0)
 
-[![GitHub license](https://img.shields.io/github/license/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/develop/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/issues)
 [![GitHub network/members](https://img.shields.io/github/forks/enadim/spring-cloud-ribbon-extensions.svg)](https://github.com/enadim/spring-cloud-ribbon-extensions/network/members)
 
-## Requirements 1.4.5
+## Requirements 2.0.0
 * java 8
 * spring boot 1.5.x
 * spring cloud Daslton.
@@ -98,14 +98,14 @@ maven
 <dependency>
   <groupId>com.github.enadim</groupId>
   <artifactId>spring-cloud-ribbon-extensions</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
 gradle
 ```gradle
 dependencies {
-    compile 'com.github.enadim:spring-cloud-ribbon-extensions:2.0.0-SNAPSHOT'
+    compile 'com.github.enadim:spring-cloud-ribbon-extensions:2.0.0'
 }
 ```
 
