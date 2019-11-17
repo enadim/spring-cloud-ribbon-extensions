@@ -75,8 +75,8 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Finchley.RELEASE'
-        mavenBom 'org.springframework.boot:spring-boot:2.0.3.RELEASE'
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE'
+        mavenBom 'org.springframework.boot:spring-boot:2.2.1.RELEASE'
     }
 }
 

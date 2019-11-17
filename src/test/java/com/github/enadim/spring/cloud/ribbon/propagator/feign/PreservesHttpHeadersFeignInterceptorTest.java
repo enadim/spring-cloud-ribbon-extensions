@@ -16,16 +16,13 @@
 package com.github.enadim.spring.cloud.ribbon.propagator.feign;
 
 import com.github.enadim.spring.cloud.ribbon.propagator.PatternFilter;
+import feign.Request;
 import feign.RequestTemplate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
@@ -44,8 +41,8 @@ public class PreservesHttpHeadersFeignInterceptorTest {
 
     @Before
     public void before() {
-        requestTemplate.append("http://google.com");
-        requestTemplate.method("GET");
+        requestTemplate.target("http://google.com");
+        requestTemplate.method(Request.HttpMethod.GET);
     }
 
     @After
@@ -55,6 +52,7 @@ public class PreservesHttpHeadersFeignInterceptorTest {
 
     @Test
     public void do_nothing_on_empty_context() throws Exception {
+        requestTemplate = requestTemplate.resolve(Collections.emptyMap());
         propagator.apply(requestTemplate);
         assertThat(requestTemplate.headers().size(), is(0));
     }
@@ -62,7 +60,8 @@ public class PreservesHttpHeadersFeignInterceptorTest {
     @Test
     public void do_nothing_on_excluded_url() throws Exception {
         asList("1", "3", "2").forEach(x -> current().put(x, x));
-        requestTemplate.append(excludedUrl);
+        requestTemplate.uri(excludedUrl);
+        requestTemplate = requestTemplate.resolve(Collections.emptyMap());
         propagator.apply(requestTemplate);
         assertThat(requestTemplate.headers().size(), is(0));
     }
@@ -70,6 +69,7 @@ public class PreservesHttpHeadersFeignInterceptorTest {
     @Test
     public void copy_headers() throws Exception {
         asList("1", "3", "2").forEach(x -> current().put(x, x));
+        requestTemplate = requestTemplate.resolve(Collections.emptyMap());
         propagator.apply(requestTemplate);
         Map<String, Collection<String>> headers = requestTemplate.headers();
         asList("1", "2").forEach(x -> assertThat(headers.get(x), equalTo(asList(x))));
