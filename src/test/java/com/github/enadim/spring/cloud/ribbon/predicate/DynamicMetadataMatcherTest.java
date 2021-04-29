@@ -18,9 +18,9 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,12 +41,12 @@ public class DynamicMetadataMatcherTest {
     DiscoveryEnabledServer server = new DiscoveryEnabledServer(instanceInfo, true);
     DynamicMetadataMatcher predicate = new DynamicMetadataMatcher(dynamicAttributeKey, false);
 
-    @Before
+    @BeforeEach
     public void before() {
         when(instanceInfo.getMetadata()).thenReturn(metada);
     }
 
-    @After
+    @AfterEach
     public void after() {
         remove();
     }

@@ -59,7 +59,7 @@ public abstract class AbstractPreservesMessageProperties {
             try {
                 ExecutionContext context = current();
                 List<String> eligiblePropertyNames = new ArrayList<>();
-                list((Enumeration<String>) message.getPropertyNames()).stream()
+                list((Enumeration<String>) message.getPropertyNames())
                         .forEach(x -> copy(context, message, x, eligiblePropertyNames));
                 log.trace("Message Properties copied {}", eligiblePropertyNames);
             } catch (JMSException e) {

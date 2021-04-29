@@ -15,18 +15,10 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support.strategy;
 
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareAsyncListenableTaskExecutor;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareAsyncTaskExecutor;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareExecutor;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareExecutorService;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareScheduledExecutorService;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareSchedulingTaskExecutor;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareTaskScheduler;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareThreadPoolTaskExecutor;
-import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareThreadPoolTaskScheduler;
+import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.*;
 import com.github.enadim.spring.cloud.ribbon.support.PropagationProperties;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.SchedulingTaskExecutor;
@@ -49,7 +41,7 @@ public class PreservesExecutionContextExecutorStrategyTest {
     String toBeExcluded = "toBeExcluded";
     PreservesExecutionContextExecutorStrategy processor = new PreservesExecutionContextExecutorStrategy();
 
-    @Before
+    @BeforeEach
     public void before() {
         PropagationProperties properties = new PropagationProperties();
         properties.getExecutor().getExcludes().add(Pattern.compile(toBeExcluded));

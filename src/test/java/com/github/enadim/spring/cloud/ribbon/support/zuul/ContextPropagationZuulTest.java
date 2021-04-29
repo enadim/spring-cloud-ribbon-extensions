@@ -21,21 +21,20 @@ import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.PropagationProperties;
 import com.netflix.hystrix.strategy.HystrixPlugins;
 import feign.RequestInterceptor;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {ContextPropagationZuulTest.Application.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"eureka.client.enabled=false"}
@@ -50,9 +49,9 @@ public class ContextPropagationZuulTest {
 
     @Test
     public void test_configuration() {
-        assertNotNull(properties);
-        assertNotNull(requestInterceptor);
-        assertEquals(HystrixPlugins.getInstance().getConcurrencyStrategy().getClass(),
+        assertThat(properties).isNotNull();
+        assertThat(requestInterceptor).isNotNull();
+        assertThat(HystrixPlugins.getInstance().getConcurrencyStrategy().getClass()).isExactlyInstanceOf(
                 ExecutionContextAwareHystrixStrategy.class);
     }
 

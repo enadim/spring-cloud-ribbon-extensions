@@ -15,9 +15,9 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -28,13 +28,8 @@ import java.util.Set;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 public class AbstractPreservesMessagePropertiesTest {
     private Set<String> keys = new HashSet<>(asList("1", "2"));
@@ -42,9 +37,10 @@ public class AbstractPreservesMessagePropertiesTest {
     };
     private Message message = mock(Message.class);
 
-    @After
+    @AfterEach
     public void after() {
         remove();
+        reset(message);
     }
 
     @Test
@@ -55,15 +51,16 @@ public class AbstractPreservesMessagePropertiesTest {
         when(message.getStringProperty("3")).thenReturn("3");
         propagator.copyFromMessage(message);
         verify(message, never()).getStringProperty(eq("3"));
-        keys.forEach(x -> Assert.assertThat(current().get(x), is(x)));
-        Assert.assertThat(current().containsKey("3"), is(false));
+        SoftAssertions soft = new SoftAssertions();
+        keys.forEach(x -> soft.assertThat(current().get(x)).isEqualTo(x));
+        soft.assertThat(current().containsKey("3")).isFalse();
     }
 
     @Test
     public void fail_on_get_property_names() throws Exception {
         when(message.getPropertyNames()).thenThrow(JMSException.class);
         propagator.copyFromMessage(message);
-        Assert.assertThat(current().entrySet(), empty());
+        assertThat(current().entrySet()).isEmpty();
     }
 
     @Test
@@ -75,8 +72,8 @@ public class AbstractPreservesMessagePropertiesTest {
         verify(message).getStringProperty(eq("1"));
         verify(message).getStringProperty(eq("2"));
         verify(message, never()).getStringProperty(eq("3"));
-        Assert.assertThat(current().containsKey("1"), is(true));
-        Assert.assertThat(current().entrySet().size(), is(1));
+        assertThat(current().containsKey("1")).isTrue();
+        assertThat(current().entrySet()).hasSize(1);
     }
 
 

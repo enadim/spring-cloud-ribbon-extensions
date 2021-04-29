@@ -15,11 +15,9 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PropagationPropertiesTest {
 
@@ -27,21 +25,21 @@ public class PropagationPropertiesTest {
     @Test
     public void buildEntriesFilter() throws Exception {
         PropagationProperties properties = new PropagationProperties();
-        assertThat(properties.buildEntriesFilter().accept(""), is(false));
+        assertThat(properties.buildEntriesFilter().accept("")).isFalse();
     }
 
     @Test
     public void buildExtraStaticEntries() throws Exception {
         PropagationProperties properties = new PropagationProperties();
-        assertThat(properties.buildExtraStaticEntries(new EurekaInstanceProperties()).get("upstream-zone"), is("default"));
+        assertThat(properties.buildExtraStaticEntries(new EurekaInstanceProperties()).get("upstream-zone")).isEqualTo("default");
 
         properties = new PropagationProperties();
         properties.getUpStreamZone().setKey("new");
-        assertThat(properties.buildExtraStaticEntries(new EurekaInstanceProperties()).get("new"), is("default"));
+        assertThat(properties.buildExtraStaticEntries(new EurekaInstanceProperties()).get("new")).isEqualTo("default");
 
         properties = new PropagationProperties();
         properties.getUpStreamZone().setEnabled(false);
-        assertThat(properties.buildExtraStaticEntries(new EurekaInstanceProperties()).get("upstream-zone"), is(nullValue()));
+        assertThat(properties.buildExtraStaticEntries(new EurekaInstanceProperties()).get("upstream-zone")).isNull();
     }
 
 }

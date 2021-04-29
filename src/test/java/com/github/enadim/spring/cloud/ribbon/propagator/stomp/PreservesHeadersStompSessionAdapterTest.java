@@ -16,8 +16,8 @@
 package com.github.enadim.spring.cloud.ribbon.propagator.stomp;
 
 import com.github.enadim.spring.cloud.ribbon.ArgumentHolder;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
@@ -30,9 +30,7 @@ import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHold
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -47,8 +45,8 @@ public class PreservesHeadersStompSessionAdapterTest {
     private StompSessionHandler handler = mock(StompSessionHandler.class);
     private PreservesHeadersStompSessionAdapter propagator = new PreservesHeadersStompSessionAdapter(delegate, keysToCopy::contains, new HashMap<>());
 
-    @After
-    public void after() {
+    @BeforeEach
+    public void before() {
         remove();
     }
 

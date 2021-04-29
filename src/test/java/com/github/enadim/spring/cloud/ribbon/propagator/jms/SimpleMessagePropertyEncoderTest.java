@@ -15,46 +15,47 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class SimpleMessagePropertyEncoderTest {
     SimpleMessagePropertyEncoder simple = new SimpleMessagePropertyEncoder();
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_encoding_unsupported_value() {
-        simple.encode("*");
+        assertThatThrownBy(() -> simple.encode("*")).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_decoding_unsupported_value1() {
-        simple.decode("" + (char) ('a' - 1));
+        assertThatThrownBy(() -> simple.decode("" + (char) ('a' - 1))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_decoding_unsupported_value2() {
-        simple.decode("" + (char) ('A' - 1));
+        assertThatThrownBy(() -> simple.decode("" + (char) ('A' - 1))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_decoding_unsupported_value3() {
-        simple.decode("" + (char) ('0' - 1));
+        assertThatThrownBy(() -> simple.decode("" + (char) ('0' - 1))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_decoding_unsupported_value4() {
-        simple.decode("" + (char) ('z' + 1));
+        assertThatThrownBy(() -> simple.decode("" + (char) ('z' + 1))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_decoding_unsupported_value5() {
-        simple.decode("" + (char) ('Z' + 1));
+        assertThatThrownBy(() -> simple.decode("" + (char) ('Z' + 1))).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_decoding_unsupported_value6() {
-        simple.decode("" + (char) ('9' + 1));
+        assertThatThrownBy(() -> simple.decode("" + (char) ('9' + 1))).isInstanceOf(IllegalArgumentException.class);
     }
 
 

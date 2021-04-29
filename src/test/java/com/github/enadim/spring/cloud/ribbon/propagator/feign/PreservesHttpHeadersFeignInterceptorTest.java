@@ -17,23 +17,17 @@ package com.github.enadim.spring.cloud.ribbon.propagator.feign;
 
 import com.github.enadim.spring.cloud.ribbon.propagator.PatternFilter;
 import feign.RequestTemplate;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class PreservesHttpHeadersFeignInterceptorTest {
@@ -42,13 +36,13 @@ public class PreservesHttpHeadersFeignInterceptorTest {
     PreservesHttpHeadersFeignInterceptor propagator = new PreservesHttpHeadersFeignInterceptor(new PatternFilter(asList(Pattern.compile(".*")), asList(Pattern.compile(excludedUrl))), keys::contains, new HashMap<>());
     RequestTemplate requestTemplate = new RequestTemplate();
 
-    @Before
+    @BeforeEach
     public void before() {
         requestTemplate.append("http://google.com");
         requestTemplate.method("GET");
     }
 
-    @After
+    @AfterEach
     public void after() {
         remove();
     }
@@ -56,7 +50,7 @@ public class PreservesHttpHeadersFeignInterceptorTest {
     @Test
     public void do_nothing_on_empty_context() throws Exception {
         propagator.apply(requestTemplate);
-        assertThat(requestTemplate.headers().size(), is(0));
+        assertThat(requestTemplate.headers()).isEmpty();
     }
 
     @Test
@@ -64,7 +58,7 @@ public class PreservesHttpHeadersFeignInterceptorTest {
         asList("1", "3", "2").forEach(x -> current().put(x, x));
         requestTemplate.append(excludedUrl);
         propagator.apply(requestTemplate);
-        assertThat(requestTemplate.headers().size(), is(0));
+        assertThat(requestTemplate.headers()).isEmpty();
     }
 
     @Test
@@ -72,7 +66,7 @@ public class PreservesHttpHeadersFeignInterceptorTest {
         asList("1", "3", "2").forEach(x -> current().put(x, x));
         propagator.apply(requestTemplate);
         Map<String, Collection<String>> headers = requestTemplate.headers();
-        asList("1", "2").forEach(x -> assertThat(headers.get(x), equalTo(asList(x))));
-        assertThat(headers.containsKey("3"), is(false));
+        asList("1", "2").forEach(x -> assertThat(headers.get(x)).hasSameElementsAs(asList(x)));
+        assertThat(headers.containsKey("3")).isFalse();
     }
 }

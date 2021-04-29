@@ -15,8 +15,8 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.stomp;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 
@@ -34,8 +34,8 @@ public class PreservesHeadersStompFrameHandlerAdapterTest {
     private StompFrameHandler delegate = mock(StompFrameHandler.class);
     private PreservesHeadersStompFrameHandlerAdapter propagator = new PreservesHeadersStompFrameHandlerAdapter(delegate, attributes::contains);
 
-    @After
-    public void After() {
+    @BeforeEach
+    public void before() {
         remove();
     }
 

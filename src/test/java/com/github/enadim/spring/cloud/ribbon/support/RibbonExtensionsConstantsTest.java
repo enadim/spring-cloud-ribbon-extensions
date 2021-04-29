@@ -15,7 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 

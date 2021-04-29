@@ -16,9 +16,9 @@
 package com.github.enadim.spring.cloud.ribbon.it;
 
 import io.restassured.RestAssured;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public abstract class AbstractTest {
         this.applicationName = applicationName;
     }
 
-    @Before
+    @BeforeEach
     public final void abstractBefore() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.basePath = basePath;
@@ -96,11 +96,14 @@ public abstract class AbstractTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test()
     public void parallelRunTest() {
-        parallelRun(Assert::fail);
-        if (!parrallelRunEnabled) {
-            throw new IllegalStateException();
-        }
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> {
+            parallelRun(Assertions::fail);
+            if (!parrallelRunEnabled) {
+                throw new IllegalStateException();
+            }
+        }).isInstanceOf(IllegalStateException.class);
+
     }
 }

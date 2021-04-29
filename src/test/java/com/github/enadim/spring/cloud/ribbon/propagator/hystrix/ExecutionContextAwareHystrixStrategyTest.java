@@ -19,7 +19,7 @@ import com.github.enadim.spring.cloud.ribbon.propagator.concurrent.ContextAwareC
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategy;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

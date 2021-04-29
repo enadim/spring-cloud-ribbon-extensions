@@ -1,24 +1,25 @@
 apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
-apply plugin: 'pmd'
+//apply plugin: 'findbugs'
 
-findbugs {
-    sourceSets = [sourceSets.main]
-    ignoreFailures = project.hasProperty('ignoreFailures')
-    reportLevel = 'low'
-}
+//apply plugin: 'pmd'
 
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = true
-        html.enabled = false
-    }
-}
+//findbugs {
+//    sourceSets = [sourceSets.main]
+//    ignoreFailures = project.hasProperty('ignoreFailures')
+//    reportLevel = 'low'
+//}
 
-pmd {
-    sourceSets = [sourceSets.main]
-    ignoreFailures = project.hasProperty('ignoreFailures')
-}
+//tasks.withType(FindBugs) {
+//    reports {
+//        xml.enabled = true
+//        html.enabled = false
+//    }
+//}
+
+//pmd {
+//    sourceSets = [sourceSets.main]
+//    ignoreFailures = project.hasProperty('ignoreFailures')
+//}
 
 checkstyle {
     sourceSets = [project.sourceSets.main]
@@ -35,7 +36,7 @@ check.dependsOn checkstyleMain
 
 checkstyleMain.group 'coding'
 checkstyleTest.group 'coding'
-findbugsMain.group 'coding'
-findbugsTest.group 'coding'
-pmdMain.group 'coding'
-pmdTest.group 'coding'
+//findbugsMain.group 'coding'
+//findbugsTest.group 'coding'
+//pmdMain.group 'coding'
+//pmdTest.group 'coding'

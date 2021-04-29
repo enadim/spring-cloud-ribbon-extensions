@@ -19,14 +19,13 @@ import com.google.common.base.Optional;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.ILoadBalancer;
 import com.netflix.loadbalancer.Server;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,15 +38,15 @@ public class PredicateBasedRuleSupportTest {
     @Test
     public void testConstructor() {
         PredicateBasedRuleSupport support = new PredicateBasedRuleSupport(predicate);
-        Assert.assertThat(support.getPredicate(), is(predicate));
+        assertThat(support.getPredicate()).isSameAs(predicate);
     }
 
     @Test
     public void testSetPredicate() throws Exception {
         PredicateBasedRuleSupport support = new PredicateBasedRuleSupport();
-        Assert.assertThat(support.getPredicate(), is(nullValue()));
+        assertThat(support.getPredicate()).isNull();
         support.setPredicate(predicate);
-        Assert.assertThat(support.getPredicate(), is(predicate));
+        assertThat(support.getPredicate()).isSameAs(predicate);
     }
 
     @Test
@@ -57,16 +56,18 @@ public class PredicateBasedRuleSupportTest {
         List<Server> servers = asList(server);
         when(loadBalancer.getAllServers()).thenReturn(servers);
         when(predicate.chooseRoundRobinAfterFiltering(servers, null)).thenReturn(Optional.of(server));
-        Assert.assertThat(support.choose(null), is(server));
+        assertThat(support.choose(null)).isSameAs(server);
     }
 
-    @Test(expected = ChooseServerException.class)
+    @Test()
     public void shouldNotChooseServer() throws Exception {
+        assertThatThrownBy(() -> {
         PredicateBasedRuleSupport support = new PredicateBasedRuleSupport(predicate);
         support.setLoadBalancer(loadBalancer);
         List<Server> servers = asList(server);
         when(loadBalancer.getAllServers()).thenReturn(servers);
         when(predicate.chooseRoundRobinAfterFiltering(servers, null)).thenReturn(Optional.fromNullable(null));
         support.choose(null);
+        }).isInstanceOf(ChooseServerException.class);
     }
 }

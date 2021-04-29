@@ -15,7 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 
 import static org.mockito.Mockito.mock;

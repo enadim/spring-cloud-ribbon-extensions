@@ -18,7 +18,6 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Convenient class for predicates that are based on {@link DiscoveryEnabledServer} created by the {@link DiscoveryEnabledNIWSServerList}.
@@ -33,7 +32,7 @@ public abstract class DiscoveryEnabledServerPredicate extends NullSafeServerPred
      * {@inheritDoc}
      */
     @Override
-    @SuppressFBWarnings("BC_UNCONFIRMED_CAST_OF_RETURN_VALUE")
+//    @SuppressFBWarnings("BC_UNCONFIRMED_CAST_OF_RETURN_VALUE")
     protected boolean doApply(PredicateKey input) {
         return input.getServer() instanceof DiscoveryEnabledServer
                 && doApply((DiscoveryEnabledServer) input.getServer());

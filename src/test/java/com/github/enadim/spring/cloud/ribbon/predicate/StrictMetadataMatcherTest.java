@@ -17,9 +17,9 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,13 +38,13 @@ public class StrictMetadataMatcherTest {
     Map<String, String> metada = new HashMap<>();
     DiscoveryEnabledServer server = new DiscoveryEnabledServer(instanceInfo, true);
 
-    @Before
+    @BeforeEach
     public void before() {
         remove();
         when(instanceInfo.getMetadata()).thenReturn(metada);
     }
 
-    @After
+    @AfterEach
     public void after() {
         remove();
         metada.clear();

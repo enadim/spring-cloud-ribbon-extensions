@@ -15,39 +15,38 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class EurekaInstancePropertiesTest {
     EurekaInstanceProperties properties = new EurekaInstanceProperties();
 
     @Test
     public void metadata() throws Exception {
-        assertNull(properties.getMetadataMap().get("key"));
+        assertThat(properties.getMetadataMap().get("key")).isNull();
         properties.setMetadataMap(new HashMap<String, String>() {
             {
                 put("key", "value");
             }
         });
-        assertEquals("value", properties.getMetadataMap().get("key"));
+        assertThat(properties.getMetadataMap().get("key")).isEqualTo("value");
     }
 
     @Test
     public void getInstanceId() throws Exception {
-        assertNull(properties.getInstanceId());
+        assertThat(properties.getInstanceId()).isNull();
         properties.getMetadataMap().put("instanceId", "instanceId");
-        assertEquals("instanceId", properties.getInstanceId());
+        assertThat(properties.getInstanceId()).isEqualTo("instanceId");
     }
 
     @Test
     public void getZone() throws Exception {
-        assertEquals("default", properties.getZone());
+        assertThat(properties.getZone()).isEqualTo("default");
         properties.getMetadataMap().put("zone", "zone");
-        assertEquals("zone", properties.getZone());
+        assertThat(properties.getZone()).isEqualTo("zone");
     }
 
 

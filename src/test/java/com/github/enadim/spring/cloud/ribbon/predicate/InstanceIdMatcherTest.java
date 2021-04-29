@@ -18,8 +18,8 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +33,7 @@ public class InstanceIdMatcherTest {
     DiscoveryEnabledServer server = new DiscoveryEnabledServer(instanceInfo, true);
     InstanceIdMatcher predicate = new InstanceIdMatcher(expected);
 
-    @After
+    @AfterEach
     public void after() {
         remove();
     }

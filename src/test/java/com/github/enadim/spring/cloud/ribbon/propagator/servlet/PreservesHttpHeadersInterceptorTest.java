@@ -15,8 +15,8 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.servlet;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
@@ -26,9 +26,7 @@ import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHold
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
 import static java.util.Arrays.asList;
 import static java.util.Collections.enumeration;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,8 +35,8 @@ public class PreservesHttpHeadersInterceptorTest {
     PreservesHttpHeadersInterceptor propagator = new PreservesHttpHeadersInterceptor(attributes::contains);
     HttpServletRequest request = mock(HttpServletRequest.class);
 
-    @After
-    public void after() {
+    @BeforeEach
+    public void before() {
         remove();
     }
 
@@ -47,7 +45,7 @@ public class PreservesHttpHeadersInterceptorTest {
         when(request.getHeaderNames()).thenReturn(enumeration(asList("1", "2", "3")));
         attributes.forEach(x -> when(request.getHeader(x)).thenReturn(x));
         propagator.preHandle(request, null, null);
-        attributes.forEach(x -> assertThat(current().get(x), equalTo(x)));
+        attributes.forEach(x -> assertThat(current().get(x)).isEqualTo(x));
     }
 
     @Test
@@ -55,7 +53,7 @@ public class PreservesHttpHeadersInterceptorTest {
         when(request.getHeaderNames()).thenReturn(null);
         attributes.forEach(x -> when(request.getHeader(x)).thenReturn(x));
         propagator.preHandle(request, null, null);
-        assertThat(current().entrySet().size(), equalTo(0));
+        assertThat(current().entrySet()).isEmpty();
     }
 
     @Test
@@ -73,7 +71,7 @@ public class PreservesHttpHeadersInterceptorTest {
     public void testAfterCompletion() throws Exception {
         current().put("1", "1");
         propagator.afterCompletion(null, null, null, null);
-        assertThat(current().entrySet().size(), is(0));
+        assertThat(current().entrySet()).isEmpty();
     }
 
 

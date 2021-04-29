@@ -16,7 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.jms.ConnectionFactory;
 

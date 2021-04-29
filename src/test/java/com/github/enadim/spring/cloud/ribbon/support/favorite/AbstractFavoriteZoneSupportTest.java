@@ -19,7 +19,7 @@ import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest;
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
 import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonFavoriteZone;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;

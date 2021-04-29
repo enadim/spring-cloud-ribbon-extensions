@@ -17,8 +17,8 @@ package com.github.enadim.spring.cloud.ribbon.predicate;
 
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.loadbalancer.Server;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
@@ -32,7 +32,7 @@ public class DynamicZoneMatcherTest {
     Server server = new Server("id");
     PredicateKey predicateKey = new PredicateKey(server);
 
-    @After
+    @AfterEach
     public void after() {
         remove();
     }

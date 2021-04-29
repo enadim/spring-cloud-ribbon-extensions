@@ -15,7 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,8 +24,7 @@ import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHold
 import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -69,21 +68,21 @@ public class ExecutorServicePropagatorTest extends AbstractExecutionContextAware
     @Test
     public void testSubmitCallable() throws Exception {
         current().put(key, value);
-        assertThat(propagator.submit(callable).get(), is(value));
+        assertThat(propagator.submit(callable).get()).isEqualTo(value);
     }
 
     @Test
     public void testSubmitRunnable() throws Exception {
         current().put(key, value);
         propagator.submit(runnable).get();
-        assertThat(signal.poll(1, SECONDS), is(value));
+        assertThat(signal.poll(1, SECONDS)).isEqualTo(value);
     }
 
     @Test
     public void testSubmitRunnableWithResult() throws Exception {
         current().put(key, value);
         propagator.submit(runnable, true).get();
-        assertThat(signal.poll(1, SECONDS), is(value));
+        assertThat(signal.poll(1, SECONDS)).isEqualTo(value);
     }
 
     @Test
@@ -93,7 +92,7 @@ public class ExecutorServicePropagatorTest extends AbstractExecutionContextAware
                 .stream()
                 .map(AbstractExecutionContextAwareExecutorTest::uncheck)
                 .reduce((x, y) -> x + y)
-                .get(), is(value + value));
+                .get()).isEqualTo(value + value);
     }
 
     @Test
@@ -103,18 +102,18 @@ public class ExecutorServicePropagatorTest extends AbstractExecutionContextAware
                 .stream()
                 .map(AbstractExecutionContextAwareExecutorTest::uncheck)
                 .reduce((x, y) -> x + y)
-                .get(), is(value + value));
+                .get()).isEqualTo(value + value);
     }
 
     @Test
     public void testInvokeAny() throws Exception {
         current().put(key, value);
-        assertThat(propagator.invokeAny(asList(callable, callable)), is(value));
+        assertThat(propagator.invokeAny(asList(callable, callable))).isEqualTo(value);
     }
 
     @Test
     public void testInvokeAnyWithTimeOut() throws Exception {
         current().put(key, value);
-        assertThat(propagator.invokeAny(asList(callable, callable), 10, SECONDS), is(value));
+        assertThat(propagator.invokeAny(asList(callable, callable), 10, SECONDS)).isEqualTo(value);
     }
 }
