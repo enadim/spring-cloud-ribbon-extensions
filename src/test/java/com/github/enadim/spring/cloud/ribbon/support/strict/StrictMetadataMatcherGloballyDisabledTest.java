@@ -17,16 +17,17 @@ package com.github.enadim.spring.cloud.ribbon.support.strict;
 
 import com.github.enadim.spring.cloud.ribbon.rule.PredicateBasedRuleSupport;
 import com.github.enadim.spring.cloud.ribbon.support.StrictMetadataMatcherConfig;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.inject.Inject;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = StrictMetadataMatcherConfig.class, properties = {
         "ribbon.extensions.rule.strict-metadata-matcher.enabled=false"})
 public class StrictMetadataMatcherGloballyDisabledTest {
@@ -34,8 +35,8 @@ public class StrictMetadataMatcherGloballyDisabledTest {
     @Inject
     ApplicationContext applicationContext;
 
-    @Test(expected = NoSuchBeanDefinitionException.class)
+    @Test()
     public void should_not_be_instantiated() {
-        applicationContext.getBean(PredicateBasedRuleSupport.class);
+        Assertions.assertThatThrownBy(() -> applicationContext.getBean(PredicateBasedRuleSupport.class)).isEqualTo(NoSuchBeanDefinitionException.class);
     }
 }

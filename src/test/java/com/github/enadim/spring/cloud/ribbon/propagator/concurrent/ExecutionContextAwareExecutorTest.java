@@ -15,14 +15,13 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class ExecutionContextAwareExecutorTest extends AbstractExecutionContextAwareExecutorTest {
 
@@ -32,6 +31,6 @@ public class ExecutionContextAwareExecutorTest extends AbstractExecutionContextA
     public void testExecute() throws Exception {
         current().put(key, value);
         propagator.execute(runnable);
-        assertThat(signal.poll(5, TimeUnit.SECONDS), is(value));
+        Assertions.assertThat(signal.poll(5, TimeUnit.SECONDS)).isEqualTo(value);
     }
 }

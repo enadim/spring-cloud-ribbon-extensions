@@ -18,14 +18,12 @@ package com.github.enadim.spring.cloud.ribbon.support.strategy;
 import com.github.enadim.spring.cloud.ribbon.propagator.stomp.PreservesHeadersStompSessionAdapter;
 import com.github.enadim.spring.cloud.ribbon.support.EurekaInstanceProperties;
 import com.github.enadim.spring.cloud.ribbon.support.PropagationProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.stomp.StompSession;
 
 import static java.util.regex.Pattern.compile;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
 public class PreservesStompHeadersStrategyTest {

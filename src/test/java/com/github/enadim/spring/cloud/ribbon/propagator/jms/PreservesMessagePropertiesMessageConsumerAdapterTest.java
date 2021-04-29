@@ -15,16 +15,13 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PreservesMessagePropertiesMessageConsumerAdapterTest {
     MessageConsumer delegate = mock(MessageConsumer.class);

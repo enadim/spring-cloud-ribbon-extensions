@@ -15,16 +15,9 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.jms;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import javax.jms.BytesMessage;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
-import javax.jms.StreamMessage;
-import javax.jms.TextMessage;
+import javax.jms.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,10 +25,7 @@ import java.util.Set;
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PreservesMessagePropertiesSessionAdapterTest {
     Set<String> keys = new HashSet<>(asList("1"));

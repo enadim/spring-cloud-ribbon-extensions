@@ -15,16 +15,14 @@
  */
 package com.github.enadim.spring.cloud.ribbon.context;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
-import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.remove;
-import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.switchTo;
+import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.*;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -78,8 +76,8 @@ public class ExecutionContextHolderTest {
         assertThat(future.get(), is(nullValue()));
     }
 
-    @After
-    public void after() {
+    @BeforeEach
+    public void before() {
         remove();
     }
 

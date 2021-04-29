@@ -16,7 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.propagator.zuul;
 
 import com.netflix.zuul.context.RequestContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;

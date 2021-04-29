@@ -15,7 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.scheduling.Trigger;
 
 import java.util.Date;
@@ -51,7 +51,7 @@ public abstract class AbstractExecutionContextAwareExecutorTest {
     protected final Date date = new Date();
     protected final Trigger trigger = mock(Trigger.class);
 
-    @After
+    @AfterEach
     public void after() {
         remove();
     }

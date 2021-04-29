@@ -136,5 +136,10 @@ public class PreservesHeadersStompSessionAdapter extends AbstractExecutionContex
         delegate.disconnect();
     }
 
+    @Override
+    public void disconnect(StompHeaders headers) {
+        delegate.disconnect(headers);
+    }
+
 
 }

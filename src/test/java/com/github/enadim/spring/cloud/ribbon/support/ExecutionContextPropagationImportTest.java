@@ -15,15 +15,9 @@
  */
 package com.github.enadim.spring.cloud.ribbon.support;
 
-import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesExecutionContextExecutorStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesExecutionContextHystrixStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesHeadersInboundHttpRequestStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesHttpHeadersFeignStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesHttpHeadersZuulStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesJmsMessagePropertiesStrategy;
-import com.github.enadim.spring.cloud.ribbon.support.strategy.PreservesStompHeadersStrategy;
+import com.github.enadim.spring.cloud.ribbon.support.strategy.*;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 

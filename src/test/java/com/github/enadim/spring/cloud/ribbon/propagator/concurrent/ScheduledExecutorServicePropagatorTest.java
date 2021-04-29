@@ -15,14 +15,13 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.enadim.spring.cloud.ribbon.context.ExecutionContextHolder.current;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ScheduledExecutorServicePropagatorTest extends AbstractExecutionContextAwareExecutorTest {
     private final ContextAwareScheduledExecutorService propagator = new ContextAwareScheduledExecutorService(newScheduledThreadPool(4));
@@ -31,28 +30,28 @@ public class ScheduledExecutorServicePropagatorTest extends AbstractExecutionCon
     public void scheduleRunnable() throws Exception {
         current().put(key, value);
         propagator.schedule(runnable, 1, MILLISECONDS);
-        assertThat(signal.poll(1, SECONDS), is(value));
+        assertThat(signal.poll(1, SECONDS)).isEqualTo(value);
     }
 
     @Test
     public void scheduleCallable() throws Exception {
         current().put(key, value);
         propagator.schedule(callable, 1, MILLISECONDS);
-        assertThat(signal.poll(1, SECONDS), is(value));
+        assertThat(signal.poll(1, SECONDS)).isEqualTo(value);
     }
 
     @Test
     public void scheduleAtFixedRate() throws Exception {
         current().put(key, value);
         propagator.scheduleAtFixedRate(runnable, 1, 1000, MILLISECONDS);
-        assertThat(signal.poll(1, SECONDS), is(value));
+        assertThat(signal.poll(1, SECONDS)).isEqualTo(value);
     }
 
     @Test
     public void scheduleWithFixedDelay() throws Exception {
         current().put(key, value);
         propagator.scheduleWithFixedDelay(runnable, 1, 1000, MILLISECONDS);
-        assertThat(signal.poll(1, SECONDS), is(value));
+        assertThat(signal.poll(1, SECONDS)).isSameAs(value);
     }
 
 }

@@ -21,17 +21,16 @@ import com.netflix.loadbalancer.ServerList;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 import io.restassured.RestAssured;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.web.server.LocalServerPort;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -52,7 +51,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 //import org.springframework.boot.web.server.LocalServerPort;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public abstract class AbstractSupportTest {
 
     @LocalServerPort
@@ -70,7 +69,7 @@ public abstract class AbstractSupportTest {
         RestAssured.basePath = TestApplicationBase.TestControllerConstants.BASE_PATH;
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         RestAssured.port = port;
         server1.setPort(port);
@@ -83,7 +82,7 @@ public abstract class AbstractSupportTest {
         server.getInstanceInfo().getMetadata().clear();
     }
 
-    @After
+    @AfterEach
     public void after() {
         reset(server1);
         reset(server2);

@@ -20,8 +20,8 @@ import com.github.enadim.spring.cloud.ribbon.support.AbstractSupportTest.TestApp
 import com.github.enadim.spring.cloud.ribbon.support.EnableContextPropagation;
 import com.github.enadim.spring.cloud.ribbon.support.EnableHttpLogging;
 import com.github.enadim.spring.cloud.ribbon.support.EnableRibbonDynamicMetadataMatcher;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -47,7 +47,7 @@ public abstract class AbstractDynamicMatcherSupportTest extends AbstractSupportT
     }
 
     @Test
-    @Ignore("will fail")
+    @Disabled("will fail")
     @Override
     public void test_default() {
     }

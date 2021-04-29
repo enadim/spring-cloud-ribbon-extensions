@@ -16,7 +16,7 @@
 package com.github.enadim.spring.cloud.ribbon.propagator;
 
 import com.github.enadim.spring.cloud.ribbon.propagator.AbstractExecutionContextCopy.ExecutionContextCopyFunction;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;

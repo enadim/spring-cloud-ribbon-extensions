@@ -20,15 +20,14 @@ import com.github.enadim.spring.cloud.ribbon.propagator.jms.PreservesMessageProp
 import com.github.enadim.spring.cloud.ribbon.propagator.stomp.PreservesHeadersStompSessionAdapter;
 import com.github.enadim.spring.cloud.ribbon.support.EurekaInstanceProperties;
 import com.github.enadim.spring.cloud.ribbon.support.PropagationProperties;
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.jms.ConnectionFactory;
 
 import static java.util.regex.Pattern.compile;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
 public class PreservesJmsMessagePropertiesStrategyTest {
@@ -56,20 +55,24 @@ public class PreservesJmsMessagePropertiesStrategyTest {
         processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_to_decorate_unaccessible_encoder_class() {
-        processor.setEncoderType(EchoMessagePropertyEncoder1.class);
-        processor.setProperties(new PropagationProperties());
-        processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
-        processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
+        Assertions.assertThatThrownBy(() -> {
+            processor.setEncoderType(EchoMessagePropertyEncoder1.class);
+            processor.setProperties(new PropagationProperties());
+            processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
+            processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test()
     public void should_fail_to_decorate_encoder_with_no_default_constructor() {
-        processor.setEncoderType(EchoMessagePropertyEncoder2.class);
-        processor.setProperties(new PropagationProperties());
-        processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
-        processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
+        Assertions.assertThatThrownBy(() -> {
+            processor.setEncoderType(EchoMessagePropertyEncoder2.class);
+            processor.setProperties(new PropagationProperties());
+            processor.setEurekaInstanceProperties(new EurekaInstanceProperties());
+            processor.postProcessAfterInitialization(mock(ConnectionFactory.class), beanName);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

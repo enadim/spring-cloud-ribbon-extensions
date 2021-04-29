@@ -15,8 +15,7 @@
  */
 package com.github.enadim.spring.cloud.ribbon.propagator;
 
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.regex.Pattern;
 
@@ -24,9 +23,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.regex.Pattern.compile;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PatternFilterTest {
     String value1 = "12";
@@ -37,26 +34,26 @@ public class PatternFilterTest {
 
     @Test
     public void accept() throws Exception {
-        assertThat(new PatternFilter().accept(value1), Matchers.is(true));
-        assertThat(new PatternFilter(singletonList(pattern1), emptyList()).accept(value1), Matchers.is(true));
-        assertThat(new PatternFilter(singletonList(pattern1), emptyList()).accept(value2), Matchers.is(false));
-        assertThat(new PatternFilter(singletonList(pattern1), singletonList(pattern2)).accept(value1), Matchers.is(true));
-        assertThat(new PatternFilter(singletonList(pattern1), singletonList(pattern2)).accept(value2), Matchers.is(false));
-        assertThat(new PatternFilter(singletonList(pattern1), singletonList(pattern2)).accept(value1 + value2), Matchers.is(false));
-        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept(value1), Matchers.is(true));
-        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept(value2), Matchers.is(true));
-        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept(value1 + value2), Matchers.is(true));
-        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept(""), Matchers.is(false));
+        assertThat(new PatternFilter().accept(value1)).isTrue();
+        assertThat(new PatternFilter(singletonList(pattern1), emptyList()).accept(value1)).isTrue();
+        assertThat(new PatternFilter(singletonList(pattern1), emptyList()).accept(value2)).isFalse();
+        assertThat(new PatternFilter(singletonList(pattern1), singletonList(pattern2)).accept(value1)).isTrue();
+        assertThat(new PatternFilter(singletonList(pattern1), singletonList(pattern2)).accept(value2)).isFalse();
+        assertThat(new PatternFilter(singletonList(pattern1), singletonList(pattern2)).accept(value1 + value2)).isFalse();
+        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept(value1)).isTrue();
+        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept(value2)).isTrue();
+        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept(value1 + value2)).isTrue();
+        assertThat(new PatternFilter(asList(pattern1, pattern2), emptyList()).accept("")).isFalse();
     }
 
     @Test
     public void getIncludes() throws Exception {
-        assertThat(new PatternFilter().getIncludes().size(), is(1));
+        assertThat(new PatternFilter().getIncludes()).hasSize(1);
     }
 
     @Test
     public void getExcludes() throws Exception {
-        assertThat(new PatternFilter().getExcludes(), equalTo(emptyList()));
+        assertThat(new PatternFilter().getExcludes()).isEmpty();
     }
 
 }

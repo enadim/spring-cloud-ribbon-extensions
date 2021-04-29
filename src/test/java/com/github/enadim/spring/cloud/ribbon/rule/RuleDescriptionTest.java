@@ -16,12 +16,11 @@
 package com.github.enadim.spring.cloud.ribbon.rule;
 
 import com.netflix.loadbalancer.AbstractServerPredicate;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static com.github.enadim.spring.cloud.ribbon.rule.RuleDescription.from;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,29 +29,29 @@ public class RuleDescriptionTest {
     String description = "description";
     String predicateDescription = "predicate";
 
-    @Before
+    @BeforeEach
     public void before() {
         when(predicate.toString()).thenReturn(predicateDescription);
     }
 
     @Test
     public void from_string() {
-        assertThat(from(description).describe(), is(description));
+        assertThat(from(description).describe()).isSameAs(description);
     }
 
     @Test
     public void from_predicate() throws Exception {
-        assertThat(from(predicate).describe(), is(predicateDescription));
+        assertThat(from(predicate).describe()).isSameAs(predicateDescription);
     }
 
     @Test
     public void and() throws Exception {
-        assertThat(from(predicate).and(from(description)).describe(), is("(" + predicateDescription + " && " + description + ")"));
+        assertThat(from(predicate).and(from(description)).describe()).isEqualTo("(" + predicateDescription + " && " + description + ")");
     }
 
     @Test
     public void fallback() throws Exception {
-        assertThat(from(predicate).fallback(from(description)).describe(), is(predicateDescription + " -> " + description));
+        assertThat(from(predicate).fallback(from(description)).describe()).isEqualTo(predicateDescription + " -> " + description);
     }
 
 }
